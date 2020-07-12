@@ -23,20 +23,35 @@ if [ ! -d ~/bin/install/pretty-git-prompt/ ]; then
 	git clone https://github.com/TomasTomecek/pretty-git-prompt ~/bin/install/pretty-git-prompt/
 else
 	# TODO: Enable git-prompt pull
-	#(cd ~/bin/install/pretty-git-prompt; git pull)
+	#cd ~/bin/install/pretty-git-prompt; git pull
 	echo ""
 fi
 # Build pretty git prompt
-(cd ~/bin/install/pretty-git-prompt; cargo build --release)
+cd ~/bin/install/pretty-git-prompt
+cargo build --release
+
 mkdir -p ~/.config
 if [ -f ~/bin/config/pretty-git-prompt.yml ]
 then
 	ln -sf ~/bin/config/pretty-git-prompt.yml ~/.config/pretty-git-prompt.yml
 fi
 
+function link() {
+	if [ -f ~/bin/$1 ]
+	then
+		ln -sf ~/bin/$1 $2
+	fi
+}
+
 # Link rc files to where they belong
-if [ -f ~/bin/config/bashrc ]
+link config/bashrc ~/.bashrc
+link config/Xmodmap ~/.Xmodmap
+
+# Apply Git config options
+if type nvim
 then
-	ln -sf ~/bin/config/bashrc ~/.bashrc
+	git config --global core.editor "nvim"
 fi
+git config --global user.name "Matthew Pomes"
+git config --global user.email "the10thwiz@gmail.com"
 
