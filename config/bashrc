@@ -61,6 +61,7 @@ source ~/bin/config/aliases
 
 source ~/bin/config/venv_activate
 source ~/bin/config/screen
+source ~/bin/completions/*
 
 # Add ~/bin/ to the path, for useful scripts on my path
 PATH=~/bin/:$PATH

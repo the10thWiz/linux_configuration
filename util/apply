@@ -2,9 +2,41 @@
 
 # Script to apply `bin` configs to the system
 
+# Make git-ignored dirs
+mkdir -p ~/bin/completions/
+mkdir -p ~/bin/install/
+
+# Check for rust installation
+if type rustup
+then
+	# TODO: Enable rustup update
+	# rustup update
+	echo ""
+else
+	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+fi
+rustup completions bash rustup > ~/bin/completions/rustup
+rustup completions bash cargo > ~/bin/completions/cargo
+
+# Clone/pull pretty-git-prompt
+if [ ! -d ~/bin/install/pretty-git-prompt/ ]; then
+	git clone https://github.com/TomasTomecek/pretty-git-prompt ~/bin/install/pretty-git-prompt/
+else
+	# TODO: Enable git-prompt pull
+	#(cd ~/bin/install/pretty-git-prompt; git pull)
+	echo ""
+fi
+# Build pretty git prompt
+(cd ~/bin/install/pretty-git-prompt; cargo build --release)
+mkdir -p ~/.config
+if [ -f ~/bin/config/pretty-git-prompt.yml ]
+then
+	ln -sf ~/bin/config/pretty-git-prompt.yml ~/.config/pretty-git-prompt.yml
+fi
+
+# Link rc files to where they belong
 if [ -f ~/bin/config/bashrc ]
 then
 	ln -sf ~/bin/config/bashrc ~/.bashrc
 fi
 
-# bashrc
