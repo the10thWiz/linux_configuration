@@ -2,5 +2,9 @@
 
 # Script to apply `bin` configs to the system
 
+if [ -f ~/bin/config/bashrc ]
+then
+	ln -sf ~/bin/config/bashrc ~/.bashrc
+fi
+
 # bashrc
-ln -sf ~/bin/config/bashrc ~/.bashrc
