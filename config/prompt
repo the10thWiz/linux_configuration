@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set_bash_prompt(){
+	echo -ne "\033]0;${PWD/#$HOME/\~} \007"
+}
+
+PROMPT_COMMAND=set_bash_prompt
+case ${TERM} in
+	xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
+# Enable thefuck
+PS1='\[\033[01;32m\]\u@\[manjaro-hp\033[01;36m\]:\W\[\033[01;32m\]$(get_screen_name_prompt_color)\
+$(echo -e "$(/home/matthew/Documents/pretty-git-prompt/target/release/pretty-git-prompt)")\
+$(get_venv_name_prompt_color)\[\033[00m\]\$ '
+		;;
+	screen*|*)
+PS1='\[\033[01;32m\]\u@manjaro-hp\[\033[01;36m\]:\W\[\033[01;32m\]$(get_screen_name_prompt_color)\
+$(echo -e "$(/home/matthew/Documents/pretty-git-prompt/target/release/pretty-git-prompt)")\
+$(get_venv_name_prompt_color)\[\033[00m\]\$ '
+	
+		;;
+esac
+
+eval $(thefuck --alias --enable-experimental-instant-mode)
+LS_COLORS="ex=01;33:di=01;36"
+

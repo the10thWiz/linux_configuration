@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Script to apply `bin` configs to the system
+
+# bashrc
+ln -sf ~/bin/config/bashrc ~/.bashrc

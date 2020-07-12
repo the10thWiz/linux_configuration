@@ -1,0 +1,28 @@
+#!/bin/bash
+
+function venv_activate() {
+	local START=$PWD
+	while [[ $PWD != "/" ]]; do
+		if [[ -f "bin/activate" ]]; then
+			source bin/activate
+			echo "Activated venv at $VIRTUAL_ENV"
+			cd $START
+			return 0
+		fi
+		cd ..
+	done
+	cd $START
+}
+
+function get_venv_name_prompt() {
+	local VENV=$(basename "$VIRTUAL_ENV")
+	if [[ $VENV != "" ]]; then
+		echo " (py:$VENV)"
+	fi
+}
+function get_venv_name_prompt_color() {
+	local VENV=$(basename "$VIRTUAL_ENV")
+	if [[ $VENV != "" ]]; then
+		echo -e " (\001\033[36m\002py:\001\033[34m\002$VENV\001\033[0m\002)"
+	fi
+}

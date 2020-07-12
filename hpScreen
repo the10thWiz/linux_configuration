@@ -1,0 +1,31 @@
+#!/bin/env bash
+
+# xrandr --listmonitors | grep -Po "1: (\d|\w)+ \d+/\d+x\d+/\d+\+\d+\+\d+\s+\K.+$"
+# xrandr -q | grep -P "^[A-Za-z0-9-]+(?= connected| disconnected)"
+
+# disp_count=0
+# primary=""
+
+# for disp in $(xrandr -q | grep -Po "^[\w\d-]+(?= (dis)?connected)")
+# do
+#	disp_count=$((disp_count + 1))
+#	xrandr --output ${disp} --auto
+#	case ${disp} in
+#		"eDP*")
+#			xrandr --output ${disp} --primary
+#			primary="${disp}"
+#			;;
+#		"HDMI*")
+#			xrandr --output ${disp} --left-of ${primary}
+#			;;
+#	esac
+# done
+
+xrandr --output eDP --auto --primary
+
+xrandr --output HDMI-A-0 --auto
+xrandr --output HDMI-A-0 --left-of eDP
+xrandr --output HDMI-A-0 --set "underscan" on
+xrandr --output HDMI-A-0 --set "underscan vborder" 70
+xrandr --output HDMI-A-0 --set "underscan hborder" 110
+

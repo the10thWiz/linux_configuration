@@ -1,0 +1,29 @@
+#!/bin/bash
+
+alias cp="cp -i"            # confirm before overwriting something
+alias df='df -h'            # human-readable sizes
+alias free='free -m'        # show sizes in MB
+alias np='nano -w PKGBUILD'
+alias more=less
+
+
+# my aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+# Some cool aliases, with cloned completes
+alias pls='sudo !!'
+alias ddp='dd status=progress bs=1024k '
+complete -F _dd ddp
+alias op='xdg-open'
+complete -F _minimal op
+alias vs='code -a'
+complete -F _code vs
+
+alias clip='xclip -i'
+alias paste='xclip -o'
+
+# `command` is a bash built-in that executes the given shell command
+# `sudo` is the same, but executes the command as a different user
+complete -F _command sudo
+
