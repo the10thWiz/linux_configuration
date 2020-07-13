@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if ! type code
+then
+	exit
+fi
+
+code --install-extension "beardedbear.beardedtheme"
+code --install-extension "bungcip.better-toml"
+code --install-extension "phr0s.bib"
+code --install-extension "gerane.theme-blackboard"
+code --install-extension "ms-vscode.cpptools"
+code --install-extension "streetsidesoftware.code-spell-checker"
+code --install-extension "vadimcn.vscode-lldb"
+code --install-extension "serayuzgur.crates"
+code --install-extension "spgoding.datapack-json"
+code --install-extension "eamodio.gitlens"
+code --install-extension "cadenas.vscode-glsllint"
+code --install-extension "redhat.java"
+code --install-extension "leojhonsong.latex-extension-pack"
+code --install-extension "torn4dom4n.latex-support"
+code --install-extension "kamikillerto.vscode-linthtml"
+code --install-extension "pkief.material-icon-theme"
+code --install-extension "levertion.mcjson"
+code --install-extension "medo64.render-crlf"
+code --install-extension "swellaby.rust-pack"
+code --install-extension "slevesque.shader"
+code --install-extension "ms-mssql.mssql"
+code --install-extension "oijaz.unicode-latex"
+code --install-extension "drekevist.word-count-command"
+code --install-extension "redhat.vscode-yaml"
+code --install-extension "DavidAnson.vscode-markdownlint"
+code --install-extension "GitHub.vscode-pull-request-github"
+code --install-extension "JScearcy.rust-doc-viewer"
+code --install-extension "ZakCodes.rust-snippets"
+
