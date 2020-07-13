@@ -17,11 +17,14 @@ alias ddp='dd status=progress bs=1024k '
 complete -F _dd ddp
 alias op='xdg-open'
 complete -F _minimal op
-alias vs='code -a'
-complete -F _code vs
+if type code > /dev/null
+then
+	alias vs='code -a'
+	complete -F _code vs
+fi
 
 alias clip='xclip -i'
-alias paste='xclip -o'
+alias paste='echo "$(xclip -o -rmlastnl)"'
 
 # `command` is a bash built-in that executes the given shell command
 # `sudo` is the same, but executes the command as a different user
