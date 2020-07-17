@@ -20,7 +20,7 @@ PROMPT_COMMAND=set_bash_prompt
 case ${TERM} in
 	xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
 # Enable thefuck
-PS1='\[\033[01;32m\]\u@\[manjaro-hp\033[01;36m\]│\W\[\033[01;32m\]$(get_screen_name_prompt_color)\
+PS1='\[\033[G\033[K\033[01;32m\]\u@\[manjaro-hp\033[01;36m\]│\W\[\033[01;32m\]$(get_screen_name_prompt_color)\
 $(echo -e "$(~/bin/install/pretty-git-prompt/target/release/pretty-git-prompt)")\
 $(get_venv_name_prompt_color)\[\033[00m\]\$ '
 		;;
