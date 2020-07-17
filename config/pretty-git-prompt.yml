@@ -45,8 +45,8 @@ values:
           #  * <REMOTE> will be replaced with name of a remote
           #  * <LOCAL_BRANCH> will be replaced with current branch name
           #  * <REMOTE_BRANCH> will be replaced with name of remote branch
-          pre_format: ' \01\033[38;5;4m\02(<LOCAL_BRANCH>'
-          post_format: ')\01\033[0m\02 '
+          pre_format: ' \01\033[0m\02|\01\033[38;5;4m\02<LOCAL_BRANCH>'
+          post_format: '\01\033[0m\02'
           # the number of files present locally which are missing in remote repo
         - type: ahead
           pre_format: '\01\033[38;5;7m\02↑'
