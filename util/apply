@@ -9,9 +9,7 @@ mkdir -p ~/bin/install/
 # Check for rust installation
 if type rustup
 then
-	# TODO: Enable rustup update
-	# rustup update
-	echo ""
+	rustup update
 else
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
@@ -22,9 +20,7 @@ rustup completions bash cargo > ~/bin/completions/cargo
 if [ ! -d ~/bin/install/pretty-git-prompt/ ]; then
 	git clone https://github.com/TomasTomecek/pretty-git-prompt ~/bin/install/pretty-git-prompt/
 else
-	# TODO: Enable git-prompt pull
-	#cd ~/bin/install/pretty-git-prompt; git pull
-	echo ""
+	cd ~/bin/install/pretty-git-prompt; git pull
 fi
 # Build pretty git prompt
 cd ~/bin/install/pretty-git-prompt
