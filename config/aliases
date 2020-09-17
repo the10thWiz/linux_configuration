@@ -23,6 +23,16 @@ then
 	complete -F _code vs
 fi
 
+# if type yay > /dev/null
+# then
+# 	alias yay='yay --sudoloop'
+# fi
+
+if [ -f $HOME/bin/install/arg-adjuster/target/release/p7zip-args ]
+then
+	alias 7z="$HOME/bin/install/arg-adjuster/target/release/p7zip-args"
+fi
+
 alias clip='xclip -i'
 alias paste='echo "$(xclip -o -rmlastnl)"'
 
