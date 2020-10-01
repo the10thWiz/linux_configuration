@@ -51,8 +51,8 @@ set hidden
 
 inoremap jk <ESC>
 nmap <C-n> :NERDTreeToggle<CR>
-vmap c <plug>NERDCommenterToggle
-nmap c <plug>NERDCommenterToggle
+vmap ++ <plug>NERDCommenterToggle
+nmap ++ <plug>NERDCommenterToggle
 
 
 " open NERDTree automatically
