@@ -15,7 +15,7 @@ function venv_find() {
 function venv_activate() {
   local VENV=$(venv_find)
   if [[ -z $VENV ]]; then
-    if type deactivate > /dev/null 2&>1; then
+    if type deactivate > /dev/null 2>&1; then
       deactivate
     fi
   else
