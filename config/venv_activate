@@ -1,28 +1,41 @@
 #!/bin/bash
 
-function venv_activate() {
-	local START=$PWD
-	while [[ $PWD != "/" ]]; do
-		if [[ -f "bin/activate" ]]; then
-			source bin/activate
-			echo "Activated venv at $VIRTUAL_ENV"
-			cd $START
+function venv_find() {
+	local CUR=$PWD
+	while [[ $CUR != "/" ]]; do
+		if [[ -f "$CUR/bin/activate" ]]; then
+			echo "$CUR/bin/activate"
+			# echo "Activated venv at $VIRTUAL_ENV"
 			return 0
 		fi
-		cd ..
+    CUR=$(dirname "$CUR")
 	done
-	cd $START
+}
+
+function venv_activate() {
+  local VENV=$(venv_find)
+  if [[ -z $VENV ]]; then
+    if type deactivate > /dev/null 2>&1; then
+      deactivate
+    fi
+  else
+    source $VENV
+  fi
 }
 
 function get_venv_name_prompt() {
 	local VENV=$(basename "$VIRTUAL_ENV")
 	if [[ $VENV != "" ]]; then
 		echo " (py:$VENV)"
+  else
+    venv_activate
 	fi
 }
 function get_venv_name_prompt_color() {
+  venv_activate
 	local VENV=$(basename "$VIRTUAL_ENV")
+  #echo " (pwd: $PWD)"
 	if [[ $VENV != "" ]]; then
 		echo -e " (\001\033[36m\002py:\001\033[34m\002$VENV\001\033[0m\002)"
-	fi
+  fi
 }

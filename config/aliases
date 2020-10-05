@@ -23,8 +23,26 @@ then
 	complete -F _code vs
 fi
 
-alias clip='xclip -i'
-alias paste='echo "$(xclip -o -rmlastnl)"'
+# if type yay > /dev/null
+# then
+# 	alias yay='yay --sudoloop'
+# fi
+
+if [ -f $HOME/bin/install/arg-adjuster/target/release/p7zip-args ]
+then
+	alias 7z="$HOME/bin/install/arg-adjuster/target/release/p7zip-args"
+fi
+
+case $TERM in 
+		*kitty)
+				alias clip='kitty +kitten clipboard'
+				alias paste='kitty +kitten clipboard --get-clipboard'
+				;;
+		*)
+				alias clip='xclip -i'
+				alias paste='echo "$(xclip -o -rmlastnl)"'
+				;;
+esac
 
 # `command` is a bash built-in that executes the given shell command
 # `sudo` is the same, but executes the command as a different user

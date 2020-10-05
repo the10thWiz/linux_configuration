@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Protects output from overwrite by the bash prompt
+# 
+# If the cursor is not at the left of the screen,
+# the cursor is moved to the next line.
+#
+# This also moves the cursor to the left edge of
+# the screen, and clears the line.
 function prevent_overwrite() {
 	local CURPOS
 	echo -en "\E[6n"
@@ -9,28 +16,41 @@ function prevent_overwrite() {
 	then
 		echo ""
 	fi
+	echo -ne "\033[G\033[K"
 }
 
-set_bash_prompt(){
+function get_jobs_color() {
+	local JOB_COUNT="\\j"
+	JOB_COUNT=${JOB_COUNT@P}
+	if [[ ${JOB_COUNT} != "0" ]]
+	then
+		echo -ne "│%${JOB_COUNT}"
+	fi
+}
+function get_dir() {
+	local DIR="\\W"
+	DIR=${DIR@P}
+	if [[ ${PWD} =~ "${HOME}/[^/]+" ]]
+	then
+		echo -ne "~/${DIR}"
+	else
+		echo -ne "${DIR}"
+	fi
+}
+
+function set_bash_prompt() {
 	prevent_overwrite
 	echo -ne "\033]0;${PWD/#$HOME/\~} \007"
 }
 
 PROMPT_COMMAND=set_bash_prompt
-case ${TERM} in
-	xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-# Enable thefuck
-PS1='\[\033[G\033[K\033[01;32m\]\u@manjaro-hp\[\033[01;36m\]│\W\[\033[01;32m\]$(get_screen_name_prompt_color)\
+
+TEST_COLOR="35"
+# Prompt: `<user>@manjaro-hp|<dir><(screen)><|git><(venv)>$ `
+PS1='\[\e[01;32m\]\u@\[manjaro-hp\e[0m\]│\[\e[01;36m\]\W\[\e[01;32m\]\
+$(get_screen_name_prompt_color)\
 $(echo -e "$(~/bin/install/pretty-git-prompt/target/release/pretty-git-prompt)")\
-$(get_venv_name_prompt_color)\[\033[00m\]\$ '
-		;;
-	screen*|*)
-PS1='\[\033[01;32m\]\u@manjaro-hp\[\033[01;36m\]:\W\[\033[01;32m\]$(get_screen_name_prompt_color)\
-$(echo -e "$(~/bin/install/pretty-git-prompt/target/release/pretty-git-prompt)")\
-$(get_venv_name_prompt_color)\[\033[00m\]\$ '
-	
-		;;
-esac
+$(get_venv_name_prompt_color)$(get_jobs_color)\[\e[0m\]│\[\e[35m\]!\!\[\e[00m\]\$ '
 
 # eval $(thefuck --enable-experimental-instant-mode --alias)
 LS_COLORS="ex=01;33:di=01;36"

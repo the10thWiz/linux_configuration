@@ -9,26 +9,28 @@ mkdir -p ~/bin/install/
 # Check for rust installation
 if type rustup
 then
-	# TODO: Enable rustup update
-	# rustup update
-	echo ""
+	rustup update
 else
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
 rustup completions bash rustup > ~/bin/completions/rustup
 rustup completions bash cargo > ~/bin/completions/cargo
 
-# Clone/pull pretty-git-prompt
-if [ ! -d ~/bin/install/pretty-git-prompt/ ]; then
-	git clone https://github.com/TomasTomecek/pretty-git-prompt ~/bin/install/pretty-git-prompt/
-else
-	# TODO: Enable git-prompt pull
-	#cd ~/bin/install/pretty-git-prompt; git pull
-	echo ""
-fi
-# Build pretty git prompt
-cd ~/bin/install/pretty-git-prompt
-cargo build --release
+function rust-git-install() {
+	# Clone/pull
+	if [ ! -d ~/bin/install/$2/ ]; then
+		git clone https://github.com/$1/$2 ~/bin/install/$2/
+	else
+		cd ~/bin/install/$2
+		git pull
+	fi
+	# Build
+	cd ~/bin/install/$2
+	cargo build --release
+}
+
+rust-git-install TomasTomecek pretty-git-prompt 
+rust-git-install the10thwiz arg-adjuster
 
 mkdir -p ~/.config
 if [ -f ~/bin/config/pretty-git-prompt.yml ]
@@ -46,6 +48,7 @@ function link() {
 # Link rc files to where they belong
 link config/bashrc ~/.bashrc
 link config/Xmodmap ~/.Xmodmap
+link config/init.vim ~/.config/nvim/init.vim
 
 # Apply Git config options
 if type nvim

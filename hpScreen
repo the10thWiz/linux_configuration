@@ -24,7 +24,7 @@
 xrandr --output eDP --auto --primary
 
 xrandr --output HDMI-A-0 --auto
-xrandr --output HDMI-A-0 --left-of eDP
+xrandr --output HDMI-A-0 --right-of eDP
 xrandr --output HDMI-A-0 --set "underscan" on
 xrandr --output HDMI-A-0 --set "underscan vborder" 70
 xrandr --output HDMI-A-0 --set "underscan hborder" 110
