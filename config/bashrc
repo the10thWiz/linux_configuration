@@ -41,8 +41,6 @@ if ${use_color} ; then
 	if type -P dircolors >/dev/null ; then
 		if [[ -f ~/.dir_colors ]] ; then
 			eval $(dircolors -b ~/.dir_colors)
-		elif [[ -f /etc/DIR_COLORS ]] ; then
-			eval $(dircolors -b /etc/DIR_COLORS)
 		fi
 	fi
 
@@ -57,14 +55,8 @@ unset safe_term match_lhs sh
 # Ignore repeat lines of history, to make up arrow faster
 export HISTCONTROL='ignoredups'
 
-source ~/bin/config/aliases
-
-source ~/bin/config/venv_activate
-source ~/bin/config/screen
-source ~/bin/completions/*
-
 # Add ~/bin/ to the path, for useful scripts on my path
-PATH=~/bin/:$PATH
+PATH=~/bin/:/usr/local/gradle/bin:$PATH
 
 MANPATH=:/opt/texlive/2020/texmf-dist/doc/man
 INFOPATH=/usr/local/texlive/2010/texmf/doc/info:$INFOPATH
@@ -72,5 +64,16 @@ INFOPATH=/usr/local/texlive/2010/texmf/doc/info:$INFOPATH
 # Prevent Python Virtual Enviroments from changing prompt (for thefuck)
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
+[ $DEBUG ] && echo "aliases"
+source ~/bin/config/aliases
+
+[ $DEBUG ] && echo "venv"
+source ~/bin/config/venv_activate
+[ $DEBUG ] && echo "screen"
+source ~/bin/config/screen
+[ $DEBUG ] && echo "completions"
+source ~/bin/completions/*
+
+[ $DEBUG ] && echo "prompt"
 source ~/bin/config/prompt
 
