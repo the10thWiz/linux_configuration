@@ -7,6 +7,32 @@
 
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
+_completion_loader()
+{
+    # $1=_EmptycmD_ already for empty cmds in bash 4.3, set to it for earlier
+    local cmd="${1:-_EmptycmD_}"
+    
+    # Load completion for aliases by loading command completion
+    # for expanded alias, then duplicate the completion definition
+    case $(type -t $cmd) in
+      "alias")
+        local alia=$(alias -p | grep -Po "alias $cmd='\K[^\s]+(?=.+')")
+        if __load_completion "$alia"; then
+          eval $(complete -p "$alia" | grep -Po "complete .+(?= $alia)") "$cmd"
+          return 124
+        fi
+        ;;
+      *)
+        __load_completion "$cmd" && return 124
+        ;;
+    esac
+
+
+    # Need to define *something*, otherwise there will be no completion at all.
+    complete -F _minimal -- "$cmd" && return 124
+} &&
+    complete -D -F _completion_loader
+
 xhost +local:root > /dev/null 2>&1
 
 # Bash won't get SIGWINCH if another process is in the foreground.

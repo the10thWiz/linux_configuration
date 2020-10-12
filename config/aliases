@@ -14,13 +14,13 @@ alias l='ls -CF'
 # Some cool aliases, with cloned completes
 alias pls='sudo !!'
 alias ddp='dd status=progress bs=1024k '
-complete -F _dd ddp
+#complete -F _dd ddp
 alias op='xdg-open'
-complete -F _minimal op
+#complete -F _minimal op
 if type code > /dev/null
 then
 	alias vs='code -a'
-	complete -F _code vs
+	#complete -F _code vs
 fi
 
 # if type yay > /dev/null
