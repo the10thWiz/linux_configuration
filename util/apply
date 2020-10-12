@@ -57,6 +57,7 @@ then
 fi
 git config --global user.name "Matthew Pomes"
 git config --global user.email "the10thwiz@gmail.com"
+git config pull.ff only
 
 # install vscode extensions
 bash ~/bin/util/vscode
