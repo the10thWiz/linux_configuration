@@ -1,9 +1,9 @@
+"g:coc_global_extensions Install Plug before loading plugins
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-
 
 " Plugins will be downloaded under the specified directory.
 call plug#begin('~/.vim/plugged')
@@ -34,12 +34,57 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'morhetz/gruvbox'
 
 Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
+
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+
+" Cargo commands
+Plug 'timonv/vim-cargo'
+
+" Remember the last location when reopening files
+Plug 'farmergreg/vim-lastplace'
  
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
+" Coc extensions:
+augroup build
+   autocmd!
+   autocmd BufWritePost *.tex silent :!latexmk -pdf %
+augroup END
+
 " Required for operations modifying multiple buffers like rename.
 set hidden
+
+" vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
+
+packadd! vimspector
+
+" Prevent sign clobber from overwriting vimspector
+let g:gitgutter_highlight_linenrs = 1
+let g:gitgutter_signs = 0
+
+highlight link GitGutterAddLineNR GruvBoxAquaSign
+highlight link GitGutterChangeLineNR GruvBoxOrangeSign
+highlight link GitGutterDeleteLineNR GruvBoxRedSign
+highlight link GitGutterChangeDeleteLineNR GruvBoxPurpleSign
+
+
+" coc-actions
+" Remap for do codeAction of selected region
+function! s:cocActionsOpenFromSelected(type) abort
+  execute 'CocCommand actions.open ' . a:type
+endfunction
+xmap <silent> <leader>k :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+
+" coc-calc
+" append result on current expression
+nmap <Leader>xa <Plug>(coc-calc-result-append)
+" replace result on current expression
+nmap <Leader>xr <Plug>(coc-calc-result-replace)
+
+map <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 
 " autozimu/LanguageClient-neovim
 " let g:LanguageClient_serverCommands = { 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'] }
@@ -97,10 +142,13 @@ set relativenumber
 
 set smarttab
 set cindent
-set tabstop=2
-set shiftwidth=2
+set tabstop=3
+set softtabstop=3
+set shiftwidth=3
 " always uses spaces instead of tab characters
 set expandtab
+
+"set autoindent
 
 colorscheme gruvbox
 
@@ -130,6 +178,17 @@ let g:coc_global_extensions = [
   \ 'coc-eslint', 
   \ 'coc-prettier', 
   \ 'coc-json', 
+  \ 'coc-cord',
+  \ 'coc-calc',
+  \ 'coc-actions',
+  \ 'coc-rls',
+  \ 'coc-markdownlint',
+  \ 'coc-java-debug',
+  \ 'coc-java',
+  \ 'coc-texlab',
+  \ 'coc-sh',
+  \ 'coc-python',
+  "\ 'coc-html',
   \ ]
 " from readme
 " if hidden is not set, TextEdit might fail.
@@ -251,3 +310,9 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+set statusline=%{coc#status()}
+set statusline+=%{get(b:,'coc_current_function','')}
+
+set statusline+=%=
+set statusline+=%t:%n(%l,%c)\ 
