@@ -47,7 +47,7 @@ PROMPT_COMMAND=set_bash_prompt
 
 TEST_COLOR="35"
 # Prompt: `<user>@manjaro-hp|<dir><(screen)><|git><(venv)>$ `
-PS1='\[\e[01;32m\]\u@\[manjaro-hp\e[0m\]│\[\e[01;36m\]\W\[\e[01;32m\]\
+PS1='\[\e[01;32m\]\u@manjaro-hp\[\e[0m\]│\[\e[01;36m\]\W\[\e[01;32m\]\
 $(get_screen_name_prompt_color)\
 $(echo -e "$(~/bin/install/pretty-git-prompt/target/release/pretty-git-prompt)")\
 $(get_venv_name_prompt_color)$(get_jobs_color)\[\e[0m\]│\[\e[35m\]!\!\[\e[00m\]\$ '
