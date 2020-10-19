@@ -13,8 +13,8 @@ then
 else
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
-rustup completions bash rustup > ~/bin/completions/rustup
-rustup completions bash cargo > ~/bin/completions/cargo
+rustup completions bash rustup > /etc/bash_completion.d/rustup.sh
+rustup completions bash cargo > /etc/bash_completion.d/cargo.sh
 
 function rust-git-install() {
 	# Clone/pull

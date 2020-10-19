@@ -97,8 +97,8 @@ source ~/bin/config/aliases
 source ~/bin/config/venv_activate
 [ $DEBUG ] && echo "screen"
 source ~/bin/config/screen
-[ $DEBUG ] && echo "completions"
-source ~/bin/completions/*
+#[ $DEBUG ] && echo "completions"
+#source ~/bin/completions/*
 
 [ $DEBUG ] && echo "prompt"
 source ~/bin/config/prompt
