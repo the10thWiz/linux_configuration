@@ -3,7 +3,6 @@
 # Script to apply `bin` configs to the system
 
 # Make git-ignored dirs
-mkdir -p ~/bin/completions/
 mkdir -p ~/bin/install/
 
 # Check for rust installation
@@ -12,9 +11,10 @@ then
 	rustup update
 else
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   rustup update
 fi
-rustup completions bash rustup > /etc/bash_completion.d/rustup.sh
-rustup completions bash cargo > /etc/bash_completion.d/cargo.sh
+rustup completions bash rustup | sudo tee /etc/bash_completion.d/rustup.sh
+rustup completions bash cargo | sudo tee /etc/bash_completion.d/cargo.sh
 
 function rust-git-install() {
 	# Clone/pull
@@ -49,6 +49,7 @@ function link() {
 link config/bashrc ~/.bashrc
 link config/Xmodmap ~/.Xmodmap
 link config/init.vim ~/.config/nvim/init.vim
+link config/kitty.conf ~/.config/kitty/kitty.conf
 
 # Apply Git config options
 if type nvim
@@ -57,8 +58,8 @@ then
 fi
 git config --global user.name "Matthew Pomes"
 git config --global user.email "the10thwiz@gmail.com"
-git config pull.ff only
+git config --global pull.ff only
 
 # install vscode extensions
-bash ~/bin/util/vscode
+#bash ~/bin/util/vscode
 
