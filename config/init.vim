@@ -37,6 +37,7 @@ Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-characterize'
 
 " Cargo commands
 Plug 'timonv/vim-cargo'
@@ -48,10 +49,6 @@ Plug 'farmergreg/vim-lastplace'
 call plug#end()
 
 " Coc extensions:
-augroup build
-   autocmd!
-   autocmd BufWritePost *.tex silent :!latexmk -pdf %
-augroup END
 
 " Required for operations modifying multiple buffers like rename.
 set hidden
@@ -311,8 +308,13 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-set statusline=%{coc#status()}
-set statusline+=%{get(b:,'coc_current_function','')}
+function UTF8info(ch)
+   let nr = char2nr(a:ch)
+   return printf('U+%04X', nr)
+endfunction
 
-set statusline+=%=
-set statusline+=%t:%n(%l,%c)\ 
+set statusline=
+set statusline+=%t:%n%-10((%l,%c)%)
+set statusline+=%{coc#status()}
+set statusline+=%{get(b:,'coc_current_function','')}
+set statusline+=%=%{UTF8info(matchstr(getline('.')[col('.')-1:-1],'.'))}\ \ 
