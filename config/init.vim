@@ -308,7 +308,7 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-function UTF8info(ch)
+function! UTF8info(ch)
    let nr = char2nr(a:ch)
    return printf('U+%04X', nr)
 endfunction
@@ -317,4 +317,5 @@ set statusline=
 set statusline+=%t:%n%-10((%l,%c)%)
 set statusline+=%{coc#status()}
 set statusline+=%{get(b:,'coc_current_function','')}
-set statusline+=%=%{UTF8info(matchstr(getline('.')[col('.')-1:-1],'.'))}\ \ 
+" UTF-8 info is 6 chars wide
+set statusline+=%=%-8{UTF8info(matchstr(getline('.')[col('.')-1:-1],'.'))}
