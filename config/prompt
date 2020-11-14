@@ -52,6 +52,12 @@ $(get_screen_name_prompt_color)\
 $(echo -e "$(~/bin/install/pretty-git-prompt/target/release/pretty-git-prompt)")\
 $(get_venv_name_prompt_color)$(get_jobs_color)\[\e[0m\]│\[\e[35m\]!\!\[\e[00m\]\$ '
 
+# Alternate prompt idea:
+# |--|<user>@<pc>|<dir>|<screen>|<git>|<venv>|---------|
+# |-$                                                 -|
+# using unicode box drawing characters
+#"\u256D\u2500\u2500\u2524matt@stpc\u2502~\u2502master\u2502\!155\u2502\n\u2570\u2574$"
+
 # eval $(thefuck --enable-experimental-instant-mode --alias)
 LS_COLORS="ex=01;33:di=01;36"
 

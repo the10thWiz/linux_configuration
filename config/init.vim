@@ -5,6 +5,8 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+let mapleader = ' '
+
 " Plugins will be downloaded under the specified directory.
 call plug#begin('~/.vim/plugged')
 
@@ -42,8 +44,16 @@ Plug 'tpope/vim-characterize'
 " Cargo commands
 Plug 'timonv/vim-cargo'
 
+" Vimspector
+Plug 'puremourning/vimspector'
+
+" Floaterm
+Plug 'voldikss/vim-floaterm'
+
 " Remember the last location when reopening files
 Plug 'farmergreg/vim-lastplace'
+
+Plug 'puremourning/vimspector'
  
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -56,7 +66,7 @@ set hidden
 " vimspector
 let g:vimspector_enable_mappings = 'HUMAN'
 
-packadd! vimspector
+"packadd! vimspector
 
 " Prevent sign clobber from overwriting vimspector
 let g:gitgutter_highlight_linenrs = 1
@@ -287,8 +297,48 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 " use `:OR` for organize import of current buffer
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+" Floaterm Config
+let g:floaterm_title=''
+let g:floaterm_wintype='floating'
+let g:floaterm_width=0.7
+let g:floaterm_height=0.7
+let g:floaterm_position='top'
+let g:floaterm_rootmarkers=['.git', 'Cargo.lock']
+let g:floaterm_open_command='edit'
+let g:floaterm_gitcommit='floaterm'
+let g:floaterm_autoclose=2
+let g:floaterm_autoinsert=v:true
+
+function! StartFloatermSilently() abort
+   FloatermNew --name=quick
+   call timer_start(1, {-> execute('FloatermHide!')})
+endfunction
+
+augroup Term
+   autocmd!
+
+   autocmd VimEnter * call StartFloatermSilently()
+
+
+augroup END
+
+tnoremap <Esc> <C-\><C-N>
+
+noremap <A-Q> <Cmd>FloatermToggle quick<CR>
+tnoremap <A-Q> <Cmd>FloatermToggle quick<CR>
+
+tnoremap <A-j> <C-\><C-N><C-w>j
+tnoremap <A-k> <C-\><C-N><C-w>k
+tnoremap <A-h> <C-\><C-N><C-w>h
+tnoremap <A-j> <C-\><C-N><C-w>j
+noremap <A-j> <Esc><C-w>j
+noremap <A-k> <Esc><C-w>k
+noremap <A-h> <Esc><C-w>h
+noremap <A-j> <Esc><C-w>j
+inoremap <A-k> <Esc><C-w>k
+inoremap <A-h> <Esc><C-w>h
+inoremap <A-l> <Esc><C-w>l
+inoremap <A-l> <Esc><C-w>l
 
 " Using CocList
 " Show all diagnostics
