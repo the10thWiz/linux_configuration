@@ -19,6 +19,7 @@ call plug#begin('~/.vim/plugged')
 "     \ 'branch': 'next',
 "     \ 'do': 'bash install.sh',
 "     \ }
+Plug 'junegunn/vim-plug'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'scrooloose/nerdtree'
@@ -54,6 +55,8 @@ Plug 'voldikss/vim-floaterm'
 Plug 'farmergreg/vim-lastplace'
 
 Plug 'puremourning/vimspector'
+
+Plug 'file:///home/matt/Documents/float-make'
  
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -320,53 +323,23 @@ function! FloatermCommand(cmd)
    FloatermShow quick
 endfunction
 
-let g:run_commands = {
-      \ 'rust': {'build':'cargo build', 'build_run':'cargo run'},
-      \ 'java': {'build':'gradlew build', 'build_run':'gradlew run'},
-      \ 'c++': {'build':'g++ {}'},
-      \ 'vim': {'build_run':'echo {file}'},
-   \}
-
-function! FloatermRun(build_only)
-   if has_key(g:run_commands, &filetype)
-      let cmd = g:run_commands[&filetype]
-      let run_cmd = ''
-      if type(cmd) == 1
-         let run_cmd = cmd
-      elseif type(cmd) == 4
-         " check dict entries
-         if a:build_only
-            if has_key(cmd, 'build')
-               let run_cmd = cmd['build']
-            else
-               echom 'File type' . &filetype . ' does not support building'
-               return
-            endif
-         else
-            if has_key(cmd, 'build_run')
-               let run_cmd = cmd['build_run']
-            elseif has_key(cmd, 'run')
-               if has_key(cmd, 'build')
-                  let run_cmd = cmd['build'] . ';' . cmd['run']
-               else
-                  let run_cmd = cmd['run']
-               endif
-            else
-               echom 'No run configuration for filetype ' . &filetype
-               return
-            endif
-         endif
-      else
-         echom 'Malformed run commands: ' . cmd
-         return
-      endif
-      let run_cmd = substitute(run_cmd, '{file}', expand('%:p'), 'g')
-      let run_cmd = substitute(run_cmd, '{dir}', expand('%:p:h'), 'g')
-      call FloatermCommand(trim(run_cmd))
+function! FloatermRun(build)
+   if a:build
+      let cmd = floatmake#buildcmd()
    else
-      echom 'No commands for filetype: ' . &filetype
+      let cmd = floatmake#runcmd()
+   endif
+   if cmd != ''
+      call FloatermCommand(cmd)
    endif
 endfunction
+
+command! Build call FloatermRun(v:true)
+command! Run call FloatermRun(v:false)
+noremap <A-b> <Cmd>Build<CR>
+tnoremap <A-b> <Cmd>Build<CR>
+noremap <A-r> <Cmd>Run<CR>
+tnoremap <A-r> <Cmd>Run<CR>
 
 augroup Term
    autocmd!
