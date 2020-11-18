@@ -49,11 +49,11 @@ values:
           post_format: ''
           # the number of files present locally which are missing in remote repo
         - type: ahead
-          pre_format: '↑ '
-          post_format: ''
+          pre_format: '↑'
+          post_format: ' '
         - type: behind
-          pre_format: '↓ '
-          post_format: ''
+          pre_format: '↓'
+          post_format: ' '
     - type: separator
       display: surrounded
       pre_format: ''
