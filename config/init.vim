@@ -1,9 +1,9 @@
 "g:coc_global_extensions Install Plug before loading plugins
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
+"if empty(glob('~/.vim/autoload/plug.vim'))
+"  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+"    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+"endif
 
 let mapleader = ' '
 
@@ -314,18 +314,69 @@ function! StartFloatermSilently() abort
    call timer_start(1, {-> execute('FloatermHide!')})
 endfunction
 
+function! FloatermCommand(cmd)
+   FloatermHide quick
+   execute 'FloatermSend --name=quick ' . a:cmd
+   FloatermShow quick
+endfunction
+
+let g:run_commands = {
+      \ 'rust': {'build':'cargo build', 'build_run':'cargo run'},
+      \ 'java': {'build':'gradlew build', 'build_run':'gradlew run'},
+      \ 'c++': {'build':'g++ {}'},
+      \ 'vim': {'build_run':'echo {file}'},
+   \}
+
+function! FloatermRun(build_only)
+   if has_key(g:run_commands, &filetype)
+      let cmd = g:run_commands[&filetype]
+      let run_cmd = ''
+      if type(cmd) == 1
+         let run_cmd = cmd
+      elseif type(cmd) == 4
+         " check dict entries
+         if a:build_only
+            if has_key(cmd, 'build')
+               let run_cmd = cmd['build']
+            else
+               echom 'File type' . &filetype . ' does not support building'
+               return
+            endif
+         else
+            if has_key(cmd, 'build_run')
+               let run_cmd = cmd['build_run']
+            elseif has_key(cmd, 'run')
+               if has_key(cmd, 'build')
+                  let run_cmd = cmd['build'] . ';' . cmd['run']
+               else
+                  let run_cmd = cmd['run']
+               endif
+            else
+               echom 'No run configuration for filetype ' . &filetype
+               return
+            endif
+         endif
+      else
+         echom 'Malformed run commands: ' . cmd
+         return
+      endif
+      let run_cmd = substitute(run_cmd, '{file}', expand('%:p'), 'g')
+      let run_cmd = substitute(run_cmd, '{dir}', expand('%:p:h'), 'g')
+      call FloatermCommand(trim(run_cmd))
+   else
+      echom 'No commands for filetype: ' . &filetype
+   endif
+endfunction
+
 augroup Term
    autocmd!
-
    autocmd VimEnter * call StartFloatermSilently()
-
-
 augroup END
 
 tnoremap <Esc> <C-\><C-N>
 
-noremap <A-Q> <Cmd>FloatermToggle quick<CR>
-tnoremap <A-Q> <Cmd>FloatermToggle quick<CR>
+noremap <A-q> <Cmd>FloatermToggle quick<CR>
+tnoremap <A-q> <Cmd>FloatermToggle quick<CR>
 
 tnoremap <A-j> <C-\><C-N><C-w>j
 tnoremap <A-k> <C-\><C-N><C-w>k
