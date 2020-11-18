@@ -24,12 +24,12 @@ function venv_activate() {
 }
 
 function get_venv_name_prompt() {
-	local VENV=$(basename "$VIRTUAL_ENV")
-	if [[ $VENV != "" ]]; then
-		echo " (py:$VENV)"
-  else
-    venv_activate
-	fi
+   local VENV=$(basename "$VIRTUAL_ENV")
+   if [[ $VENV != "" ]]; then
+      echo " py:$VENV "
+   #else
+      #venv_activate
+   fi
 }
 function get_venv_name_prompt_color() {
   venv_activate
