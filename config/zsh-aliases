@@ -1,0 +1,36 @@
+#!/bin/zsh
+
+alias cp="cp -i"            # confirm before overwriting something
+alias df='df -h'            # human-readable sizes
+alias free='free -m'        # show sizes in MB
+alias more=less
+
+
+# my aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+# Some cool aliases, with cloned completes
+alias ddp='dd status=progress bs=1024k '
+alias op='xdg-open'
+
+if [ -f $HOME/bin/install/arg-adjuster/target/release/p7zip-args ]
+then
+	alias 7z="$HOME/bin/install/arg-adjuster/target/release/p7zip-args"
+fi
+
+case $TERM in 
+		*kitty)
+				alias clip='kitty +kitten clipboard'
+				alias paste='kitty +kitten clipboard --get-clipboard'
+				;;
+		*)
+				alias clip='xclip -i'
+				alias paste='echo "$(xclip -o -rmlastnl)"'
+				;;
+esac
+
+# `command` is a bash built-in that executes the given shell command
+# `sudo` is the same, but executes the command as a different user
+#complete -F _command sudo
+
