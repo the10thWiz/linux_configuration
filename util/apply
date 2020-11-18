@@ -38,10 +38,14 @@ then
 	ln -sf ~/bin/config/pretty-git-prompt.yml ~/.config/pretty-git-prompt.yml
 fi
 
+# oh-my-zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
 function link() {
 	if [ -f ~/bin/$1 ]
 	then
-		ln -sf ~/bin/$1 $2
+      mkdir -p $(dirname $2)
+		ln -sf $HOME/bin/$1 $2
 	fi
 }
 
@@ -50,6 +54,9 @@ link config/bashrc ~/.bashrc
 link config/Xmodmap ~/.Xmodmap
 link config/init.vim ~/.config/nvim/init.vim
 link config/kitty.conf ~/.config/kitty/kitty.conf
+link config/zshrc ~/.zshrc
+link config/personal.zsh-theme ~/.oh-my-zsh/themes/personal.zsh-theme
+link config/i3config ~/.config/i3/config
 
 # Apply Git config options
 if type nvim
