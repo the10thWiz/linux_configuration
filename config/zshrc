@@ -1,11 +1,24 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-function venv_find() {
+vi() {
+   if [[ ! -f $XDG_RUNTIME_DIR/discord-ipc-0 ]]
+   then
+      ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0
+   fi
+   if type floaterm > /dev/null
+   then
+      floaterm $*
+   else
+      nvim $*
+   fi
+}
+
+gradlew() {
 	local CUR=$PWD
 	while [[ $CUR != "/" ]]; do
-		if [[ -f "$CUR/bin/activate" ]]; then
-			echo "$CUR/bin/activate"
+		if [[ -f "$CUR/gradlew" ]]; then
+			$CUR/gradlew $@
 			# echo "Activated venv at $VIRTUAL_ENV"
 			return 0
 		fi
@@ -13,16 +26,6 @@ function venv_find() {
 	done
 }
 
-function venv_activate() {
-  local VENV=$(venv_find)
-  if [[ -z $VENV ]]; then
-    if type deactivate > /dev/null 2>&1; then
-      deactivate
-    fi
-  else
-    source $VENV
-  fi
-}
 export PATH=$PATH:$HOME/bin/
 
 source $HOME/bin/config/zsh-aliases
