@@ -57,6 +57,9 @@ Plug 'farmergreg/vim-lastplace'
 Plug 'puremourning/vimspector'
 
 Plug 'file:///home/matt/Documents/float-make'
+
+" Template files
+Plug 'aperezdc/vim-template'
  
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -74,6 +77,9 @@ let g:vimspector_enable_mappings = 'HUMAN'
 " Prevent sign clobber from overwriting vimspector
 let g:gitgutter_highlight_linenrs = 1
 let g:gitgutter_signs = 0
+
+nnoremap <Leader>gs <Cmd>GitGutterPreviewHunk<CR><Cmd>GitGutterStageHunk<CR>
+nnoremap <Leader>gu <Cmd>GitGutterPreviewHunk<CR><Cmd>GitGutterUndoHunk<CR>
 
 highlight link GitGutterAddLineNR GruvBoxAquaSign
 highlight link GitGutterChangeLineNR GruvBoxOrangeSign
@@ -104,7 +110,7 @@ map <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR
 
 " BEGIN VS-VIM
 
-inoremap jk <ESC>
+"inoremap jk <ESC>
 nmap <C-n> :NERDTreeToggle<CR>
 vmap ++ <plug>NERDCommenterToggle
 nmap ++ <plug>NERDCommenterToggle
@@ -306,11 +312,17 @@ let g:floaterm_wintype='floating'
 let g:floaterm_width=0.7
 let g:floaterm_height=0.7
 let g:floaterm_position='top'
-let g:floaterm_rootmarkers=['.git', 'Cargo.lock']
+let g:floaterm_rootmarkers=['.git', 'Cargo.lock', 'build.gradle']
 let g:floaterm_open_command='edit'
 let g:floaterm_gitcommit='floaterm'
 let g:floaterm_autoclose=2
 let g:floaterm_autoinsert=v:true
+let g:floaterm_borderchars=[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+
+" Set floaterm window's background to black
+hi Floaterm guibg=#000000 ctermbg=0
+
+hi link FloatermBorder CursorColumn
 
 function! StartFloatermSilently() abort
    FloatermNew --name=quick
@@ -362,7 +374,7 @@ noremap <A-j> <Esc><C-w>j
 inoremap <A-k> <Esc><C-w>k
 inoremap <A-h> <Esc><C-w>h
 inoremap <A-l> <Esc><C-w>l
-inoremap <A-l> <Esc><C-w>l
+inoremap <A-j> <Esc><C-w>j
 
 " Using CocList
 " Show all diagnostics
