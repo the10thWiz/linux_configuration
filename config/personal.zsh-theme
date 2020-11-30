@@ -68,9 +68,9 @@ TEST_PROMPT+='(208;237)!%!>'
 TEST_PROMPT+='(109;237)%4~>'
 TEST_PROMPT+='(142;237)?$($HOME/bin/install/pretty-git-prompt/target/release/pretty-git-prompt -c $HOME/bin/config/pretty-git-prompt-zsh.yml)>'
 TEST_PROMPT+='(72;237)?$(get_venv_name_prompt)>'
-#TEST_PROMPT+='(;237)%d'
-TEST_PROMPT+='(0)\n|(241)??;%F{250} √;%F{88}%?<'
-TEST_PROMPT+='(0;0)%k%f%(!.#.)'
+TEST_PROMPT+='(208;237)%D %T>'
+TEST_PROMPT+='(~)\n|(237)??;%F{250}  √;%F{88}%?<'
+TEST_PROMPT+='(0)%k%f%(!.#.)'
 
 TMP=$($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
 for L in $TMP; do
