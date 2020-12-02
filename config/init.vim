@@ -6,6 +6,7 @@
 "endif
 
 let mapleader = ' '
+set mouse=nvichar
 
 " Plugins will be downloaded under the specified directory.
 call plug#begin('~/.vim/plugged')
@@ -76,10 +77,21 @@ let g:vimspector_enable_mappings = 'HUMAN'
 
 " Prevent sign clobber from overwriting vimspector
 let g:gitgutter_highlight_linenrs = 1
-let g:gitgutter_signs = 0
+"let g:gitgutter_signs = 0
+let g:gitgutter_preview_win_floating = 0
+let g:gitgutter_map_keys = 0
+let g:gitgutter_sign_allow_clobber = 1
 
-nnoremap <Leader>gs <Cmd>GitGutterPreviewHunk<CR><Cmd>GitGutterStageHunk<CR>
-nnoremap <Leader>gu <Cmd>GitGutterPreviewHunk<CR><Cmd>GitGutterUndoHunk<CR>
+nmap <Leader>gs <Plug>(GitGutterStageHunk)
+"vmap <Leader>gs <Plug>(GitGutterStageHunk)
+nmap <Leader>gu <Plug>(GitGutterUndoHunk)
+"vmap <Leader>gu <Plug>(GitGutterUndoHunk)
+nnoremap <Leader>gp <Cmd>GitGutterPreviewHunk<CR><Cmd>wincmd p<CR>
+
+nmap ]h <Plug>(GitGutterNextHunk)
+vmap ]h <Plug>(GitGutterNextHunk)
+nmap [h <Plug>(GitGutterPrevHunk)
+vmap [h <Plug>(GitGutterPrevHunk)
 
 highlight link GitGutterAddLineNR GruvBoxAquaSign
 highlight link GitGutterChangeLineNR GruvBoxOrangeSign
@@ -204,6 +216,7 @@ let g:coc_global_extensions = [
   \ 'coc-texlab',
   \ 'coc-sh',
   \ 'coc-python',
+  \ 'coc-yaml',
   "\ 'coc-html',
   \ ]
 " from readme
@@ -215,7 +228,7 @@ set updatetime=300
 set shortmess+=c
 
 " always show signcolumns
-set signcolumn=yes
+set signcolumn=yes:1
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -399,9 +412,19 @@ function! UTF8info(ch)
    return printf('U+%04X', nr)
 endfunction
 
+function! GitStatus()
+  let [a,m,r] = GitGutterGetHunkSummary()
+  let s = a > 0 || m > 0 || r > 0 ? "Git:" : ""
+  let a = a == 0 ? "" : printf(' +%d', a)
+  let m = m == 0 ? "" : printf(' ~%d', m)
+  let r = r == 0 ? "" : printf(' -%d', r)
+  return s . a . m . r
+endfunction
+
 set statusline=
 set statusline+=%t:%n%-10((%l,%c)%)
-set statusline+=%{coc#status()}
-set statusline+=%{get(b:,'coc_current_function','')}
+set statusline+=%{GitStatus()}
+set statusline+=\ %{coc#status()}
+set statusline+=\ %{get(b:,'coc_current_function','')}
 " UTF-8 info is 6 chars wide
 set statusline+=%=%-8{UTF8info(matchstr(getline('.')[col('.')-1:-1],'.'))}
