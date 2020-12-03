@@ -20,16 +20,20 @@ call plug#begin('~/.vim/plugged')
 "     \ 'branch': 'next',
 "     \ 'do': 'bash install.sh',
 "     \ }
-Plug 'junegunn/vim-plug'
+"Plug 'junegunn/vim-plug'
+Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
+Plug 'junegunn/fzf.vim' " needed for previews
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'antoinemadec/coc-fzf'
+
 Plug 'scrooloose/nerdtree'
 "Plug 'tsony-tsonev/nerdtree-git-plugin'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
-Plug 'airblade/vim-gitgutter'
-Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
+"Plug 'airblade/vim-gitgutter'
+"Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
 Plug 'scrooloose/nerdcommenter'
 "Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
@@ -76,27 +80,58 @@ let g:vimspector_enable_mappings = 'HUMAN'
 "packadd! vimspector
 
 " Prevent sign clobber from overwriting vimspector
-let g:gitgutter_highlight_linenrs = 1
-"let g:gitgutter_signs = 0
-let g:gitgutter_preview_win_floating = 0
-let g:gitgutter_map_keys = 0
-let g:gitgutter_sign_allow_clobber = 1
+"let g:gitgutter_highlight_linenrs = 1
+""let g:gitgutter_signs = 0
+"let g:gitgutter_preview_win_floating = 0
+"let g:gitgutter_map_keys = 0
+"let g:gitgutter_sign_allow_clobber = 1
 
-nmap <Leader>gs <Plug>(GitGutterStageHunk)
-"vmap <Leader>gs <Plug>(GitGutterStageHunk)
-nmap <Leader>gu <Plug>(GitGutterUndoHunk)
-"vmap <Leader>gu <Plug>(GitGutterUndoHunk)
-nnoremap <Leader>gp <Cmd>GitGutterPreviewHunk<CR><Cmd>wincmd p<CR>
+"nmap <Leader>gs <Plug>(GitGutterStageHunk)
+""vmap <Leader>gs <Plug>(GitGutterStageHunk)
+"nmap <Leader>gu <Plug>(GitGutterUndoHunk)
+""vmap <Leader>gu <Plug>(GitGutterUndoHunk)
+"nnoremap <Leader>gp <Cmd>GitGutterPreviewHunk<CR><Cmd>wincmd p<CR>
 
-nmap ]h <Plug>(GitGutterNextHunk)
-vmap ]h <Plug>(GitGutterNextHunk)
-nmap [h <Plug>(GitGutterPrevHunk)
-vmap [h <Plug>(GitGutterPrevHunk)
+"nmap ]h <Plug>(GitGutterNextHunk)
+"vmap ]h <Plug>(GitGutterNextHunk)
+"nmap [h <Plug>(GitGutterPrevHunk)
+"vmap [h <Plug>(GitGutterPrevHunk)
+"
+"highlight link GitGutterAddLineNR GruvBoxAquaSign
+"highlight link GitGutterChangeLineNR GruvBoxOrangeSign
+"highlight link GitGutterDeleteLineNR GruvBoxRedSign
+"highlight link GitGutterChangeDeleteLineNR GruvBoxPurpleSign
 
-highlight link GitGutterAddLineNR GruvBoxAquaSign
-highlight link GitGutterChangeLineNR GruvBoxOrangeSign
-highlight link GitGutterDeleteLineNR GruvBoxRedSign
-highlight link GitGutterChangeDeleteLineNR GruvBoxPurpleSign
+" navigate chunks of current buffer
+nmap [h <Plug>(coc-git-prevchunk)
+nmap ]h <Plug>(coc-git-nextchunk)
+" navigate conflicts of current buffer
+nmap [c <Plug>(coc-git-prevconflict)
+nmap ]c <Plug>(coc-git-nextconflict)
+" show chunk diff at current position
+nmap gs <Plug>(coc-git-chunkinfo)
+" show commit contains current position
+nmap gc <Plug>(coc-git-commit)
+" create text object for git chunks
+omap ig <Plug>(coc-git-chunk-inner)
+xmap ig <Plug>(coc-git-chunk-inner)
+omap ag <Plug>(coc-git-chunk-outer)
+xmap ag <Plug>(coc-git-chunk-outer)
+
+nmap <Leader>gs :CocCommand git.chunkStage<CR>
+nmap <Leader>gu :CocCommand git.chunkUndo<CR>
+nmap <Leader>gf :CocCommand git.foldUnchanged<CR>
+
+nmap <Leader>y :CocList yank<CR>
+nmap <Leader>b :CocList buffers<CR>
+nmap <expr> <Leader>e Get_file_list()
+function! Get_file_list()
+   if exists("g:coc_git_status")
+      CocList gfiles
+   else
+      CocList files
+   endif
+endfunction
 
 
 " coc-actions
@@ -201,6 +236,9 @@ autocmd BufEnter * call SyncTree()
 " coc config
 let g:coc_global_extensions = [
   \ 'coc-snippets',
+  \ 'coc-lists',
+  \ 'coc-yank',
+  \ 'coc-git',
   \ 'coc-pairs',
   \ 'coc-tsserver',
   \ 'coc-eslint', 
@@ -327,7 +365,7 @@ let g:floaterm_height=0.7
 let g:floaterm_position='top'
 let g:floaterm_rootmarkers=['.git', 'Cargo.lock', 'build.gradle']
 let g:floaterm_open_command='edit'
-let g:floaterm_gitcommit='floaterm'
+let g:floaterm_gitcommit='tabe'
 let g:floaterm_autoclose=2
 let g:floaterm_autoinsert=v:true
 let g:floaterm_borderchars=[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
@@ -391,9 +429,9 @@ inoremap <A-j> <Esc><C-w>j
 
 " Using CocList
 " Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+"nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+"nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
 nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
 " Find symbol of current document
@@ -412,18 +450,18 @@ function! UTF8info(ch)
    return printf('U+%04X', nr)
 endfunction
 
-function! GitStatus()
-  let [a,m,r] = GitGutterGetHunkSummary()
-  let s = a > 0 || m > 0 || r > 0 ? "Git:" : ""
-  let a = a == 0 ? "" : printf(' +%d', a)
-  let m = m == 0 ? "" : printf(' ~%d', m)
-  let r = r == 0 ? "" : printf(' -%d', r)
-  return s . a . m . r
-endfunction
+"function! GitStatus()
+  "let [a,m,r] = GitGutterGetHunkSummary()
+  "let s = a > 0 || m > 0 || r > 0 ? "Git:" : ""
+  "let a = a == 0 ? "" : printf(' +%d', a)
+  "let m = m == 0 ? "" : printf(' ~%d', m)
+  "let r = r == 0 ? "" : printf(' -%d', r)
+  "return s . a . m . r
+"endfunction
 
 set statusline=
 set statusline+=%t:%n%-10((%l,%c)%)
-set statusline+=%{GitStatus()}
+set statusline+=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
 set statusline+=\ %{coc#status()}
 set statusline+=\ %{get(b:,'coc_current_function','')}
 " UTF-8 info is 6 chars wide
