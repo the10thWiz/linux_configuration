@@ -8,6 +8,26 @@
 let mapleader = ' '
 set mouse=nvichar
 
+augroup startup
+   autocmd!
+   " Called after startup
+   autocmd VimEnter * call Init()
+   " Called when a GUI is running
+   autocmd UIEnter * call GuiInit()
+augroup END
+
+" g:autocd can be set by adding `-c 'let g:autocd = v:true'` to command used
+" to invoke the 
+let g:autocd = v:false
+function! Init()
+   if g:autocd && argv() == []
+      cd ~/Documents
+   endif
+endfunction
+
+function! GuiInit() 
+endfunction
+
 " Plugins will be downloaded under the specified directory.
 call plug#begin('~/.vim/plugged')
 
