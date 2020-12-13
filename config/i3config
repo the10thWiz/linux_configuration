@@ -26,7 +26,12 @@ font pango:monospace 8
 # screen before suspend. Use loginctl lock-session to lock your screen.
 #exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c ff0000 --nofork
 #exec --no-startup-id "xset s 60;xset dpms 0 0 0;xss-lock -- sudo -nk zzz"
-exec --no-startup-id "xset s off;xset dmps 0 0 0"
+#exec --no-startup-id "xset s off;xset dmps 0 0 0"
+
+bindsym $mod+p exec --no-startup-id "maim -s ~/Pictures/screenshot-$(date +%s).png"
+bindsym $mod+Ctrl+p exec --no-startup-id "maim -s | xclip -selection clipboard -t image/png"
+bindsym $mod+Shift+p exec --no-startup-id "maim -i $(xprop 2&>1 > /dev/null; xdotool getactivewindow) ~/Pictures/screenshot-$(date +%s).png"
+bindsym $mod+Ctrl+Shift+p exec --no-startup-id "maim -i $(xprop 2&>1 > /dev/null; xdotool getactivewindow) | xclip -selection clipboard -t image/png"
 
 # i3lock, lockscreen. Set to use black background
 bindsym $mod+m exec --no-startup-id "i3lock -c 000000"
@@ -58,6 +63,9 @@ bindsym $mod+d exec --no-startup-id j4-dmenu-desktop
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+
+# Set default workspace layout to tabbed
+workspace_layout tabbed
 
 # change focus
 bindsym $mod+h focus left
