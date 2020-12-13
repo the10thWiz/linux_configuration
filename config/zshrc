@@ -1,35 +1,8 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-vi() {
-   if [[ ! -f $XDG_RUNTIME_DIR/discord-ipc-0 ]]
-   then
-      ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0
-   fi
-   if type floaterm > /dev/null
-   then
-      floaterm $*
-   else
-      nvim $*
-   fi
-}
 
-gradlew() {
-	local CUR=$PWD
-	while [[ $CUR != "/" ]]; do
-		if [[ -f "$CUR/gradlew" ]]; then
-			$CUR/gradlew $@
-			# echo "Activated venv at $VIRTUAL_ENV"
-			return 0
-		fi
-    CUR=$(dirname "$CUR")
-	done
-}
-
-export PATH=$PATH:$HOME/bin/
-
-source $HOME/bin/config/zsh-aliases
-source $HOME/bin/config/venv_activate
+fpath+="/home/matt/bin/install/completions"
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/matt/.oh-my-zsh"
@@ -106,6 +79,37 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+vi() {
+   if [[ ! -f $XDG_RUNTIME_DIR/discord-ipc-0 ]]
+   then
+      ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0
+   fi
+   if type floaterm > /dev/null
+   then
+      floaterm $*
+   else
+      nvim $*
+   fi
+}
+
+gradlew() {
+	local CUR=$PWD
+	while [[ $CUR != "/" ]]; do
+		if [[ -f "$CUR/gradlew" ]]; then
+			$CUR/gradlew $@
+			# echo "Activated venv at $VIRTUAL_ENV"
+			return 0
+		fi
+    CUR=$(dirname "$CUR")
+	done
+}
+
+export PATH=$PATH:$HOME/bin/
+
+source $HOME/bin/config/zsh-aliases
+source $HOME/bin/config/venv_activate
+
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
@@ -130,3 +134,11 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# Setting fd as the default source for fzf
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_OPTs='--height 60% --layout reverse'
+
+# To apply the command to CTRL-T as well
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
