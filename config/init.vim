@@ -14,16 +14,39 @@ augroup startup
    autocmd VimEnter * call Init()
    " Called when a GUI is running
    autocmd UIEnter * call GuiInit()
+   " Called when entering a buffer
+   autocmd BufCreate * call BuffInit()
+   autocmd BufNew * call BuffInit()
 augroup END
 
 " g:autocd can be set by adding `-c 'let g:autocd = v:true'` to command used
 " to invoke the 
 let g:autocd = v:false
+let g:project_root = ''
 function! Init()
    if g:autocd && argv() == []
       cd ~/Documents
+   else
+      "if GetRoot() != '/'
+         "execute 'cd' GetRoot()
+      "endif
    endif
 endfunction
+"let g:project_root = ''
+function! BuffInit()
+endfunction
+"function! IsGit(git, other)
+   "let git = get(b:, 'git_repo', '')
+   "if git == ''
+      "let b:git_repo = fnamemodify(finddir('.git', expand('%:p:h') . ';') . '/../', ':p')
+      "let git = b:git_repo
+   "endif
+   "if git == '/'
+      "return a:other
+   "else
+      "return a:git
+   "endif
+"endfunction
 
 function! GuiInit() 
 endfunction
@@ -44,13 +67,15 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
 
+Plug 'file:///home/matt/Documents/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile && yarn build'}
+
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'antoinemadec/coc-fzf'
 
-Plug 'scrooloose/nerdtree'
+"Plug 'scrooloose/nerdtree'
 "Plug 'tsony-tsonev/nerdtree-git-plugin'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+"Plug 'Xuyuanp/nerdtree-git-plugin'
+"Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 "Plug 'airblade/vim-gitgutter'
 "Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
@@ -79,8 +104,6 @@ Plug 'voldikss/vim-floaterm'
 " Remember the last location when reopening files
 Plug 'farmergreg/vim-lastplace'
 
-Plug 'puremourning/vimspector'
-
 Plug 'file:///home/matt/Documents/float-make'
 
 " Template files
@@ -88,6 +111,39 @@ Plug 'aperezdc/vim-template'
  
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
+
+" Fzf config
+
+let g:fzf_buffers_jump = 1
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6 } }
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+"command! GitFzf call fzf#run(fzf#wrap({'source': 'git ls-files', 'dir': GetGitRoot()}))
+"function! FzfNetrwReplace()
+   "let buf = 
+"endfunction
+
+augroup fzfcommands
+   autocmd!
+   " Work around to map <Esc> to quit, also handles when the window loses
+   " focus
+   autocmd FileType fzf autocmd TermLeave <buffer> q
+   "autocmd FileType netrw call FzfNetrwReplace()
+augroup END
 
 " Coc extensions:
 
@@ -142,17 +198,9 @@ nmap <Leader>gs :CocCommand git.chunkStage<CR>
 nmap <Leader>gu :CocCommand git.chunkUndo<CR>
 nmap <Leader>gf :CocCommand git.foldUnchanged<CR>
 
-nmap <Leader>y :CocList yank<CR>
-nmap <Leader>b :CocList buffers<CR>
-nmap <expr> <Leader>e Get_file_list()
-function! Get_file_list()
-   if exists("g:coc_git_status")
-      CocList gfiles
-   else
-      CocList files
-   endif
-endfunction
-
+"nmap <Leader>y :CocList yank<CR>
+nmap <Leader>b :Buffers<CR>
+nmap <expr> <Leader>e ':Files ' . get(g:, 'WorkspaceFolders', [getcwd()])[0] . '<CR>'
 
 " coc-actions
 " Remap for do codeAction of selected region
@@ -178,7 +226,7 @@ map <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR
 " BEGIN VS-VIM
 
 "inoremap jk <ESC>
-nmap <C-n> :NERDTreeToggle<CR>
+"nmap <C-n> :NERDTreeToggle<CR>
 vmap ++ <plug>NERDCommenterToggle
 nmap ++ <plug>NERDCommenterToggle
 
@@ -237,21 +285,21 @@ colorscheme gruvbox
 
 " sync open file with NERDTree
 " " Check if NERDTree is open or active
-function! IsNERDTreeOpen()        
-  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-endfunction
+"function! IsNERDTreeOpen()        
+  "return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+"endfunction
 
 " Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
 " file, and we're not in vimdiff
-function! SyncTree()
-  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-    NERDTreeFind
-    wincmd p
-  endif
-endfunction
+"function! SyncTree()
+  "if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+    "NERDTreeFind
+    "wincmd p
+  "endif
+"endfunction
 
 " Highlight currently open buffer in NERDTree
-autocmd BufEnter * call SyncTree()
+"autocmd BufEnter * call SyncTree()
 
 " coc config
 let g:coc_global_extensions = [
@@ -267,7 +315,8 @@ let g:coc_global_extensions = [
   \ 'coc-cord',
   \ 'coc-calc',
   \ 'coc-actions',
-  \ 'coc-rls',
+  "\ 'coc-rls',
+  "\ 'coc-rust-analyzer',
   \ 'coc-markdownlint',
   \ 'coc-java-debug',
   \ 'coc-java',
@@ -331,6 +380,34 @@ function! s:show_documentation()
   endif
 endfunction
 
+let g:tool_tip_buffer = -1
+let g:tool_tip_window = -1
+
+function! TestWin(text)
+   if g:tool_tip_buffer == -1
+      let g:tool_tip_buffer = nvim_create_buf(v:false, v:true)
+      call nvim_buf_set_lines(g:tool_tip_buffer, 0, 0, v:true, [a:text])
+   endif
+   "let [row, col] = nvim_win_get_cursor(0)
+   let win_pos = nvim_win_get_cursor(0)
+   let win_pos[0] = win_pos[0] - 1
+   let row_p = win_pos[0]
+   let col_p = 1
+   if g:tool_tip_window == -1
+      let opts = {'relative': 'win', 'width': 10, 'height': 1, 'bufpos': win_pos,
+        \ 'anchor': 'NW', 'style': 'minimal'}
+      let g:tool_tip_window = nvim_open_win(g:tool_tip_buffer, 0, opts)
+      "call nvim_win_set_option(g:tool_tip_window, 'winhl', 'CocHintFloat')
+   else
+      let opts = {'relative': 'win', 'row': row_p, 'col': col_p}
+      call nvim_win_set_config(g:tool_tip_window, opts)
+   endif
+endfunction
+function! ResetWin() 
+   let g:tool_tip_window = -1
+   let g:tool_tip_buffer = -1
+endfunction
+
 " Highlight symbol under cursor on CursorHold
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
@@ -350,11 +427,14 @@ augroup mygroup
 augroup end
 
 " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+"xmap <leader>a  <Plug>(coc-codeaction-selected)
+"nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+xmap <leader>a  :CocFzfList actions<CR>
+nmap <leader>a  :CocFzfList actions<CR>
 
 " Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
+"nmap <leader>ac  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
 
@@ -372,10 +452,10 @@ xmap <silent> <C-d> <Plug>(coc-range-select)
 command! -nargs=0 Format :call CocAction('format')
 
 " Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 " use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 
 " Floaterm Config
 let g:floaterm_title=''
@@ -453,11 +533,11 @@ inoremap <A-j> <Esc><C-w>j
 " Manage extensions
 "nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
 " Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+nnoremap <silent> <space>c  :<C-u>CocFzfList commands<cr>
 " Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent> <space>o  :<C-u>CocFzfList outline<cr>
 " Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+nnoremap <silent> <space>s  :<C-u>CocFzfList -I symbols<cr>
 " Do default action for next item.
 nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
