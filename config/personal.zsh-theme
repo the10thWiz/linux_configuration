@@ -72,7 +72,7 @@ TEST_PROMPT+='(208;237)%D %T>'
 TEST_PROMPT+='(~)\n|(237)??;%F{250}  √;%F{88}%?<'
 TEST_PROMPT+='(0)%k%f%(!.#.)'
 
-TMP=$($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
+TMP=$($HOME/Documents/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
 for L in $TMP; do
    eval $L
 done

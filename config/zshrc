@@ -109,6 +109,10 @@ export PATH=$PATH:$HOME/bin/
 source $HOME/bin/config/zsh-aliases
 source $HOME/bin/config/venv_activate
 
+# Prevent venv from modifiying the prompt,
+# since the prompt already has the info
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
 
 # export MANPATH="/usr/local/man:$MANPATH"
 

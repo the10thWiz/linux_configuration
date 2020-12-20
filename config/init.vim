@@ -112,6 +112,8 @@ Plug 'aperezdc/vim-template'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
+source /home/matt/Documents/hex_edit/plugin/hexedit.vim
+
 " Fzf config
 
 let g:fzf_buffers_jump = 1
@@ -272,14 +274,16 @@ noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 set relativenumber
 
 set smarttab
-set cindent
-set tabstop=3
-set softtabstop=3
-set shiftwidth=3
+"set cindent
+"set tabstop=3
+"set softtabstop=3
+"set shiftwidth=3
 " always uses spaces instead of tab characters
-set expandtab
+"set expandtab
 
 "set autoindent
+
+set undofile
 
 colorscheme gruvbox
 
@@ -561,7 +565,7 @@ endfunction
 
 set statusline=
 set statusline+=%t:%n%-10((%l,%c)%)
-set statusline+=%{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
+set statusline+=\ %y\ %{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
 set statusline+=\ %{coc#status()}
 set statusline+=\ %{get(b:,'coc_current_function','')}
 " UTF-8 info is 6 chars wide
