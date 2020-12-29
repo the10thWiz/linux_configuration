@@ -17,7 +17,7 @@ alias ddp='dd status=progress bs=1024k '
 #complete -F _dd ddp
 alias op='xdg-open'
 #complete -F _minimal op
-if type code 2&>1 > /dev/null
+if type code 2>/dev/null > /dev/null
 then
 	alias vs='code -a'
 	#complete -F _code vs
