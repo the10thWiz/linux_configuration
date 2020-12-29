@@ -67,7 +67,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
 
-Plug 'file:///home/matt/Documents/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile && yarn build'}
+"Plug 'file:///home/matt/Documents/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile && yarn build'}
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'antoinemadec/coc-fzf'
@@ -104,7 +104,7 @@ Plug 'voldikss/vim-floaterm'
 " Remember the last location when reopening files
 Plug 'farmergreg/vim-lastplace'
 
-Plug 'file:///home/matt/Documents/float-make'
+"Plug 'file:///home/matt/Documents/float-make'
 
 " Template files
 Plug 'aperezdc/vim-template'
@@ -112,7 +112,7 @@ Plug 'aperezdc/vim-template'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
-source /home/matt/Documents/hex_edit/plugin/hexedit.vim
+"source /home/matt/Documents/hex_edit/plugin/hexedit.vim
 
 " Fzf config
 
@@ -283,7 +283,7 @@ set smarttab
 
 "set autoindent
 
-set undofile
+"set undofile
 
 colorscheme gruvbox
 
@@ -320,7 +320,7 @@ let g:coc_global_extensions = [
   \ 'coc-calc',
   \ 'coc-actions',
   "\ 'coc-rls',
-  "\ 'coc-rust-analyzer',
+  \ 'coc-rust-analyzer',
   \ 'coc-markdownlint',
   \ 'coc-java-debug',
   \ 'coc-java',
