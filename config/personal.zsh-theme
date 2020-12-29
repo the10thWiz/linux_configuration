@@ -48,12 +48,12 @@
 
 # strategy: eval the result of a rust program
 build() {
-   if [[ ! -d $HOMR/bin/install/zsh-theme ]]
+   if [[ ! -d $HOME/bin/install/zsh-theme ]]
    then
-      cd $HOME/install
+      cd $HOME/bin/install
       git clone https://github.com/the10thWiz/zsh-theme.git
    fi
-   cd $HOME/install/zsh-theme
+   cd $HOME/bin/install/zsh-theme
    cargo +nightly build
 }
 
@@ -72,7 +72,7 @@ TEST_PROMPT+='(208;237)%D %T>'
 TEST_PROMPT+='(~)\n|(237)??;%F{250}  √;%F{88}%?<'
 TEST_PROMPT+='(0)%k%f%(!.#.)'
 
-TMP=$($HOME/Documents/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
+TMP=$($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
 for L in $TMP; do
    eval $L
 done
