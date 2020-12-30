@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/bash
 
 # xrandr --listmonitors | grep -Po "1: (\d|\w)+ \d+/\d+x\d+/\d+\+\d+\+\d+\s+\K.+$"
 # xrandr -q | grep -P "^[A-Za-z0-9-]+(?= connected| disconnected)"
