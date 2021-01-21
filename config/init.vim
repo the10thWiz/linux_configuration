@@ -1,22 +1,23 @@
 "g:coc_global_extensions Install Plug before loading plugins
 "if empty(glob('~/.vim/autoload/plug.vim'))
 "  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-"    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"   \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 "  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 "endif
 
 let mapleader = ' '
 set mouse=nvichar
+"filetype plugin indent on
 
 augroup startup
-   autocmd!
-   " Called after startup
-   autocmd VimEnter * call Init()
-   " Called when a GUI is running
-   autocmd UIEnter * call GuiInit()
-   " Called when entering a buffer
-   autocmd BufCreate * call BuffInit()
-   autocmd BufNew * call BuffInit()
+  autocmd!
+  " Called after startup
+  autocmd VimEnter * call Init()
+  " Called when a GUI is running
+  autocmd UIEnter * call GuiInit()
+  " Called when entering a buffer
+  autocmd BufCreate * call BuffInit()
+  autocmd BufNew * call BuffInit()
 augroup END
 
 " g:autocd can be set by adding `-c 'let g:autocd = v:true'` to command used
@@ -24,28 +25,28 @@ augroup END
 let g:autocd = v:false
 let g:project_root = ''
 function! Init()
-   if g:autocd && argv() == []
-      cd ~/Documents
-   else
-      "if GetRoot() != '/'
-         "execute 'cd' GetRoot()
-      "endif
-   endif
+  if g:autocd && argv() == []
+    cd ~/Documents
+  else
+    "if GetRoot() != '/'
+      "execute 'cd' GetRoot()
+    "endif
+  endif
 endfunction
 "let g:project_root = ''
 function! BuffInit()
 endfunction
 "function! IsGit(git, other)
-   "let git = get(b:, 'git_repo', '')
-   "if git == ''
-      "let b:git_repo = fnamemodify(finddir('.git', expand('%:p:h') . ';') . '/../', ':p')
-      "let git = b:git_repo
-   "endif
-   "if git == '/'
-      "return a:other
-   "else
-      "return a:git
-   "endif
+  "let git = get(b:, 'git_repo', '')
+  "if git == ''
+   "let b:git_repo = fnamemodify(finddir('.git', expand('%:p:h') . ';') . '/../', ':p')
+   "let git = b:git_repo
+  "endif
+  "if git == '/'
+   "return a:other
+  "else
+   "return a:git
+  "endif
 "endfunction
 
 function! GuiInit() 
@@ -60,9 +61,9 @@ call plug#begin('~/.vim/plugged')
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " Rust Langugae Client
 " Plug 'autozimu/LanguageClient-neovim', {
-"     \ 'branch': 'next',
-"     \ 'do': 'bash install.sh',
-"     \ }
+"    \ 'branch': 'next',
+"    \ 'do': 'bash install.sh',
+"    \ }
 "Plug 'junegunn/vim-plug'
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
@@ -91,6 +92,7 @@ Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-characterize'
+Plug 'tpope/vim-sleuth'
 
 " Cargo commands
 Plug 'timonv/vim-cargo'
@@ -120,13 +122,13 @@ let g:fzf_buffers_jump = 1
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6 } }
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
+\ { 'fg':    ['fg', 'Normal'],
+  \ 'bg':    ['bg', 'Normal'],
+  \ 'hl':    ['fg', 'Comment'],
+  \ 'fg+':    ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':    ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':    ['fg', 'Statement'],
+  \ 'info':   ['fg', 'PreProc'],
   \ 'border':  ['fg', 'Ignore'],
   \ 'prompt':  ['fg', 'Conditional'],
   \ 'pointer': ['fg', 'Exception'],
@@ -136,15 +138,15 @@ let g:fzf_colors =
 
 "command! GitFzf call fzf#run(fzf#wrap({'source': 'git ls-files', 'dir': GetGitRoot()}))
 "function! FzfNetrwReplace()
-   "let buf = 
+  "let buf = 
 "endfunction
 
 augroup fzfcommands
-   autocmd!
-   " Work around to map <Esc> to quit, also handles when the window loses
-   " focus
-   autocmd FileType fzf autocmd TermLeave <buffer> q
-   "autocmd FileType netrw call FzfNetrwReplace()
+  autocmd!
+  " Work around to map <Esc> to quit, also handles when the window loses
+  " focus
+  autocmd FileType fzf autocmd TermLeave <buffer> q
+  "autocmd FileType netrw call FzfNetrwReplace()
 augroup END
 
 " Coc extensions:
@@ -241,15 +243,15 @@ let g:NERDTreeGitStatusWithFlags = 1
 "let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 "let g:NERDTreeGitStatusNodeColorization = 1
 "let g:NERDTreeColorMapCustom = {
-    "\ "Staged"    : "#0ee375",  
-    "\ "Modified"  : "#d9bf91",  
-    "\ "Renamed"   : "#51C9FC",  
-    "\ "Untracked" : "#FCE77C",  
-    "\ "Unmerged"  : "#FC51E6",  
-    "\ "Dirty"     : "#FFBD61",  
-    "\ "Clean"     : "#87939A",   
-    "\ "Ignored"   : "#808080"   
-    "\ }                         
+  "\ "Staged"   : "#0ee375",  
+  "\ "Modified"  : "#d9bf91",  
+  "\ "Renamed"  : "#51C9FC",  
+  "\ "Untracked" : "#FCE77C",  
+  "\ "Unmerged"  : "#FC51E6",  
+  "\ "Dirty"    : "#FFBD61",  
+  "\ "Clean"    : "#87939A",  
+  "\ "Ignored"  : "#808080"  
+  "\ }                 
 
 
 let g:NERDTreeIgnore = ['^node_modules$']
@@ -273,7 +275,7 @@ noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
 set relativenumber
 
-set smarttab
+"set smarttab
 "set cindent
 "set tabstop=3
 "set softtabstop=3
@@ -285,11 +287,39 @@ set smarttab
 
 "set undofile
 
+"function! TabSettings() 
+  
+"endfunction
+"let g:indent_settings = {
+  "\ 'vim': ['expandtab', 'tabstop=3'],
+"}
+" expandtab     Use spaces rather than tabs
+" tabstop=3     Width of a `\t`
+" shiftwidth=3   Width of (auto)indent: 'cindent', >>, << (maybe set to zero,
+" and just rely on tabstop)
+" softtabstop=3  
+" smarttab
+"function! TabFileType() 
+  "if &filetype == 'vim'
+    ""setlocal expandtab
+    ""setlocal tabstop=3
+    ""setlocal shiftwidth=3
+    ""setlocal softtabstop=3
+    ""setlocal smarttab
+  "endif
+"endfunction
+
+"augroup tabsettings
+  "autocmd!
+  "autocmd FileType * call TabFileType()
+  "autocmd BufEnter * call TabSettings()
+"augroup END
+
 colorscheme gruvbox
 
 " sync open file with NERDTree
 " " Check if NERDTree is open or active
-"function! IsNERDTreeOpen()        
+"function! IsNERDTreeOpen()      
   "return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
 "endfunction
 
@@ -297,8 +327,8 @@ colorscheme gruvbox
 " file, and we're not in vimdiff
 "function! SyncTree()
   "if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-    "NERDTreeFind
-    "wincmd p
+   "NERDTreeFind
+   "wincmd p
   "endif
 "endfunction
 
@@ -328,8 +358,8 @@ let g:coc_global_extensions = [
   \ 'coc-sh',
   \ 'coc-python',
   \ 'coc-yaml',
-  "\ 'coc-html',
-  \ ]
+  \ 'coc-html',
+\ ]
 " from readme
 " if hidden is not set, TextEdit might fail.
 set hidden " Some servers have issues with backup files, see #649 set nobackup set nowritebackup " Better display for messages set cmdheight=2 " You will have bad experience for diagnostic messages when it's default 4000.
@@ -344,9 +374,9 @@ set signcolumn=yes:1
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
@@ -388,28 +418,28 @@ let g:tool_tip_buffer = -1
 let g:tool_tip_window = -1
 
 function! TestWin(text)
-   if g:tool_tip_buffer == -1
-      let g:tool_tip_buffer = nvim_create_buf(v:false, v:true)
-      call nvim_buf_set_lines(g:tool_tip_buffer, 0, 0, v:true, [a:text])
-   endif
-   "let [row, col] = nvim_win_get_cursor(0)
-   let win_pos = nvim_win_get_cursor(0)
-   let win_pos[0] = win_pos[0] - 1
-   let row_p = win_pos[0]
-   let col_p = 1
-   if g:tool_tip_window == -1
-      let opts = {'relative': 'win', 'width': 10, 'height': 1, 'bufpos': win_pos,
-        \ 'anchor': 'NW', 'style': 'minimal'}
-      let g:tool_tip_window = nvim_open_win(g:tool_tip_buffer, 0, opts)
-      "call nvim_win_set_option(g:tool_tip_window, 'winhl', 'CocHintFloat')
-   else
-      let opts = {'relative': 'win', 'row': row_p, 'col': col_p}
-      call nvim_win_set_config(g:tool_tip_window, opts)
-   endif
+  if g:tool_tip_buffer == -1
+    let g:tool_tip_buffer = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(g:tool_tip_buffer, 0, 0, v:true, [a:text])
+  endif
+  "let [row, col] = nvim_win_get_cursor(0)
+  let win_pos = nvim_win_get_cursor(0)
+  let win_pos[0] = win_pos[0] - 1
+  let row_p = win_pos[0]
+  let col_p = 1
+  if g:tool_tip_window == -1
+    let opts = {'relative': 'win', 'width': 10, 'height': 1, 'bufpos': win_pos,
+      \ 'anchor': 'NW', 'style': 'minimal'}
+    let g:tool_tip_window = nvim_open_win(g:tool_tip_buffer, 0, opts)
+    "call nvim_win_set_option(g:tool_tip_window, 'winhl', 'CocHintFloat')
+  else
+    let opts = {'relative': 'win', 'row': row_p, 'col': col_p}
+    call nvim_win_set_config(g:tool_tip_window, opts)
+  endif
 endfunction
 function! ResetWin() 
-   let g:tool_tip_window = -1
-   let g:tool_tip_buffer = -1
+  let g:tool_tip_window = -1
+  let g:tool_tip_buffer = -1
 endfunction
 
 " Highlight symbol under cursor on CursorHold
@@ -480,25 +510,25 @@ hi Floaterm guibg=#000000 ctermbg=0
 hi link FloatermBorder CursorColumn
 
 function! StartFloatermSilently() abort
-   FloatermNew --name=quick
-   call timer_start(1, {-> execute('FloatermHide!')})
+  FloatermNew --name=quick
+  call timer_start(1, {-> execute('FloatermHide!')})
 endfunction
 
 function! FloatermCommand(cmd)
-   FloatermHide quick
-   execute 'FloatermSend --name=quick ' . a:cmd
-   FloatermShow quick
+  FloatermHide quick
+  execute 'FloatermSend --name=quick ' . a:cmd
+  FloatermShow quick
 endfunction
 
 function! FloatermRun(build)
-   if a:build
-      let cmd = floatmake#buildcmd()
-   else
-      let cmd = floatmake#runcmd()
-   endif
-   if cmd != ''
-      call FloatermCommand(cmd)
-   endif
+  if a:build
+    let cmd = floatmake#buildcmd()
+  else
+    let cmd = floatmake#runcmd()
+  endif
+  if cmd != ''
+    call FloatermCommand(cmd)
+  endif
 endfunction
 
 command! Build call FloatermRun(v:true)
@@ -509,8 +539,8 @@ noremap <A-r> <Cmd>Run<CR>
 tnoremap <A-r> <Cmd>Run<CR>
 
 augroup Term
-   autocmd!
-   autocmd VimEnter * call StartFloatermSilently()
+  autocmd!
+  autocmd VimEnter * call StartFloatermSilently()
 augroup END
 
 tnoremap <Esc> <C-\><C-N>
@@ -550,8 +580,8 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 function! UTF8info(ch)
-   let nr = char2nr(a:ch)
-   return printf('U+%04X', nr)
+  let nr = char2nr(a:ch)
+  return printf('U+%04X', nr)
 endfunction
 
 "function! GitStatus()
