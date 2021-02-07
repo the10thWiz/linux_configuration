@@ -47,7 +47,9 @@
 #PROMPT+="%K{241} %(?.%F{250}√.%F{88}%?) %F{0}$(echo -n '\ue0b2')%k%f%(!.#.) "
 
 # strategy: eval the result of a rust program
-build() {
+
+if [[ ! -x $HOME/bin/install/zsh-theme/target/debug/zsh-theme ]]
+then
    if [[ ! -d $HOME/bin/install/zsh-theme ]]
    then
       cd $HOME/bin/install
@@ -55,11 +57,6 @@ build() {
    fi
    cd $HOME/bin/install/zsh-theme
    cargo +nightly build
-}
-
-if [[ ! -x $HOME/bin/install/zsh-theme/target/debug/zsh-theme ]]
-then
-   build
 fi
 
 TEST_PROMPT='(237;223)%n>'
