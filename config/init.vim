@@ -52,6 +52,40 @@ endfunction
 function! GuiInit() 
 endfunction
 
+" Emulate IndentLine 'correctly'
+set tabstop=4
+" Tabs will start with |
+set list
+set listchars=tab:\⎸\ 
+set conceallevel=1
+set concealcursor=nvic
+" Conceal whitespace chars created via listchars
+highlight link Whitespace GruvBoxBg0
+" Need to group spaces
+" Disable automatic shiftwidth calculation, since I can't rely on it to
+" raise an OptionSet event - I will be automatically calling it myself
+let g:slueth_automatic = 0
+function! ApplyIndentLine()
+  " call vim-sleuth to calculate correct shiftwidth
+  Sleuth
+  if exists('b:IndentPatternLineId')
+    call matchdelete(b:IndentPatternLineId)
+    unlet b:IndentPatternLineId
+  endif
+  if &expandtab
+    let pattern = '\(^\( \{' . &shiftwidth . '\}\)\+\)\@<= \( \{' . (&shiftwidth - 1) . '\}\)\@='
+    let b:IndentPatternLineId = matchadd('Conceal', pattern, 10, -1, {'conceal': '⎸'})
+  else
+    let pattern = '\(^\t\+\)\@<=\t'
+    let b:IndentPatternLineId = matchadd('GruvBoxBlue', pattern, 10, -1)
+  endif
+endfunction
+augroup IndentLine
+  au!
+  "autocmd OptionSet shiftwidth call ApplyIndentLine()
+  autocmd Filetype * call ApplyIndentLine()
+augroup END
+
 " Plugins will be downloaded under the specified directory.
 call plug#begin('~/.vim/plugged')
 
@@ -110,9 +144,22 @@ Plug 'farmergreg/vim-lastplace'
 
 " Template files
 Plug 'aperezdc/vim-template'
- 
+
+" Ghost server for firefox functionality
+Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
+
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
+
+
+"
+  "
+    "
+      "
+        "
+          "
+"
+
 
 "source /home/matt/Documents/hex_edit/plugin/hexedit.vim
 
@@ -148,6 +195,9 @@ augroup fzfcommands
   autocmd FileType fzf autocmd TermLeave <buffer> q
   "autocmd FileType netrw call FzfNetrwReplace()
 augroup END
+
+nmap gb :Buffers<CR>
+nmap go :GitFiles<CR>
 
 " Coc extensions:
 
@@ -346,7 +396,7 @@ let g:coc_global_extensions = [
   \ 'coc-eslint', 
   \ 'coc-prettier', 
   \ 'coc-json', 
-  \ 'coc-cord',
+  \ 'coc-discord-rpc',
   \ 'coc-calc',
   \ 'coc-actions',
   "\ 'coc-rls',
