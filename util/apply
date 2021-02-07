@@ -4,6 +4,7 @@
 
 # Make git-ignored dirs
 mkdir -p ~/bin/install/
+mkdir -p ~/.zfunc
 
 # Check for rust installation
 if type rustup
@@ -14,7 +15,10 @@ else
    rustup update
 fi
 rustup completions bash rustup | sudo tee /etc/bash_completion.d/rustup.sh
+rustup completions zsh > ~/.zfunc/_rustup
+
 rustup completions bash cargo | sudo tee /etc/bash_completion.d/cargo.sh
+rustup completions zsh cargo > ~/.zfunc/_cargo
 
 function rust-git-install() {
 	# Clone/pull
@@ -39,8 +43,8 @@ then
 fi
 
 # oh-my-zsh
-rm -r ~/.oh-my-zsh/
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+-rm -r ~/.oh-my-zsh/
+-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 function link() {
 	if [ -f ~/bin/$1 ]
