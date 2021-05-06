@@ -1,23 +1,29 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-xmodmap ~/.Xmodmap
+#xmodmap ~/.Xmodmap
 
 fpath+="$HOME/bin/install/completions"
 fpath+=~/.zfunc
 
 # User configuration
-
+EDITOR="nvim"
 vi() {
-   if [[ ! -f $XDG_RUNTIME_DIR/discord-ipc-0 ]]
-   then
-      ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0
-   fi
+   #if [[ ! -f $XDG_RUNTIME_DIR/discord-ipc-0 ]]
+   #then
+      #ln -sf {app/com.discordapp.Discord,$XDG_RUNTIME_DIR}/discord-ipc-0
+   #fi
    if type floaterm > /dev/null
    then
-      floaterm $*
+      PROG=floaterm
    else
-      nvim $*
+      PROG=nvim
+   fi
+   if [[ $1 == "-l" ]]
+   then
+      $PROG $(fd -I '\.log$' | tail -n 1)
+   else
+      $PROG $*
    fi
 }
 
@@ -35,8 +41,6 @@ gradlew() {
 
 export PATH=$PATH:$HOME/bin/:$HOME/.local/bin/
 
-source $HOME/bin/config/zsh-aliases
-source $HOME/bin/config/venv_activate
 
 # Prevent venv from modifiying the prompt,
 # since the prompt already has the info
@@ -150,11 +154,13 @@ ZSH_THEME="personal"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git calc)
+plugins=(git calc docker docker-compose)
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+source $HOME/bin/config/zsh-aliases
+source $HOME/bin/config/venv_activate
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
