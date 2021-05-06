@@ -13,77 +13,73 @@ augroup startup
   autocmd!
   " Called after startup
   autocmd VimEnter * call Init()
-  " Called when a GUI is running
-  autocmd UIEnter * call GuiInit()
-  " Called when entering a buffer
-  autocmd BufCreate * call BuffInit()
-  autocmd BufNew * call BuffInit()
 augroup END
 
 " g:autocd can be set by adding `-c 'let g:autocd = v:true'` to command used
-" to invoke the 
-let g:autocd = v:false
-let g:project_root = ''
 function! Init()
-  if g:autocd && argv() == []
+  if get(g:, 'autocd', v:false) && argv() == []
     cd ~/Documents
-  else
-    "if GetRoot() != '/'
-      "execute 'cd' GetRoot()
-    "endif
+  endif
+  if get(g:, 'WorkspaceFolders', []) == []
+    let g:WorkspaceFolders = [floaterm#path#get_root()]
   endif
 endfunction
-"let g:project_root = ''
-function! BuffInit()
-endfunction
-"function! IsGit(git, other)
-  "let git = get(b:, 'git_repo', '')
-  "if git == ''
-   "let b:git_repo = fnamemodify(finddir('.git', expand('%:p:h') . ';') . '/../', ':p')
-   "let git = b:git_repo
-  "endif
-  "if git == '/'
-   "return a:other
-  "else
-   "return a:git
-  "endif
-"endfunction
 
-function! GuiInit() 
+function! Focus(sleep)
+  if getenv('KITTY_LISTEN_ON') != v:null
+    if a:sleep
+      sleep 400 m
+    endif
+    silent ! kitty @ focus-window
+    return v:true
+  else
+    return v:false
+  endif
 endfunction
+
+set termguicolors
 
 " Emulate IndentLine 'correctly'
-set tabstop=4
+set tabstop=2
 " Tabs will start with |
 set list
 set listchars=tab:\⎸\ 
 set conceallevel=1
 set concealcursor=nvic
 " Conceal whitespace chars created via listchars
-highlight link Whitespace GruvBoxBg0
+"highlight link Whitespace GruvBoxBg0
 " Need to group spaces
 " Disable automatic shiftwidth calculation, since I can't rely on it to
 " raise an OptionSet event - I will be automatically calling it myself
-let g:slueth_automatic = 0
+let g:slueth_automatic = 1
+let g:indent_patterns = {
+      \"rust": {'sw': 4, 'et':1},
+      \}
 function! ApplyIndentLine()
   " call vim-sleuth to calculate correct shiftwidth
   Sleuth
-  if exists('b:IndentPatternLineId')
-    call matchdelete(b:IndentPatternLineId)
-    unlet b:IndentPatternLineId
+  if exists('b:IndentPatternSpaceId')
+    call matchdelete(b:IndentPatternSpaceId)
+    unlet b:IndentPatternSpaceId
   endif
-  if &expandtab
-    let pattern = '\(^\( \{' . &shiftwidth . '\}\)\+\)\@<= \( \{' . (&shiftwidth - 1) . '\}\)\@='
-    let b:IndentPatternLineId = matchadd('Conceal', pattern, 10, -1, {'conceal': '⎸'})
-  else
-    let pattern = '\(^\t\+\)\@<=\t'
-    let b:IndentPatternLineId = matchadd('GruvBoxBlue', pattern, 10, -1)
+  if exists('b:IndentPatternTabId')
+    call matchdelete(b:IndentPatternTabId)
+    unlet b:IndentPatternTabId
   endif
+  let pattern = '\(^\( \{' . &shiftwidth . '\}\)\+\)\@<= \( \{' . (&shiftwidth - 1) . '\}\)\@='
+  let b:IndentPatternSpaceId = matchadd('Conceal', pattern, 10, -1, {'conceal': '⎸'})
+  let pattern = '\(^\t\+\)\@<=\t'
+  let b:IndentPatternTabId = matchadd('GruvBoxBlue', pattern, 10, -1)
 endfunction
 augroup IndentLine
   au!
   "autocmd OptionSet shiftwidth call ApplyIndentLine()
   autocmd Filetype * call ApplyIndentLine()
+augroup END
+
+augroup LogProtect
+  au!
+  autocmd BufReadPost,FileReadPost,FilterReadPost,StdinReadPost *.log setlocal readonly | setlocal nomodifiable
 augroup END
 
 " Plugins will be downloaded under the specified directory.
@@ -125,6 +121,8 @@ Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+"Plug 'tpope/vim-endwise'
+
 Plug 'tpope/vim-characterize'
 Plug 'tpope/vim-sleuth'
 
@@ -147,6 +145,8 @@ Plug 'aperezdc/vim-template'
 
 " Ghost server for firefox functionality
 Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
+
+Plug 'chrisbra/Colorizer'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -281,8 +281,8 @@ map <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR
 
 "inoremap jk <ESC>
 "nmap <C-n> :NERDTreeToggle<CR>
-vmap ++ <plug>NERDCommenterToggle
-nmap ++ <plug>NERDCommenterToggle
+vmap <Leader>/ <plug>NERDCommenterToggle
+nmap <Leader>/ <plug>NERDCommenterToggle
 
 
 " open NERDTree automatically
@@ -405,7 +405,6 @@ let g:coc_global_extensions = [
   \ 'coc-java-debug',
   \ 'coc-java',
   \ 'coc-texlab',
-  \ 'coc-sh',
   \ 'coc-python',
   \ 'coc-yaml',
   \ 'coc-html',
@@ -560,7 +559,7 @@ hi Floaterm guibg=#000000 ctermbg=0
 hi link FloatermBorder CursorColumn
 
 function! StartFloatermSilently() abort
-  FloatermNew --name=quick
+  FloatermNew --name=quick --cwd=<root>
   call timer_start(1, {-> execute('FloatermHide!')})
 endfunction
 
@@ -594,6 +593,7 @@ augroup Term
 augroup END
 
 tnoremap <Esc> <C-\><C-N>
+tnoremap <M-[> <Esc>
 
 noremap <A-q> <Cmd>FloatermToggle quick<CR>
 tnoremap <A-q> <Cmd>FloatermToggle quick<CR>
@@ -623,9 +623,9 @@ nnoremap <silent> <space>o  :<C-u>CocFzfList outline<cr>
 " Search workspace symbols
 nnoremap <silent> <space>s  :<C-u>CocFzfList -I symbols<cr>
 " Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+"nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+"nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
