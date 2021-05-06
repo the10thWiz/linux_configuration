@@ -1,0 +1,10 @@
+#!/bin/env bash
+
+sleep 1
+content=$(cat $1)
+for line in $content
+do
+  echo "$line"
+  xdotool type --clearmodifiers $line
+  xdotool key --clearmodifiers Return
+done

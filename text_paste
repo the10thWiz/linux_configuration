@@ -1,0 +1,14 @@
+#!/bin/env bash
+
+sleep 5
+if [[ -n $1 ]]
+then
+  for line in "$@"
+  do
+    xdotool type --clearmodifiers $line
+    xdotool key --clearmodifiers Return
+  done
+else
+  echo "No Args"
+fi
+
