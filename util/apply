@@ -58,6 +58,7 @@ function link() {
 link config/bashrc ~/.bashrc
 link config/Xmodmap ~/.Xmodmap
 link config/init.vim ~/.config/nvim/init.vim
+link config/rust.vim ~/.config/nvim/after/syntax/rust.vim
 link config/kitty.conf ~/.config/kitty/kitty.conf
 link config/zshrc ~/.zshrc
 link config/personal.zsh-theme ~/.oh-my-zsh/themes/personal.zsh-theme
