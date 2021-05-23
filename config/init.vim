@@ -39,44 +39,6 @@ endfunction
 
 set termguicolors
 
-" Emulate IndentLine 'correctly'
-set tabstop=2
-" Tabs will start with |
-set list
-set listchars=tab:\⎸\ 
-set conceallevel=1
-set concealcursor=nvic
-" Conceal whitespace chars created via listchars
-"highlight link Whitespace GruvBoxBg0
-" Need to group spaces
-" Disable automatic shiftwidth calculation, since I can't rely on it to
-" raise an OptionSet event - I will be automatically calling it myself
-let g:slueth_automatic = 1
-let g:indent_patterns = {
-      \"rust": {'sw': 4, 'et':1},
-      \}
-function! ApplyIndentLine()
-  " call vim-sleuth to calculate correct shiftwidth
-  Sleuth
-  if exists('b:IndentPatternSpaceId')
-    call matchdelete(b:IndentPatternSpaceId)
-    unlet b:IndentPatternSpaceId
-  endif
-  if exists('b:IndentPatternTabId')
-    call matchdelete(b:IndentPatternTabId)
-    unlet b:IndentPatternTabId
-  endif
-  let pattern = '\(^\( \{' . &shiftwidth . '\}\)\+\)\@<= \( \{' . (&shiftwidth - 1) . '\}\)\@='
-  let b:IndentPatternSpaceId = matchadd('Conceal', pattern, 10, -1, {'conceal': '⎸'})
-  let pattern = '\(^\t\+\)\@<=\t'
-  let b:IndentPatternTabId = matchadd('GruvBoxBlue', pattern, 10, -1)
-endfunction
-augroup IndentLine
-  au!
-  "autocmd OptionSet shiftwidth call ApplyIndentLine()
-  autocmd Filetype * call ApplyIndentLine()
-augroup END
-
 augroup LogProtect
   au!
   autocmd BufReadPost,FileReadPost,FilterReadPost,StdinReadPost *.log setlocal readonly | setlocal nomodifiable
@@ -148,18 +110,11 @@ Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
 
 Plug 'chrisbra/Colorizer'
 
+" Reverse the order of commits in a rebase
+Plug 'salcode/vim-interactive-rebase-reverse'
+
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
-
-
-"
-  "
-    "
-      "
-        "
-          "
-"
-
 
 "source /home/matt/Documents/hex_edit/plugin/hexedit.vim
 
@@ -198,6 +153,26 @@ augroup END
 
 nmap gb :Buffers<CR>
 nmap go :GitFiles<CR>
+
+function! OpenError()
+  let pos = getcurpos()
+  let line = getbufline(bufnr(), pos[1])[0]
+  let match_info = matchstrpos(line, '\f\+')
+  while match_info[2] < pos[2] && match_info[2] != -1
+    let match_info = matchstrpos(line, '\f\+', match_info[2])
+  endwhile
+  if match_info[1] <= pos[2] && match_info[2] >= pos[2]
+    let pos = matchlist(line, ':\(\d\+\)', match_info[2])
+    FloatermHide
+    if pos[1] != ''
+      execute 'edit +' . pos[1] . ' ' . get(g:, 'WorkspaceFolders', [getcwd()])[0] . '/' . match_info[0]
+    else
+      execute 'edit ' . get(g:, 'WorkspaceFolders', [getcwd()])[0] . '/' . match_info[0]
+    endif
+  endif
+endfunction
+
+nmap <leader>o :call OpenError()<CR>
 
 " Coc extensions:
 
@@ -251,6 +226,35 @@ xmap ag <Plug>(coc-git-chunk-outer)
 nmap <Leader>gs :CocCommand git.chunkStage<CR>
 nmap <Leader>gu :CocCommand git.chunkUndo<CR>
 nmap <Leader>gf :CocCommand git.foldUnchanged<CR>
+
+function! s:gitrebasecmds()
+  " Use `$` rather than exec or x
+  " to avoid conflicting with edit
+  silent %s/^exec /$ /
+  " This has to be fixed later, in BufWritePre
+
+  silent %s/^p\w* /pick /
+  silent %s/^r\w* /reword /
+  silent %s/^e\w* /edit /
+  silent %s/^s\w* /squash /
+  silent %s/^f\w* /fixup /
+  silent %s/^b\w* /break /
+  silent %s/^d\w* /drop /
+  silent %s/^l\w* /label /
+  silent %s/^t\w* /reset /
+  silent %s/^m\w* /merge /
+  silent %s/^n\w* /noop /
+endfunction
+
+augroup gitrebase
+  au!
+  autocmd FileType gitrebase au! gitrebase InsertLeave
+  autocmd FileType gitrebase au InsertLeave <buffer> call <SID>gitrebasecmds()
+  autocmd FileType gitrebase au! gitrebase TextChanged
+  autocmd FileType gitrebase au TextChanged <buffer> call <SID>gitrebasecmds()
+  autocmd FileType gitrebase au! gitrebase BufWritePre
+  autocmd FileType gitrebase au BufWritePre <buffer> silent %s/^\$ /exec /
+augroup END
 
 "nmap <Leader>y :CocList yank<CR>
 nmap <Leader>b :Buffers<CR>
@@ -495,7 +499,7 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
-nmap <F2> <Plug>(coc-rename)
+nmap <leader>r <Plug>(coc-rename)
 
 " Remap for format selected region
 xmap <leader>f  <Plug>(coc-format-selected)
@@ -619,15 +623,15 @@ inoremap <A-j> <Esc><C-w>j
 " Show commands
 nnoremap <silent> <space>c  :<C-u>CocFzfList commands<cr>
 " Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocFzfList outline<cr>
+"nnoremap <silent> <space>o  :<C-u>CocFzfList outline<cr>
 " Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocFzfList -I symbols<cr>
+nnoremap <silent> <space>s  :<C-u>call OutlineRun()<cr>
 " Do default action for next item.
 "nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 " Do default action for previous item.
 "nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+nnoremap <silent> <space>p  :<C-u>CocFzfListResume<CR>
 
 function! UTF8info(ch)
   let nr = char2nr(a:ch)
