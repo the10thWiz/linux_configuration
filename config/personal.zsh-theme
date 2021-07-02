@@ -59,11 +59,19 @@ then
    cargo +nightly build
 fi
 
+GIT_PROMPT_GEN() {
+   if [[ -z $GIT_PROMPT_DISABLE ]]; then
+      $HOME/bin/install/pretty-git-prompt/target/release/pretty-git-prompt -c $HOME/bin/config/pretty-git-prompt-zsh.yml
+   else
+      echo $GIT_PROMPT_DISABLE
+   fi
+}
+
 TEST_PROMPT='(237;223)%n>'
 TEST_PROMPT+='(214)?1j;%%%j>'
 TEST_PROMPT+='(208;237)!%!>'
 TEST_PROMPT+='(109;237)%4~>'
-TEST_PROMPT+='(142;237)?$($HOME/bin/install/pretty-git-prompt/target/release/pretty-git-prompt -c $HOME/bin/config/pretty-git-prompt-zsh.yml)>'
+TEST_PROMPT+='(142;237)?$(GIT_PROMPT_GEN)>'
 TEST_PROMPT+='(72;237)?$(get_venv_name_prompt)>'
 TEST_PROMPT+='(208;237)%D %T>'
 TEST_PROMPT+='(~)\n|(237)??;%F{250}  √;%F{88}%?<'

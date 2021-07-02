@@ -38,6 +38,8 @@ function! Focus(sleep)
 endfunction
 
 set termguicolors
+set colorcolumn=101
+set switchbuf=usetab
 
 augroup LogProtect
   au!
@@ -137,6 +139,11 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
+let g:fzf_action = {
+  \ 'enter': 'tab drop',
+  \ 'ctrl-t': 'tab drop',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
 "command! GitFzf call fzf#run(fzf#wrap({'source': 'git ls-files', 'dir': GetGitRoot()}))
 "function! FzfNetrwReplace()
@@ -151,9 +158,6 @@ augroup fzfcommands
   "autocmd FileType netrw call FzfNetrwReplace()
 augroup END
 
-nmap gb :Buffers<CR>
-nmap go :GitFiles<CR>
-
 function! OpenError()
   let pos = getcurpos()
   let line = getbufline(bufnr(), pos[1])[0]
@@ -164,10 +168,15 @@ function! OpenError()
   if match_info[1] <= pos[2] && match_info[2] >= pos[2]
     let pos = matchlist(line, ':\(\d\+\)', match_info[2])
     FloatermHide
-    if pos[1] != ''
-      execute 'edit +' . pos[1] . ' ' . get(g:, 'WorkspaceFolders', [getcwd()])[0] . '/' . match_info[0]
+    if match(match_info[0], '/') == 0
+      let prefix = ''
     else
-      execute 'edit ' . get(g:, 'WorkspaceFolders', [getcwd()])[0] . '/' . match_info[0]
+      let prefix = get(g:, 'WorkspaceFolders', [getcwd()])[0] . '/'
+    endif
+    if len(pos) >= 1 && pos[1] != ''
+      execute 'tab drop +' . pos[1] . ' ' . prefix . match_info[0]
+    else
+      execute 'tab drop ' . prefix . match_info[0]
     endif
   endif
 endfunction
@@ -228,22 +237,24 @@ nmap <Leader>gu :CocCommand git.chunkUndo<CR>
 nmap <Leader>gf :CocCommand git.foldUnchanged<CR>
 
 function! s:gitrebasecmds()
+  normal m`
   " Use `$` rather than exec or x
   " to avoid conflicting with edit
-  silent %s/^exec /$ /
+  silent! %s/^exec /$ /
   " This has to be fixed later, in BufWritePre
 
-  silent %s/^p\w* /pick /
-  silent %s/^r\w* /reword /
-  silent %s/^e\w* /edit /
-  silent %s/^s\w* /squash /
-  silent %s/^f\w* /fixup /
-  silent %s/^b\w* /break /
-  silent %s/^d\w* /drop /
-  silent %s/^l\w* /label /
-  silent %s/^t\w* /reset /
-  silent %s/^m\w* /merge /
-  silent %s/^n\w* /noop /
+  silent! %s/^p\w* /pick /
+  silent! %s/^r\w* /reword /
+  silent! %s/^e\w* /edit /
+  silent! %s/^s\w* /squash /
+  silent! %s/^f\w* /fixup /
+  silent! %s/^b\w* /break /
+  silent! %s/^d\w* /drop /
+  silent! %s/^l\w* /label /
+  silent! %s/^t\w* /reset /
+  silent! %s/^m\w* /merge /
+  silent! %s/^n\w* /noop /
+  normal ``
 endfunction
 
 augroup gitrebase
@@ -253,12 +264,25 @@ augroup gitrebase
   autocmd FileType gitrebase au! gitrebase TextChanged
   autocmd FileType gitrebase au TextChanged <buffer> call <SID>gitrebasecmds()
   autocmd FileType gitrebase au! gitrebase BufWritePre
-  autocmd FileType gitrebase au BufWritePre <buffer> silent %s/^\$ /exec /
+  autocmd FileType gitrebase au BufWritePre <buffer> silent! %s/^\$ /exec /
 augroup END
 
+function! s:open(name)
+  let list = reverse(split(a:name))
+  for name in list
+    if bufnr(name) != -1
+      execute 'tab drop ' . name
+      return
+    endif
+  endfor
+endfunction
 "nmap <Leader>y :CocList yank<CR>
-nmap <Leader>b :Buffers<CR>
-nmap <expr> <Leader>e ':Files ' . get(g:, 'WorkspaceFolders', [getcwd()])[0] . '<CR>'
+"nmap <leader>b :Buffers<cr>
+nmap <leader>b :call fzf#vim#buffers({'sink': function('<SID>open')})<cr>
+nmap <Leader>e :GitFiles<CR>
+nmap <expr> <Leader>pe ':Files ' . get(g:, 'WorkspaceFolders', [getcwd()])[0] . '<CR>'
+
+nmap <leader>i 080lf<space>s<CR><ESC>
 
 " coc-actions
 " Remap for do codeAction of selected region
@@ -288,6 +312,9 @@ map <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR
 vmap <Leader>/ <plug>NERDCommenterToggle
 nmap <Leader>/ <plug>NERDCommenterToggle
 
+let g:NERDCustomDelimiters = {
+    \ 'rust': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
+  \ }
 
 " open NERDTree automatically
 "autocmd StdinReadPre * let s:std_in=1
@@ -442,7 +469,7 @@ inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 " Or use `complete_info` if your vim support it, like:
 " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
@@ -458,6 +485,11 @@ nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+" use <leader>d to add a debug macro to rust code
+vmap <leader>d cdbg!()<esc>P
+
+" Remap tab & shift+tab to change indent by one
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -551,8 +583,7 @@ let g:floaterm_width=0.7
 let g:floaterm_height=0.7
 let g:floaterm_position='top'
 let g:floaterm_rootmarkers=['.git', 'Cargo.lock', 'build.gradle']
-let g:floaterm_open_command='edit'
-let g:floaterm_gitcommit='tabe'
+let g:floaterm_opener='tabe'
 let g:floaterm_autoclose=2
 let g:floaterm_autoinsert=v:true
 let g:floaterm_borderchars=[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
@@ -562,15 +593,15 @@ hi Floaterm guibg=#000000 ctermbg=0
 
 hi link FloatermBorder CursorColumn
 
-function! StartFloatermSilently() abort
-  FloatermNew --name=quick --cwd=<root>
-  call timer_start(1, {-> execute('FloatermHide!')})
+function! StartFloatermSilently(name, params) abort
+  exec 'FloatermNew --name='. a:name . ' --cwd=<root> ' . a:params
+  call timer_start(1, {-> execute('FloatermHide! ' . a:name)})
 endfunction
 
 function! FloatermCommand(cmd)
-  FloatermHide quick
-  execute 'FloatermSend --name=quick ' . a:cmd
-  FloatermShow quick
+  FloatermHide q
+  execute 'FloatermSend --name=q ' . a:cmd
+  FloatermShow q
 endfunction
 
 function! FloatermRun(build)
@@ -593,14 +624,17 @@ tnoremap <A-r> <Cmd>Run<CR>
 
 augroup Term
   autocmd!
-  autocmd VimEnter * call StartFloatermSilently()
+  autocmd VimEnter * call StartFloatermSilently('q', '')
+  autocmd VimEnter * call StartFloatermSilently('w', '--position=bottom')
 augroup END
 
 tnoremap <Esc> <C-\><C-N>
 tnoremap <M-[> <Esc>
 
-noremap <A-q> <Cmd>FloatermToggle quick<CR>
-tnoremap <A-q> <Cmd>FloatermToggle quick<CR>
+noremap <A-q>  <Cmd>FloatermHide w<CR><Cmd>FloatermToggle q<CR>
+tnoremap <A-q> <Cmd>FloatermHide w<CR><Cmd>FloatermToggle q<CR>
+noremap <A-w>  <Cmd>FloatermHide q<CR><Cmd>FloatermToggle w<CR>
+tnoremap <A-w> <Cmd>FloatermHide q<CR><Cmd>FloatermToggle w<CR>
 
 tnoremap <A-j> <C-\><C-N><C-w>j
 tnoremap <A-k> <C-\><C-N><C-w>k
