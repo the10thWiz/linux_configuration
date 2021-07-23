@@ -594,7 +594,7 @@ hi Floaterm guibg=#000000 ctermbg=0
 hi link FloatermBorder CursorColumn
 
 function! StartFloatermSilently(name, params) abort
-  exec 'FloatermNew --name='. a:name . ' --cwd=<root> ' . a:params
+  exec 'FloatermNew --name='. a:name . ' --cwd=<root> ' . a:params . ' zsh'
   call timer_start(1, {-> execute('FloatermHide! ' . a:name)})
 endfunction
 
