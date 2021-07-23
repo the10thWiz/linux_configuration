@@ -43,8 +43,8 @@ then
 fi
 
 # oh-my-zsh
--rm -r ~/.oh-my-zsh/
--sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+rm -r ~/.oh-my-zsh/
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 function link() {
 	if [ -f ~/bin/$1 ]
@@ -69,9 +69,15 @@ if type nvim
 then
 	git config --global core.editor "nvim"
 fi
-git config --global user.name "Matthew Pomes"
-git config --global user.email "the10thwiz@gmail.com"
+#git config --global user.name "Matthew Pomes"
+#git config --global user.email "the10thwiz@gmail.com"
 git config --global pull.ff only
+git config --global core.excludesFile "$HOME/bin/config/gitignore"
+
+# Install vim plugins
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+nvim -c 'PlugInstall'
 
 # install vscode extensions
 #bash ~/bin/util/vscode
