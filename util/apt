@@ -1,0 +1,18 @@
+#!/bin/bash
+
+apt install \
+  neovim \
+  kitty \
+  zsh \
+  make \
+  htop \
+  g++ \
+  gcc \
+  docker \
+  docker-compose \
+  autojump \
+  clangd-9 \
+  fd-find \
+  git \
+  gparted \
+  net-tools
