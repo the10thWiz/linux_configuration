@@ -1,13 +1,5 @@
-"g:coc_global_extensions Install Plug before loading plugins
-"if empty(glob('~/.vim/autoload/plug.vim'))
-"  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-"   \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-"  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-"endif
-
 let mapleader = ' '
 set mouse=nvichar
-"filetype plugin indent on
 
 augroup startup
   autocmd!
@@ -50,35 +42,18 @@ augroup END
 call plug#begin('~/.vim/plugged')
 
 " Declare the list of plugins.
-" Plug 'tpope/vim-sensible'
-" Plug 'junegunn/seoul256.vim'
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Rust Langugae Client
-" Plug 'autozimu/LanguageClient-neovim', {
-"    \ 'branch': 'next',
-"    \ 'do': 'bash install.sh',
-"    \ }
-"Plug 'junegunn/vim-plug'
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
-
-"Plug 'file:///home/matt/Documents/coc-rust-analyzer', {'do': 'yarn install --frozen-lockfile && yarn build'}
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'antoinemadec/coc-fzf'
 
-"Plug 'scrooloose/nerdtree'
-"Plug 'tsony-tsonev/nerdtree-git-plugin'
-"Plug 'Xuyuanp/nerdtree-git-plugin'
-"Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
-"Plug 'airblade/vim-gitgutter'
-"Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
 Plug 'scrooloose/nerdcommenter'
-"Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
-Plug 'christoomey/vim-tmux-navigator'
+"Plug 'christoomey/vim-tmux-navigator'
 
+" Color scheme
 Plug 'morhetz/gruvbox'
 
 Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
@@ -101,8 +76,6 @@ Plug 'voldikss/vim-floaterm'
 
 " Remember the last location when reopening files
 Plug 'farmergreg/vim-lastplace'
-
-"Plug 'file:///home/matt/Documents/float-make'
 
 " Template files
 Plug 'aperezdc/vim-template'
@@ -191,31 +164,6 @@ set hidden
 " vimspector
 let g:vimspector_enable_mappings = 'HUMAN'
 
-"packadd! vimspector
-
-" Prevent sign clobber from overwriting vimspector
-"let g:gitgutter_highlight_linenrs = 1
-""let g:gitgutter_signs = 0
-"let g:gitgutter_preview_win_floating = 0
-"let g:gitgutter_map_keys = 0
-"let g:gitgutter_sign_allow_clobber = 1
-
-"nmap <Leader>gs <Plug>(GitGutterStageHunk)
-""vmap <Leader>gs <Plug>(GitGutterStageHunk)
-"nmap <Leader>gu <Plug>(GitGutterUndoHunk)
-""vmap <Leader>gu <Plug>(GitGutterUndoHunk)
-"nnoremap <Leader>gp <Cmd>GitGutterPreviewHunk<CR><Cmd>wincmd p<CR>
-
-"nmap ]h <Plug>(GitGutterNextHunk)
-"vmap ]h <Plug>(GitGutterNextHunk)
-"nmap [h <Plug>(GitGutterPrevHunk)
-"vmap [h <Plug>(GitGutterPrevHunk)
-"
-"highlight link GitGutterAddLineNR GruvBoxAquaSign
-"highlight link GitGutterChangeLineNR GruvBoxOrangeSign
-"highlight link GitGutterDeleteLineNR GruvBoxRedSign
-"highlight link GitGutterChangeDeleteLineNR GruvBoxPurpleSign
-
 " navigate chunks of current buffer
 nmap [h <Plug>(coc-git-prevchunk)
 nmap ]h <Plug>(coc-git-nextchunk)
@@ -241,6 +189,7 @@ function! s:gitrebasecmds()
   " Use `$` rather than exec or x
   " to avoid conflicting with edit
   silent! %s/^exec /$ /
+  silent! %s/^x\w* /$ /
   " This has to be fixed later, in BufWritePre
 
   silent! %s/^p\w* /pick /
@@ -301,16 +250,6 @@ nmap <Leader>xr <Plug>(coc-calc-result-replace)
 
 map <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 
-" autozimu/LanguageClient-neovim
-" let g:LanguageClient_serverCommands = { 'rust': ['~/.cargo/bin/rustup', 'run', 'stable', 'rls'] }
-" nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-" nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-" nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-" BEGIN VS-VIM
-
-"inoremap jk <ESC>
-"nmap <C-n> :NERDTreeToggle<CR>
 vmap <Leader>/ <plug>NERDCommenterToggle
 nmap <Leader>/ <plug>NERDCommenterToggle
 
@@ -318,105 +257,14 @@ let g:NERDCustomDelimiters = {
     \ 'rust': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
   \ }
 
-" open NERDTree automatically
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * NERDTree
-
-let g:NERDTreeGitStatusWithFlags = 1
-"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-"let g:NERDTreeGitStatusNodeColorization = 1
-"let g:NERDTreeColorMapCustom = {
-  "\ "Staged"   : "#0ee375",  
-  "\ "Modified"  : "#d9bf91",  
-  "\ "Renamed"  : "#51C9FC",  
-  "\ "Untracked" : "#FCE77C",  
-  "\ "Unmerged"  : "#FC51E6",  
-  "\ "Dirty"    : "#FFBD61",  
-  "\ "Clean"    : "#87939A",  
-  "\ "Ignored"  : "#808080"  
-  "\ }                 
-
-
-let g:NERDTreeIgnore = ['^node_modules$']
-
-" vim-prettier
-"let g:prettier#quickfix_enabled = 0
-"let g:prettier#quickfix_auto_focus = 0
-" prettier command for coc
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
-" run prettier on save
-"let g:prettier#autoformat = 0
-"autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
-
-
-" ctrlp
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-
 " j/k will move virtual lines (lines that wrap)
 noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
 noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
 
 set relativenumber
-
-"set smarttab
-"set cindent
-"set tabstop=3
-"set softtabstop=3
-"set shiftwidth=3
-" always uses spaces instead of tab characters
-"set expandtab
-
-"set autoindent
-
-"set undofile
-
-"function! TabSettings() 
-  
-"endfunction
-"let g:indent_settings = {
-  "\ 'vim': ['expandtab', 'tabstop=3'],
-"}
-" expandtab     Use spaces rather than tabs
-" tabstop=3     Width of a `\t`
-" shiftwidth=3   Width of (auto)indent: 'cindent', >>, << (maybe set to zero,
-" and just rely on tabstop)
-" softtabstop=3  
-" smarttab
-"function! TabFileType() 
-  "if &filetype == 'vim'
-    ""setlocal expandtab
-    ""setlocal tabstop=3
-    ""setlocal shiftwidth=3
-    ""setlocal softtabstop=3
-    ""setlocal smarttab
-  "endif
-"endfunction
-
-"augroup tabsettings
-  "autocmd!
-  "autocmd FileType * call TabFileType()
-  "autocmd BufEnter * call TabSettings()
-"augroup END
+set number
 
 colorscheme gruvbox
-
-" sync open file with NERDTree
-" " Check if NERDTree is open or active
-"function! IsNERDTreeOpen()      
-  "return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-"endfunction
-
-" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-" file, and we're not in vimdiff
-"function! SyncTree()
-  "if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-   "NERDTreeFind
-   "wincmd p
-  "endif
-"endfunction
-
-" Highlight currently open buffer in NERDTree
-"autocmd BufEnter * call SyncTree()
 
 " coc config
 let g:coc_global_extensions = [
@@ -432,7 +280,6 @@ let g:coc_global_extensions = [
   \ 'coc-discord-rpc',
   \ 'coc-calc',
   \ 'coc-actions',
-  "\ 'coc-rls',
   \ 'coc-rust-analyzer',
   \ 'coc-markdownlint',
   \ 'coc-java-debug',
@@ -443,6 +290,7 @@ let g:coc_global_extensions = [
   \ 'coc-html',
   \ 'coc-elixir',
 \ ]
+
 " from readme
 " if hidden is not set, TextEdit might fail.
 set hidden " Some servers have issues with backup files, see #649 set nobackup set nowritebackup " Better display for messages set cmdheight=2 " You will have bad experience for diagnostic messages when it's default 4000.
@@ -548,15 +396,9 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-"xmap <leader>a  <Plug>(coc-codeaction-selected)
-"nmap <leader>a  <Plug>(coc-codeaction-selected)
-
 xmap <leader>a  :CocFzfList actions<CR>
 nmap <leader>a  :CocFzfList actions<CR>
 
-" Remap for do codeAction of current line
-"nmap <leader>ac  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
 
@@ -674,15 +516,6 @@ function! UTF8info(ch)
   let nr = char2nr(a:ch)
   return printf('U+%04X', nr)
 endfunction
-
-"function! GitStatus()
-  "let [a,m,r] = GitGutterGetHunkSummary()
-  "let s = a > 0 || m > 0 || r > 0 ? "Git:" : ""
-  "let a = a == 0 ? "" : printf(' +%d', a)
-  "let m = m == 0 ? "" : printf(' ~%d', m)
-  "let r = r == 0 ? "" : printf(' -%d', r)
-  "return s . a . m . r
-"endfunction
 
 set statusline=
 set statusline+=%t:%n%-10((%l,%c)%)
