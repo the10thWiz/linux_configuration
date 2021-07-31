@@ -9,9 +9,9 @@ mkdir -p ~/.zfunc
 # Check for rust installation
 if type rustup
 then
-	rustup update
+   rustup update
 else
-	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
    rustup update
 fi
 rustup completions bash rustup | sudo tee /etc/bash_completion.d/rustup.sh
@@ -21,16 +21,16 @@ rustup completions bash cargo | sudo tee /etc/bash_completion.d/cargo.sh
 rustup completions zsh cargo > ~/.zfunc/_cargo
 
 function rust-git-install() {
-	# Clone/pull
-	if [ ! -d ~/bin/install/$2/ ]; then
-		git clone https://github.com/$1/$2 ~/bin/install/$2/
-	else
-		cd ~/bin/install/$2
-		git pull
-	fi
-	# Build
-	cd ~/bin/install/$2
-	cargo build --release
+   # Clone/pull
+   if [ ! -d ~/bin/install/$2/ ]; then
+      git clone https://github.com/$1/$2 ~/bin/install/$2/
+   else
+      cd ~/bin/install/$2
+      git pull
+   fi
+   # Build
+   cd ~/bin/install/$2
+   cargo build --release
 }
 
 rust-git-install TomasTomecek pretty-git-prompt 
@@ -39,7 +39,7 @@ rust-git-install the10thwiz arg-adjuster
 mkdir -p ~/.config
 if [ -f ~/bin/config/pretty-git-prompt.yml ]
 then
-	ln -sf ~/bin/config/pretty-git-prompt.yml ~/.config/pretty-git-prompt.yml
+   ln -sf ~/bin/config/pretty-git-prompt.yml ~/.config/pretty-git-prompt.yml
 fi
 
 # oh-my-zsh
@@ -47,17 +47,19 @@ rm -r ~/.oh-my-zsh/
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 function link() {
-	if [ -f ~/bin/$1 ]
-	then
+   if [ -f ~/bin/$1 ]
+   then
       mkdir -p $(dirname $2)
-		ln -sf $HOME/bin/$1 $2
-	fi
+      ln -sf $HOME/bin/$1 $2
+   fi
 }
 
 # Link rc files to where they belong
 link config/bashrc ~/.bashrc
 link config/Xmodmap ~/.Xmodmap
 link config/init.vim ~/.config/nvim/init.vim
+link config/indent_line.vim ~/.config/nvim/plugin/indent_line.vim
+link config/coc_fzf_outline.vim ~/.config/nvim/plugin/coc_fzf_outline.vim
 link config/rust.vim ~/.config/nvim/after/syntax/rust.vim
 link config/kitty.conf ~/.config/kitty/kitty.conf
 link config/zshrc ~/.zshrc
@@ -67,12 +69,14 @@ link config/i3config ~/.config/i3/config
 # Apply Git config options
 if type nvim
 then
-	git config --global core.editor "nvim"
+   git config --global core.editor "nvim"
 fi
-#git config --global user.name "Matthew Pomes"
-#git config --global user.email "the10thwiz@gmail.com"
+git config --global user.name "Matthew Pomes"
+git config --global user.email "the10thwiz@gmail.com"
 git config --global pull.ff only
 git config --global core.excludesFile "$HOME/bin/config/gitignore"
+git config --global alias.co checkout
+git config --global alias.s status
 
 # Install vim plugins
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \

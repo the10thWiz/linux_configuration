@@ -282,7 +282,9 @@ nmap <leader>b :call fzf#vim#buffers({'sink': function('<SID>open')})<cr>
 nmap <Leader>e :GitFiles<CR>
 nmap <expr> <Leader>pe ':Files ' . get(g:, 'WorkspaceFolders', [getcwd()])[0] . '<CR>'
 
-nmap <leader>i 080lf<space>s<CR><ESC>
+command! MdFmt normal ^79lwhr<lt>CR>J
+
+nnoremap <leader>i :MdFmt<CR>
 
 " coc-actions
 " Remap for do codeAction of selected region
@@ -439,6 +441,7 @@ let g:coc_global_extensions = [
   \ 'coc-python',
   \ 'coc-yaml',
   \ 'coc-html',
+  \ 'coc-elixir',
 \ ]
 " from readme
 " if hidden is not set, TextEdit might fail.
