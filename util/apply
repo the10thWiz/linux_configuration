@@ -2,6 +2,12 @@
 
 # Script to apply `bin` configs to the system
 
+# Run installation commands
+if type apt
+then
+   bash ~/bin/util/apt
+fi
+
 # Make git-ignored dirs
 mkdir -p ~/bin/install/
 mkdir -p ~/.zfunc
@@ -70,13 +76,20 @@ link config/i3config ~/.config/i3/config
 if type nvim
 then
    git config --global core.editor "nvim"
+elif type vi
+then
+   git config --global core.editor "vi"
 fi
-git config --global user.name "Matthew Pomes"
-git config --global user.email "the10thwiz@gmail.com"
+#git config --global user.name "Matthew Pomes"
+#git config --global user.email "the10thwiz@gmail.com"
 git config --global pull.ff only
 git config --global core.excludesFile "$HOME/bin/config/gitignore"
 git config --global alias.co checkout
 git config --global alias.s status
+git config --global alias.a add
+git config --global alias.unadd 'restore --staged'
+git config --global alias.ls '!fd'
+git config --global rerere.enabled true
 
 # Install vim plugins
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \

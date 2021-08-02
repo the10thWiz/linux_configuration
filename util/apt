@@ -17,3 +17,8 @@ apt install \
   git \
   gparted \
   net-tools
+
+mkdir -p $HOME/.local/bin/
+(# Executed in subshell so fdfind WILL be found
+  ln -s $(which fdfind) ~/.local/bin/fd
+)
