@@ -11,6 +11,8 @@ alias ls='ls --color=tty --group-directories-first'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
+
+alias sl='sl -e'
 # Some cool aliases, with cloned completes
 alias ddp='dd status=progress bs=1024k '
 alias op='xdg-open'

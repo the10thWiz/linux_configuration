@@ -5,7 +5,7 @@
 # Run installation commands
 if type apt
 then
-   bash ~/bin/util/apt
+   sudo bash ~/bin/util/apt
 fi
 
 # Make git-ignored dirs
@@ -49,8 +49,9 @@ then
 fi
 
 # oh-my-zsh
-rm -r ~/.oh-my-zsh/
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+if [ ! -d ~/.oh-my-zsh/ ]; then
+   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
 
 function link() {
    if [ -f ~/bin/$1 ]
