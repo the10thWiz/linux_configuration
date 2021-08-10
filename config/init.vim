@@ -526,9 +526,9 @@ hi User8 ctermbg=108 guibg=#fe8019 ctermfg=235 guifg=#282828
 hi User9 ctermbg=108 guibg=#ebdbb2 ctermfg=235 guifg=#282828
 
 set statusline=
-set statusline+=\ %3*\ %y\ %{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}\ %{get(b:,'coc_git_blame','')}\ %*
+set statusline+=\ %3*\ %y\ %{get(g:,'coc_git_status','Loading\ Git')}%{get(b:,'coc_git_status','')}\ %*
 set statusline+=\ \ %7*\ %t\ %*
-set statusline+=\ \ %5*\ %m\ %r\ %*
-set statusline+=\ \ %6*\ %{coc#status()}%{get(b:,'coc_current_function','')}\ %*
-set statusline+=\ \ %=(%l,%c)\ U+%04B\ 
+set statusline+=\ \ %5*\ %{get(b:,'coc_git_blame','')}\ %*
+set statusline+=%=%6*\ %{coc#status()}%{get(b:,'coc_current_function','')}\ %*
+set statusline+=\ \ %8*\ (%l,%c)\ U+%04B\ :NeoVIM\ %*\ 
 

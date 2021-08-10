@@ -1,5 +1,5 @@
 {
 	"rust-analyzer.server.path": "/home/matthew/.local/bin/rust-analyzer",
 	"git.addGBlameToBufferVar": true,
-	"git.branchCharacter": ">"
+	"git.branchCharacter": ""
 }
