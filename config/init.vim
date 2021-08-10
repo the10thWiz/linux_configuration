@@ -510,11 +510,19 @@ nnoremap <silent> <space>s  :<C-u>call OutlineRun()<cr>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocFzfListResume<CR>
 
-hi link User1 DiffAdd
-hi link User2 vCursor
+hi User1 ctermbg=108 guibg=#282828 ctermfg=235 guifg=#ebdbb2
+hi User2 ctermbg=108 guibg=#fb4934 ctermfg=235 guifg=#282828
+hi User3 ctermbg=108 guibg=#b8bb26 ctermfg=235 guifg=#282828
+hi User4 ctermbg=108 guibg=#fabd2f ctermfg=235 guifg=#282828
+hi User5 ctermbg=108 guibg=#83a598 ctermfg=235 guifg=#282828
+hi User6 ctermbg=108 guibg=#d3869b ctermfg=235 guifg=#282828
+hi User7 ctermbg=108 guibg=#8ec07c ctermfg=235 guifg=#282828
+hi User8 ctermbg=108 guibg=#fe8019 ctermfg=235 guifg=#282828
+hi User9 ctermbg=108 guibg=#ebdbb2 ctermfg=235 guifg=#282828
 
 set statusline=
-set statusline+=%1*\ %y\ %{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}\ 
-set statusline+=%2*\ %t\ %*
-set statusline+=%{coc#status()}\ %{get(b:,'coc_current_function','')}
-set statusline+=\ %=(%l,%c)\ U+%04B\ 
+set statusline+=\ %3*\ %y\ %{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}\ %*
+set statusline+=\ \ %7*\ %t\ %*
+set statusline+=\ \ %5*\ XX\ %*
+set statusline+=\ \ %6*\ %{coc#status()}%{get(b:,'coc_current_function','')}\ %*
+set statusline+=\ \ %=(%l,%c)\ U+%04B\ 
