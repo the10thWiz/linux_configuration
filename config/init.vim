@@ -156,8 +156,6 @@ endfunction
 
 nmap <leader>o :call OpenError()<CR>
 
-" Coc extensions:
-
 " Required for operations modifying multiple buffers like rename.
 set hidden
 
@@ -512,15 +510,11 @@ nnoremap <silent> <space>s  :<C-u>call OutlineRun()<cr>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocFzfListResume<CR>
 
-function! UTF8info(ch)
-  let nr = char2nr(a:ch)
-  return printf('U+%04X', nr)
-endfunction
+hi link User1 DiffAdd
+hi link User2 vCursor
 
 set statusline=
-set statusline+=%t:%n%-10((%l,%c)%)
-set statusline+=\ %y\ %{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}
-set statusline+=\ %{coc#status()}
-set statusline+=\ %{get(b:,'coc_current_function','')}
-" UTF-8 info is 6 chars wide
-set statusline+=%=%-8{UTF8info(matchstr(getline('.')[col('.')-1:-1],'.'))}
+set statusline+=%1*\ %y\ %{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}\ 
+set statusline+=%2*\ %t\ %*
+set statusline+=%{coc#status()}\ %{get(b:,'coc_current_function','')}
+set statusline+=\ %=(%l,%c)\ U+%04B\ 
