@@ -38,6 +38,8 @@ augroup LogProtect
   autocmd BufReadPost,FileReadPost,FilterReadPost,StdinReadPost *.log setlocal readonly | setlocal nomodifiable
 augroup END
 
+let g:coc_config_home = '~/bin/config/'
+
 " Plugins will be downloaded under the specified directory.
 call plug#begin('~/.vim/plugged')
 
@@ -79,9 +81,6 @@ Plug 'farmergreg/vim-lastplace'
 
 " Template files
 Plug 'aperezdc/vim-template'
-
-" Ghost server for firefox functionality
-Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
 
 Plug 'chrisbra/Colorizer'
 
@@ -275,7 +274,6 @@ let g:coc_global_extensions = [
   \ 'coc-eslint', 
   \ 'coc-prettier', 
   \ 'coc-json', 
-  \ 'coc-discord-rpc',
   \ 'coc-calc',
   \ 'coc-actions',
   \ 'coc-rust-analyzer',
@@ -419,6 +417,13 @@ command! -nargs=? Fold :call CocAction('fold', <f-args>)
 " use `:OR` for organize import of current buffer
 command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 
+augroup cleanup
+  autocmd!
+
+  autocmd BufWritePre  *.rs,*.c,*.cpp,*.h silent! %substitute/\s\+$//
+  autocmd FileWritePre *.rs,*.c,*.cpp,*.h silent! %substitute/\s\+$//
+augroup END
+
 " Floaterm Config
 let g:floaterm_title=''
 let g:floaterm_wintype='floating'
@@ -521,8 +526,9 @@ hi User8 ctermbg=108 guibg=#fe8019 ctermfg=235 guifg=#282828
 hi User9 ctermbg=108 guibg=#ebdbb2 ctermfg=235 guifg=#282828
 
 set statusline=
-set statusline+=\ %3*\ %y\ %{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}%{get(b:,'coc_git_blame','')}\ %*
+set statusline+=\ %3*\ %y\ %{get(g:,'coc_git_status','')}%{get(b:,'coc_git_status','')}\ %{get(b:,'coc_git_blame','')}\ %*
 set statusline+=\ \ %7*\ %t\ %*
-set statusline+=\ \ %5*\ XX\ %*
+set statusline+=\ \ %5*\ %m\ %r\ %*
 set statusline+=\ \ %6*\ %{coc#status()}%{get(b:,'coc_current_function','')}\ %*
 set statusline+=\ \ %=(%l,%c)\ U+%04B\ 
+
