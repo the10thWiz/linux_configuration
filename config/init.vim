@@ -1,5 +1,7 @@
 let mapleader = ' '
 set mouse=nvichar
+set nocp
+filetype plugin on
 
 augroup startup
   autocmd!
@@ -528,7 +530,8 @@ hi User9 ctermbg=108 guibg=#ebdbb2 ctermfg=235 guifg=#282828
 set statusline=
 set statusline+=\ %3*\ %y\ %{get(g:,'coc_git_status','Loading\ Git')}%{get(b:,'coc_git_status','')}\ %*
 set statusline+=\ \ %7*\ %t\ %*
-set statusline+=\ \ %5*\ %{get(b:,'coc_git_blame','')}\ %*
+" strcharpart is used to truncate the git blame
+set statusline+=\ \ %5*\ %{strcharpart(get(b:,'coc_git_blame',''),0,100)}\ %*
 set statusline+=%=%6*\ %{coc#status()}%{get(b:,'coc_current_function','')}\ %*
 set statusline+=\ \ %8*\ (%l,%c)\ U+%04B\ :NeoVIM\ %*\ 
 
