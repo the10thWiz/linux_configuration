@@ -77,6 +77,27 @@ DOCKER_NUM() {
    fi
 }
 
+GIT_REMOTE_URL() {
+   if [[ -z $GIT_PROMPT_DISABLE ]]
+   then
+      R="$(git remote show 2>/dev/null)"
+      if [[ -z $R ]]
+      then
+         echo ""
+      else
+         U="$(git remote get-url $R)"
+         # Remove github.com from the start
+         U=${U/#*@github.com:/}
+         U=${U/#https:\/\/github.com\//}
+         # Remove `.git` from the end
+         U=${U/%.git/}
+         echo "$U"
+      fi
+   else
+      echo ""
+   fi
+}
+
 TEST_PROMPT='(237;223)%n>'
 TEST_PROMPT+='(214)?1j;%%%j>'
 TEST_PROMPT+='(208;237)!%!>'
@@ -85,7 +106,7 @@ TEST_PROMPT+='(142;237)?$(GIT_PROMPT_GEN)>'
 TEST_PROMPT+='(72;237)?$(get_venv_name_prompt)>'
 TEST_PROMPT+='(109;237)?$(DOCKER_NUM)>'
 TEST_PROMPT+='(208;237)%D %T>'
-TEST_PROMPT+='(~)\n|(237)??;%F{250}  √;%F{88}%?<'
+TEST_PROMPT+='(~) $(GIT_REMOTE_URL)|(~)\n|(237)??;%F{250}  √;%F{88}%?<'
 TEST_PROMPT+='(0)%k%f%(!.#.)'
 
 TMP=$($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
