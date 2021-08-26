@@ -67,12 +67,23 @@ GIT_PROMPT_GEN() {
    fi
 }
 
+DOCKER_NUM() {
+   N="$(docker ps | tail -n +2 | wc -l)"
+   if [[ $N != "0" ]]
+   then
+      echo "D[$N]"
+   else
+      echo ""
+   fi
+}
+
 TEST_PROMPT='(237;223)%n>'
 TEST_PROMPT+='(214)?1j;%%%j>'
 TEST_PROMPT+='(208;237)!%!>'
 TEST_PROMPT+='(109;237)%4~>'
 TEST_PROMPT+='(142;237)?$(GIT_PROMPT_GEN)>'
 TEST_PROMPT+='(72;237)?$(get_venv_name_prompt)>'
+TEST_PROMPT+='(109;237)?$(DOCKER_NUM)>'
 TEST_PROMPT+='(208;237)%D %T>'
 TEST_PROMPT+='(~)\n|(237)??;%F{250}  √;%F{88}%?<'
 TEST_PROMPT+='(0)%k%f%(!.#.)'
