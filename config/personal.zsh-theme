@@ -68,10 +68,15 @@ GIT_PROMPT_GEN() {
 }
 
 DOCKER_NUM() {
-   N="$(docker ps | tail -n +2 | wc -l)"
-   if [[ $N != "0" ]]
+   if [[ -d '/var/run/docker.sock' ]]
    then
-      echo "D[$N]"
+      N="$(docker ps | tail -n +2 | wc -l)"
+      if [[ $N != "0" ]]
+      then
+         echo "D[$N]"
+      else
+         echo ""
+      fi
    else
       echo ""
    fi
