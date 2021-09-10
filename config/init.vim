@@ -100,13 +100,13 @@ let g:fzf_buffers_jump = 1
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.6 } }
 let g:fzf_history_dir = '~/.local/share/fzf-history'
 let g:fzf_colors =
-\ { 'fg':    ['fg', 'Normal'],
-  \ 'bg':    ['bg', 'Normal'],
-  \ 'hl':    ['fg', 'Comment'],
-  \ 'fg+':    ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':    ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':    ['fg', 'Statement'],
-  \ 'info':   ['fg', 'PreProc'],
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
   \ 'border':  ['fg', 'Ignore'],
   \ 'prompt':  ['fg', 'Conditional'],
   \ 'pointer': ['fg', 'Exception'],
@@ -114,7 +114,7 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 let g:fzf_action = {
-  \ 'enter': 'tab drop',
+  \ 'enter':  'tab drop',
   \ 'ctrl-t': 'tab drop',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
@@ -399,6 +399,13 @@ nmap <leader>a  :CocFzfList actions<CR>
 
 " Fix autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Map leader e and <A-e> to activate expression mode
+nmap <leader>e s<C-r>=
+vmap <leader>e s<C-r>=
+nmap <A-e> s<C-r>=
+vmap <A-e> s<C-r>=
+imap <A-e> <C-r>=
 
 " Create mappings for function text object, requires document symbols feature of languageserver.
 xmap if <Plug>(coc-funcobj-i)
