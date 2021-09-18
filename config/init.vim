@@ -35,6 +35,8 @@ set termguicolors
 set colorcolumn=101
 set switchbuf=usetab
 
+let g:tex_conceal = ''
+
 augroup LogProtect
   au!
   autocmd BufReadPost,FileReadPost,FilterReadPost,StdinReadPost *.log setlocal readonly | setlocal nomodifiable
@@ -52,41 +54,41 @@ Plug 'junegunn/fzf.vim' " needed for previews
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'antoinemadec/coc-fzf'
 
-Plug 'ryanoasis/vim-devicons'
+""Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdcommenter'
 
-"Plug 'christoomey/vim-tmux-navigator'
+""Plug 'christoomey/vim-tmux-navigator'
 
-" Color scheme
+"" Color scheme
 Plug 'morhetz/gruvbox'
 
-Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
+"Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-"Plug 'tpope/vim-endwise'
+""Plug 'tpope/vim-endwise'
 
 Plug 'tpope/vim-characterize'
 Plug 'tpope/vim-sleuth'
 
-" Cargo commands
-Plug 'timonv/vim-cargo'
+"" Cargo commands
+"Plug 'timonv/vim-cargo'
 
-" Vimspector
-Plug 'puremourning/vimspector'
+"" Vimspector
+""Plug 'puremourning/vimspector'
 
-" Floaterm
+"" Floaterm
 Plug 'voldikss/vim-floaterm'
 
-" Remember the last location when reopening files
+"" Remember the last location when reopening files
 Plug 'farmergreg/vim-lastplace'
 
-" Template files
+"" Template files
 Plug 'aperezdc/vim-template'
 
-Plug 'chrisbra/Colorizer'
+""Plug 'chrisbra/Colorizer'
 
-" Reverse the order of commits in a rebase
+"" Reverse the order of commits in a rebase
 Plug 'salcode/vim-interactive-rebase-reverse'
 
 " List ends here. Plugins become visible to Vim after this call.
