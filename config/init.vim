@@ -403,8 +403,8 @@ nmap <leader>a  :CocFzfList actions<CR>
 nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Map leader e and <A-e> to activate expression mode
-nmap <leader>e s<C-r>=
-vmap <leader>e s<C-r>=
+"nmap <leader>e s<C-r>=
+"vmap <leader>e s<C-r>=
 nmap <A-e> s<C-r>=
 vmap <A-e> s<C-r>=
 imap <A-e> <C-r>=
