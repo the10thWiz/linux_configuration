@@ -37,3 +37,12 @@ esac
 # `sudo` is the same, but executes the command as a different user
 #complete -F _command sudo
 
+if type wslsys &> /dev/null
+then
+	if wslsys &> /dev/null
+	then
+		alias firefox='wsl_run /mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe'
+	fi
+fi
+
+
