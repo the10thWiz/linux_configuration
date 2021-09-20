@@ -45,4 +45,8 @@ then
 	fi
 fi
 
+if type zathura &> /dev/null
+then
+	alias zathura='zathura --fork'
+fi
 
