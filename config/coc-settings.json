@@ -6,7 +6,7 @@
 	"texlab.forwardSearch.executable": "zathura",
 	"texlab.forwardSearch.args": [
 		"--synctex-forward", "%l:0:%f", 
-		"-x", "nvr -c 'tab drop %f | %{line} '",
+		"-x", "nvr -c 'tab drop %f | %{line}'",
 		"%p"
 	]
 }
