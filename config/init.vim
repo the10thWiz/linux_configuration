@@ -422,6 +422,7 @@ xmap <silent> <C-d> <Plug>(coc-range-select)
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
 
+
 " Use `:Fold` to fold current buffer
 command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
@@ -525,6 +526,9 @@ nnoremap <silent> <space>s  :<C-u>call OutlineRun()<cr>
 "nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocFzfListResume<CR>
+
+" SyncTex with ctrl + enter
+nmap <C-enter> :CocCommand latex.ForwardSearch<CR>
 
 hi User1 ctermbg=108 guibg=#282828 ctermfg=235 guifg=#ebdbb2
 hi User2 ctermbg=108 guibg=#fb4934 ctermfg=235 guifg=#282828
