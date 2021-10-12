@@ -72,6 +72,7 @@ link config/kitty.conf ~/.config/kitty/kitty.conf
 link config/zshrc ~/.zshrc
 link config/personal.zsh-theme ~/.oh-my-zsh/themes/personal.zsh-theme
 link config/i3config ~/.config/i3/config
+link config/indentpath.yaml ~/.indentconfig.yaml
 
 # Apply Git config options
 if type nvim

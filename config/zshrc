@@ -39,7 +39,7 @@ gradlew() {
 	done
 }
 
-export PATH=/usr/local/lib/nodejs/node-v14.17.3-linux-x64/bin:$PATH:$HOME/bin/:$HOME/.local/bin/
+export PATH=$HOME/bin/:/usr/local/lib/nodejs/node-v14.17.3-linux-x64/bin:$PATH:$HOME/.local/bin/
 
 # Prevent venv from modifiying the prompt,
 # since the prompt already has the info
@@ -198,5 +198,8 @@ source $HOME/bin/config/venv_activate
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# Attempt to avoid gnome askpass
+unset SSH_ASKPASS
 
 kitty + complete setup zsh | source /dev/stdin

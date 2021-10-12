@@ -1,12 +1,16 @@
 {
 	"rust-analyzer.server.path": "/home/matthew/.local/bin/rust-analyzer",
+	"coc.preferences.formatOnSaveFiletypes": ["rust", "tex"],
 	"git.addGBlameToBufferVar": true,
 	"git.branchCharacter": "",
 	"texlab.build.onSave": true,
+	"texlab.build.executable": "latexmk",
+	"texlab.build.args": ["%f"],
 	"texlab.forwardSearch.executable": "zathura",
 	"texlab.forwardSearch.args": [
 		"--synctex-forward", "%l:0:%f", 
 		"-x", "nvr -c 'tab drop %f | %{line}'",
 		"%p"
-	]
+	],
+	"texlab.latexindent.modifyLineBreaks": true
 }
