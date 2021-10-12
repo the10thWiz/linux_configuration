@@ -1,4 +1,5 @@
 /install/
 /completions/
 kitty
+latexmk
 fd
