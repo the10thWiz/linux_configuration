@@ -387,7 +387,8 @@ nmap <leader>r <Plug>(coc-rename)
 
 " Remap for format selected region
 xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+"nmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Cmd>call CocAction('format')<cr>
 
 augroup mygroup
   autocmd!
