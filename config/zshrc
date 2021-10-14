@@ -6,6 +6,9 @@
 fpath+="$HOME/bin/install/completions"
 fpath+=~/.zfunc
 
+export SAGE_ROOT=$HOME/SageMath
+export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
+
 # User configuration
 EDITOR="nvim"
 vi() {
@@ -39,7 +42,7 @@ gradlew() {
 	done
 }
 
-export PATH=$HOME/bin/:/usr/local/lib/nodejs/node-v14.17.3-linux-x64/bin:$PATH:$HOME/.local/bin/
+export PATH=$HOME/bin/:/usr/local/lib/nodejs/node-v14.17.3-linux-x64/bin:$PATH:$HOME/.local/bin/:$SAGE_ROOT/local/bin/
 
 # Prevent venv from modifiying the prompt,
 # since the prompt already has the info
@@ -167,7 +170,11 @@ MODE_INDICATOR="N"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git calc command-not-found colored-man-pages battery rand-quote vi-mode)
+
+cc() python3 -c "from math import *; print($*);"
+alias cc='noglob cc'
+
+plugins=(git command-not-found colored-man-pages battery rand-quote vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
