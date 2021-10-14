@@ -72,10 +72,10 @@ Plug 'tpope/vim-characterize'
 Plug 'tpope/vim-sleuth'
 
 "" Cargo commands
-"Plug 'timonv/vim-cargo'
+Plug 'timonv/vim-cargo'
 
 "" Vimspector
-""Plug 'puremourning/vimspector'
+"Plug 'puremourning/vimspector'
 
 "" Floaterm
 Plug 'voldikss/vim-floaterm'
@@ -281,6 +281,7 @@ let g:coc_global_extensions = [
   \ 'coc-calc',
   \ 'coc-actions',
   \ 'coc-rust-analyzer',
+  \ 'coc-r-lsp',
   \ 'coc-markdownlint',
   \ 'coc-java-debug',
   \ 'coc-java',
