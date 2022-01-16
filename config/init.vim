@@ -3,6 +3,9 @@ set mouse=nvichar
 set nocp
 filetype plugin on
 
+" Temporarily load quicktype
+set runtimepath^=/home/matthew/quicktype.nvim/quicktype
+
 augroup startup
   autocmd!
   " Called after startup
@@ -445,7 +448,7 @@ let g:floaterm_width=0.7
 let g:floaterm_height=0.7
 let g:floaterm_position='top'
 let g:floaterm_rootmarkers=['.git', 'Cargo.lock', 'build.gradle']
-let g:floaterm_opener='tabe'
+let g:floaterm_opener='tab drop'
 let g:floaterm_autoclose=2
 let g:floaterm_autoinsert=v:true
 let g:floaterm_borderchars=[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
