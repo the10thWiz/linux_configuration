@@ -10,7 +10,9 @@ export SAGE_ROOT=$HOME/SageMath
 export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
 
 # User configuration
-EDITOR="nvim"
+export EDITOR="nvim"
+export SUDO_EDITOR="nvim"
+export VISUAL="nvim"
 vi() {
    #if [[ ! -f $XDG_RUNTIME_DIR/discord-ipc-0 ]]
    #then
@@ -35,7 +37,7 @@ gradlew() {
 	while [[ $CUR != "/" ]]; do
 		if [[ -f "$CUR/gradlew" ]]; then
 			$CUR/gradlew $@
-			# echo "Activated venv at $VIRTUAL_ENV"
+			# 
 			return 0
 		fi
     CUR=$(dirname "$CUR")
@@ -91,9 +93,13 @@ export FZF_DEFAULT_OPTs='--height 60% --layout reverse'
 # To apply the command to CTRL-T as well
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
+
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-. /usr/share/autojump/autojump.sh
+
+
+source /usr/share/autojump/autojump.sh
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
@@ -103,7 +109,7 @@ export ZSH="/home/matthew/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
+# to know which specific one was loaded, run: 
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="personal"
 
@@ -171,15 +177,22 @@ MODE_INDICATOR="N"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 
-cc() python3 -c "from math import *; print($*);"
-alias cc='noglob cc'
+#unalias cc
+function = () {
+   python3 -c "from math import *; print(f\"{$* = }\");"
+}
+#alias cc='noglob cc'
+alias calc='='
 
 plugins=(git command-not-found colored-man-pages battery rand-quote vi-mode)
+
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+
 source $HOME/bin/config/zsh-aliases
+
 source $HOME/bin/config/venv_activate
 
 # export MANPATH="/usr/local/man:$MANPATH"
@@ -209,4 +222,7 @@ source $HOME/bin/config/venv_activate
 # Attempt to avoid gnome askpass
 unset SSH_ASKPASS
 
-kitty + complete setup zsh | source /dev/stdin
+if type kitty > /dev/null
+then
+   kitty + complete setup zsh | source /dev/stdin
+fi
