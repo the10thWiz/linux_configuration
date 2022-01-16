@@ -68,6 +68,8 @@ link config/init.vim ~/.config/nvim/init.vim
 link config/indent_line.vim ~/.config/nvim/plugin/indent_line.vim
 link config/coc_fzf_outline.vim ~/.config/nvim/plugin/coc_fzf_outline.vim
 link config/rust.vim ~/.config/nvim/after/syntax/rust.vim
+link config/squirrel.vim ~/.config/nvim/syntax/squirrel.vim
+link config/ftdetect.vim ~/.config/nvim/ftdetect/custom.vim
 link config/kitty.conf ~/.config/kitty/kitty.conf
 link config/zshrc ~/.zshrc
 link config/personal.zsh-theme ~/.oh-my-zsh/themes/personal.zsh-theme
