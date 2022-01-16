@@ -94,6 +94,9 @@ Plug 'aperezdc/vim-template'
 "" Reverse the order of commits in a rebase
 Plug 'salcode/vim-interactive-rebase-reverse'
 
+" Better git commit?
+Plug 'rhysd/committia.vim'
+
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
