@@ -1,6 +1,5 @@
 {
-	"rust-analyzer.server.path": "/home/matthew/.local/bin/rust-analyzer",
-	"coc.preferences.formatOnSaveFiletypes": ["rust", "tex"],
+	"coc.preferences.formatOnSaveFiletypes": ["tex"],
 	"git.addGBlameToBufferVar": true,
 	"git.branchCharacter": "",
 	"texlab.build.onSave": true,

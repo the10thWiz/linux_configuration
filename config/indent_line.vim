@@ -38,6 +38,8 @@ function! s:applyIndentLine(new_buffer)
   let w:IndentPatternTabId = matchadd('GruvBoxGreen', pattern, 10, -1)
 endfunction
 
+command! IndentLineDetect call <SID>applyIndentLine(v:false)
+
 augroup IndentLine
   au!
   "autocmd OptionSet shiftwidth call ApplyIndentLine()
