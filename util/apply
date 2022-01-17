@@ -41,6 +41,7 @@ function rust-git-install() {
 
 rust-git-install TomasTomecek pretty-git-prompt 
 rust-git-install the10thwiz arg-adjuster
+rust-git-install the10thwiz git-remote-url
 
 mkdir -p ~/.config
 if [ -f ~/bin/config/pretty-git-prompt.yml ]
