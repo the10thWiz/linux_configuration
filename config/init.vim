@@ -93,6 +93,7 @@ Plug 'aperezdc/vim-template'
 
 "" Reverse the order of commits in a rebase
 Plug 'salcode/vim-interactive-rebase-reverse'
+Plug 'sorribas/vim-close-duplicate-tabs'
 
 " Better git commit?
 Plug 'rhysd/committia.vim'
@@ -336,10 +337,10 @@ nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gd  <Cmd>call CocAction('jumpDefinition', 'tab drop')<cr>
+nmap <silent> gy  <Cmd>call CocAction('jumpTypeDefinition', 'tab drop')<cr>
+nmap <silent> gi  <Cmd>call CocAction('jumpImplementation', 'tab drop')<cr>
+nmap <silent> gr  <Cmd>call CocAction('jumpReferences', 'tab drop')<cr>
 
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>

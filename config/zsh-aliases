@@ -55,3 +55,7 @@ timezsh() {
   for i in $(seq 1 10); do /usr/bin/time -p $shell -i -c exit; done
 }
 
+function ghost() {
+	cd ~
+	nvim +GhostStart
+}
