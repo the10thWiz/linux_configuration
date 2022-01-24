@@ -342,6 +342,8 @@ nmap <silent> gy  <Cmd>call CocAction('jumpTypeDefinition', 'tab drop')<cr>
 nmap <silent> gi  <Cmd>call CocAction('jumpImplementation', 'tab drop')<cr>
 nmap <silent> gr  <Cmd>call CocAction('jumpReferences', 'tab drop')<cr>
 
+nmap gb <C-o>
+
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 

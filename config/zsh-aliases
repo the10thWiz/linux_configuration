@@ -15,7 +15,13 @@ alias l='ls -CF'
 alias sl='sl -e'
 # Some cool aliases, with cloned completes
 alias ddp='dd status=progress bs=1024k '
-alias op='xdg-open'
+if [[ $HOST:l =~ "window" ]]
+then
+  alias op='wsl_run files'
+else
+  alias op='xdg-open'
+fi
+
 
 if [ -f $HOME/bin/install/arg-adjuster/target/release/p7zip-args ]
 then
