@@ -6,6 +6,9 @@
 if type apt
 then
    sudo bash ~/bin/util/apt
+else
+   echo "Unkown package manager"
+   exit
 fi
 
 # Make git-ignored dirs
@@ -76,6 +79,7 @@ link config/zshrc ~/.zshrc
 link config/personal.zsh-theme ~/.oh-my-zsh/themes/personal.zsh-theme
 link config/i3config ~/.config/i3/config
 link config/indentpath.yaml ~/.indentconfig.yaml
+link config/gdbinit ~/.gdbinit
 
 # Apply Git config options
 if type nvim

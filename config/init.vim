@@ -507,6 +507,14 @@ tnoremap <A-q> <Cmd>FloatermHide w<CR><Cmd>FloatermToggle q<CR>
 noremap <A-w>  <Cmd>FloatermHide q<CR><Cmd>FloatermToggle w<CR>
 tnoremap <A-w> <Cmd>FloatermHide q<CR><Cmd>FloatermToggle w<CR>
 
+function! DebuggingFile(name)
+  let [name, line] = split(a:name, ':')
+  exec 'tab drop ' . name
+  call cursor(line, 0)
+  FloatermHide w
+  FloatermHide q
+endfunction
+
 tnoremap <A-j> <C-\><C-N><C-w>j
 tnoremap <A-k> <C-\><C-N><C-w>k
 tnoremap <A-h> <C-\><C-N><C-w>h

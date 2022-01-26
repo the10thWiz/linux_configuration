@@ -1,0 +1,9 @@
+# Automatically load local config
+set auto-load safe-path /
+
+define src
+  pipe frame | grep -Po " at \K.*" | xargs -i nvr --remote-expr "DebuggingFile('{}')"
+end
+document src
+  Jumps to the source position in vim
+end
