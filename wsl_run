@@ -1,5 +1,10 @@
 #!/bin/bash
 
+arg="file://///wsl\$/Ubuntu-20.04$(readlink -f $2)"
 
+case "$1" in
+  "firefox") "/mnt/c/Program Files/Mozilla Firefox/firefox.exe" "$arg" ;;
+  "files") "/mnt/c/Windows/explorer.exe" "$arg" ;;
+  *) "$1" "$arg" ;;
+esac
 
-"$1" "file://///wsl\$/Ubuntu-20.04$(readlink -f $2)"
