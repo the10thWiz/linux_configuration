@@ -1,9 +1,35 @@
 # Automatically load local config
 set auto-load safe-path /
 
-define src
-  pipe frame | grep -Po " at \K.*" | xargs -i nvr --remote-expr "DebuggingFile('{}')"
-end
-document src
-  Jumps to the source position in vim
-end
+#define src
+  #pipe frame | grep -Po " at \K.*" | xargs -i nvr --remote-expr "Debugging('open', '{}')"
+#end
+#document src
+  #Jumps to the source position in vim
+#end
+
+#define hookpost-break
+#python
+#breakpoints = []
+#try:
+  #for br in gdb.breakpoints():
+    #(sym, _bool) = gdb.lookup_symbol(br.location)
+    #if sym is not None:
+      #breakpoints.append([sym.symtab.filename, sym.line])
+    #elif br.location.find(':') != -1:
+      #[file, line] = br.location.split(':')
+      #breakpoints.append([file, line])
+    #else:
+      #print('unknown br')
+  ##nvr --remote-expr "Debugging('breakpoints', '{}')"
+#except:
+  #pass
+##print(breakpoints)
+#gdb.execute("! nvr --remote-expr \"Debugging('breakpoints', " + str(breakpoints) + ")\" > /dev/null")
+#end
+#end
+
+#define hook-stop
+  #hookpost-break
+  #pipe frame | grep -Po " at \K.*" | xargs -i nvr --remote-expr "Debugging('curline', '{}')" > /dev/null
+#end

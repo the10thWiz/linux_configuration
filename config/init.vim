@@ -79,6 +79,7 @@ Plug 'timonv/vim-cargo'
 
 "" Vimspector
 "Plug 'puremourning/vimspector'
+"Plug 'huawenyu/termdebug.nvim'
 
 "" Floaterm
 Plug 'voldikss/vim-floaterm'
@@ -100,6 +101,9 @@ Plug 'rhysd/committia.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
+
+"let g:termdebugMap = 0
+"let g:termdebug_wide = 2
 
 "source /home/matt/Documents/hex_edit/plugin/hexedit.vim
 
@@ -456,34 +460,37 @@ let g:floaterm_position='top'
 let g:floaterm_rootmarkers=['.git', 'Cargo.lock', 'build.gradle']
 let g:floaterm_opener='tab drop'
 let g:floaterm_autoclose=2
+let g:floaterm_autohide=2
 let g:floaterm_autoinsert=v:true
 let g:floaterm_borderchars=[' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+
+augroup floaterm
+  autocmd User FloatermOpen call s:HideBorder()
+  "autocmd * TermOpen call s:HideBorder()
+  "autocmd * BufEnter call s:HideBorder()
+augroup END
+
+function! s:HideBorder()
+  if &filetype == "floaterm"
+    setlocal nonumber
+    setlocal norelativenumber
+    setlocal signcolumn=no
+    let bufnr = floaterm#buflist#curr()
+    let title = floaterm#config#get(bufnr, 'title')
+    let w:floaterm_title = floaterm#window#make_title(bufnr, title)
+    setlocal statusline=\ %{w:floaterm_title}\ 
+  endif
+endfunction
 
 " Set floaterm window's background to black
 hi Floaterm guibg=#000000 ctermbg=0
 
 hi link FloatermBorder CursorColumn
 
-function! StartFloatermSilently(name, params) abort
-  exec 'FloatermNew --name='. a:name . ' --cwd=<root> ' . a:params . ' zsh'
-  call timer_start(1, {-> execute('FloatermHide! ' . a:name)})
-endfunction
-
 function! FloatermCommand(cmd)
   FloatermHide q
   execute 'FloatermSend --name=q ' . a:cmd
   FloatermShow q
-endfunction
-
-function! FloatermRun(build)
-  if a:build
-    let cmd = floatmake#buildcmd()
-  else
-    let cmd = floatmake#runcmd()
-  endif
-  if cmd != ''
-    call FloatermCommand(cmd)
-  endif
 endfunction
 
 command! Build call FloatermRun(v:true)
@@ -493,27 +500,27 @@ tnoremap <A-b> <Cmd>Build<CR>
 noremap <A-r> <Cmd>Run<CR>
 tnoremap <A-r> <Cmd>Run<CR>
 
+function! StartFloatermSilently(name, params) abort
+  exec 'FloatermNew --name='. a:name . ' --cwd=<root> ' . a:params . ' --silent zsh'
+  "call timer_start(1, {-> execute('FloatermHide! ' . a:name)})
+endfunction
+
 augroup Term
   autocmd!
-  autocmd VimEnter * call StartFloatermSilently('q', '')
-  autocmd VimEnter * call StartFloatermSilently('w', '--position=bottom')
+  autocmd VimEnter * FloatermNew --name=q --cwd=<root> --silent zsh
+  autocmd VimEnter * FloatermNew --name=w --cwd=<root> --position=bottom --silent zsh
+  autocmd VimEnter * stopinsert
 augroup END
 
 tnoremap <Esc> <C-\><C-N>
 tnoremap <M-[> <Esc>
 
-noremap <A-q>  <Cmd>FloatermHide w<CR><Cmd>FloatermToggle q<CR>
-tnoremap <A-q> <Cmd>FloatermHide w<CR><Cmd>FloatermToggle q<CR>
-noremap <A-w>  <Cmd>FloatermHide q<CR><Cmd>FloatermToggle w<CR>
-tnoremap <A-w> <Cmd>FloatermHide q<CR><Cmd>FloatermToggle w<CR>
+noremap  <A-q> <Cmd>FloatermToggle q<CR>
+tnoremap <A-q> <Cmd>FloatermToggle q<CR>
+noremap  <A-w> <Cmd>FloatermToggle w<CR>
+tnoremap <A-w> <Cmd>FloatermToggle w<CR>
 
-function! DebuggingFile(name)
-  let [name, line] = split(a:name, ':')
-  exec 'tab drop ' . name
-  call cursor(line, 0)
-  FloatermHide w
-  FloatermHide q
-endfunction
+source ~/bin/config/gdb-floaterm.vim
 
 tnoremap <A-j> <C-\><C-N><C-w>j
 tnoremap <A-k> <C-\><C-N><C-w>k
