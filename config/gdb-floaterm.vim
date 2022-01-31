@@ -51,8 +51,13 @@ function s:gdb_job.parse_lines()
       " Empty line
     elseif line =~ '^=breakpoint-created' || line =~ '^=breakpoint-modified' || line =~ '^\^done,bkpt='
       let number = matchlist(line, 'number="\([^"]*\)"')[1]
-      let file = matchlist(line, 'file="\([^"]*\)"')[1]
-      let lnum = matchlist(line, 'line="\([^"]*\)"')[1]
+      let pending = matchlist(line, 'pending="\([^"]*\)"')
+      if !empty(pending)
+        let [file, lnum] = split(pending[1], ':')
+      else
+        let file = matchlist(line, 'file="\([^"]*\)"')[1]
+        let lnum = matchlist(line, 'line="\([^"]*\)"')[1]
+      endif
       if has_key(self.breakpoints, number)
         let id = self.breakpoints[number]
       else
@@ -65,11 +70,12 @@ function s:gdb_job.parse_lines()
       " Result Records
     elseif line[0] == '=' || line[0] == '*'
       " Async Records
-    elseif line == '(gdb)'
+    elseif line =~ '(gdb)'
       " ready for input
       for br in self.pending_breakpoints
         call self.send_cmd(br)
       endfor
+      let self.pending_breakpoints = []
     else
     endif
       call appendbufline(self.bufnr, '$', line)
