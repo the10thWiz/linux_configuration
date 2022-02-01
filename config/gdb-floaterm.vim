@@ -1,5 +1,5 @@
 
-let g:min_gdb_width = 40
+"let g:min_gdb_width = 40
 
 function! s:get_cmd(cmd)
   let gdb = 'gdb'
@@ -16,22 +16,50 @@ function! s:get_cmd(cmd)
   endif
 endfunction
 
-function! s:CheckBreakPointDefined(line)
-  for buffer in sign_getplaced(expand('%'), {'group': 'breakpoints'})
+" BreakPoint Logic
+" group 'gdb_pending_breakpoints' is the list of breakpoints we are aware of
+"   that gdb isn't. If gdb is running, this should be empty
+" group 'gdb_breakpoints' is the list of breakpoints gdb is aware of. These
+"   are only added in response to gdb lines
+
+function! ToggleBreakpoint()
+  let file = expand('%')
+  let line = line('.')
+  let id = s:CheckBreakPointDefined(file, line)
+  if id == -1
+    if !s:gdb_job.send_cmd('-break-insert ' . file . ':' . line)
+      call sign_place(0, 'gdb_pending_breakpoints', 'gdb_breakpoint', file, {'lnum': line, 'priority': 10})
+    endif
+  else
+    call sign_unplace('gdb_pending_breakpoints', {'id': id})
+    call sign_unplace('gdb_breakpoints', {'id': id})
+    for [gdb_id, sign_id] in items(s:gdb_job.breakpoints)
+      if sign_id == id
+        call s:gdb_job.send_cmd('-break-delete ' . gdb_id)
+        call remove(s:gdb_job.breakpoints, gdb_id)
+        break
+      endif
+    endfor
+  endif
+endfunction
+
+function! s:CheckBreakPointDefined(file, line)
+  for buffer in sign_getplaced(a:file, {'lnum': a:line, 'group': '*'})
     for sign in buffer.signs
       "call add(cmds, 'break ' . bufname(buffer.bufnr) . ':' . sign.lnum)
-      if sign.lnum == a:line
-        return v:true
+      if sign.group == 'gdb_pending_breakpoints' || sign.group == 'gdb_breakpoints'
+        return sign.id
       endif
     endfor
   endfor
-  return v:false
+  return -1
 endfunction
 
-function! BreakPoint()
+" TODO: remove
+function! SetBreakPoint()
   if !s:gdb_job.send_cmd('-break-insert ' . expand('%') . ':' . line('.'))
     echo "Gdb is not open"
-    call add(s:gdb_job.pending_breakpoints, '-break-insert ' . expand('%') . ':' . line('.'))
+    "call add(s:gdb_job.pending_breakpoints, '-break-insert ' . expand('%') . ':' . line('.'))
   endif
   "let gdb_window = floaterm#terminal#get_bufnr('gdb')
   "if gdb_window != -1
@@ -44,11 +72,28 @@ function! BreakPoint()
   "endif
 endfunction
 
-let s:gdb_job = {'cur': '', 'lines': [], 'id': -1, 'term_id': -1, 'pty': v:true, 'breakpoints': {}, 'pending_breakpoints': []}
+let s:gdb_job = {
+      \ 'cur': '',
+      \ 'lines': [],
+      \ 'id': -1,
+      \ 'term_id': -1,
+      \ 'pty': v:true,
+      \ 'breakpoints': {},
+      \ 'curline': 0,
+      \ 'bufnr': -1,
+      \ 'winnr': -1,
+      \ 'focus': v:false,
+      \}
+
 function s:gdb_job.parse_lines()
   for line in self.lines
     if line == ''
       " Empty line
+    elseif line =~ '^=breakpoint-deleted'
+      let number = matchlist(line, 'id="\([^"]*\)"')[1]
+      call sign_unplace('gdb_breakpoints', {'id': self.breakpoints[number]})
+      call sign_unplace('gdb_pending_breakpoints', {'id': self.breakpoints[number]})
+      unlet self.breakpoints[number]
     elseif line =~ '^=breakpoint-created' || line =~ '^=breakpoint-modified' || line =~ '^\^done,bkpt='
       let number = matchlist(line, 'number="\([^"]*\)"')[1]
       let pending = matchlist(line, 'pending="\([^"]*\)"')
@@ -63,7 +108,30 @@ function s:gdb_job.parse_lines()
       else
         let id = 0
       endif
-      let self.breakpoints[number] = sign_place(id, 'breakpoints', 'debugging_breakpoint', file, {'lnum': lnum, 'priority': 0})
+      let self.breakpoints[number] = sign_place(id, 'gdb_breakpoints', 'gdb_breakpoint', file, {'lnum': lnum, 'priority': 10})
+    elseif line =~ '*stopped'
+      if match(line, 'frame=') >= 0
+        let file = matchlist(line, 'fullname="\([^"]*\)"')[1]
+        if match(file, '/rustc') == 0
+          continue
+        endif
+        let lnum = matchlist(line, 'line="\([^"]*\)"')[1]
+        if nvim_get_current_win() == self.winnr
+          let self.focus = v:true
+        else
+          let self.focus = v:false
+        endif
+        exec 'tab drop +' . lnum . ' ' . file
+        call sign_unplace('gdb_status', {'id': self.curline})
+        let self.curline = sign_place(0, 'gdb_status', 'gdb_curline', file, {'lnum': lnum, 'priority': 20})
+        call sign_jump(self.curline, 'gdb_status', file)
+        if self.focus
+          call nvim_set_current_win(self.winnr)
+        endif
+      else
+        call sign_unplace('gdb_status', {'id': self.curline})
+        let self.curline = 0
+      endif
     elseif line[0] == '~' || line[0] == '@' || line[0] == '&'
       " console output
     elseif line[0] == '^'
@@ -72,16 +140,13 @@ function s:gdb_job.parse_lines()
       " Async Records
     elseif line =~ '(gdb)'
       " ready for input
-      for br in self.pending_breakpoints
-        call self.send_cmd(br)
-      endfor
-      let self.pending_breakpoints = []
+      call self.restore()
     else
     endif
-      call appendbufline(self.bufnr, '$', line)
   endfor
   let self.lines = []
 endfunction
+
 function s:gdb_job.on_stdout(_id, data, _event)
   let self.cur .= a:data[0]
   if !empty(self.cur)
@@ -91,128 +156,113 @@ function s:gdb_job.on_stdout(_id, data, _event)
   call extend(self.lines, a:data[1:])
   call self.parse_lines()
 endfunction
+
 function s:gdb_job.on_stderr(_id, data, _event)
 endfunction
-function s:gdb_job.on_exit(_id, code, _event)
+
+function s:on_exit(_id, code, _event)
+  call jobstop(s:gdb_job.id)
+  exec 'bdelete! ' . s:gdb_job.bufnr
   let s:gdb_job.id = -1
+  let s:gdb_job.term_id = -1
+  call s:gdb_job.save_status()
 endfunction
+
+function! s:gdb_job.restore()
+  for bufname in nvim_list_bufs()
+    for buffer in sign_getplaced(bufname, {'group': 'gdb_pending_breakpoints'})
+      for sign in buffer.signs
+        call self.send_cmd('-break-insert ' . bufname(buffer.bufnr) . ':' . sign.lnum)
+      endfor
+    endfor
+  endfor
+  call sign_unplace('gdb_pending_breakpoints')
+endfunction
+
+function! s:gdb_job.save_status()
+  for bufname in nvim_list_bufs()
+    for buffer in sign_getplaced(bufname, {'group': 'gdb_breakpoints'})
+      for sign in buffer.signs
+        call sign_place(0, 'gdb_pending_breakpoints', 'gdb_breakpoint', buffer.bufnr, {'lnum': sign.lnum, 'priority': 10})
+      endfor
+    endfor
+  endfor
+  call sign_unplace('gdb_breakpoints')
+  let self.breakpoints = {}
+endfunction
+
+function! s:gdb_job.tab_enter()
+  if self.winnr != -1
+    if nvim_win_is_valid(self.winnr)
+      if nvim_win_get_tabpage(self.winnr) != nvim_get_current_tabpage()
+        call nvim_win_close(self.winnr, v:true)
+        let other_win = win_getid()
+        call s:OpenWindow()
+        let self.winnr = win_getid()
+        call nvim_win_set_buf(0, self.bufnr)
+      endif
+    endif
+  endif
+endfunction
+
+augroup GDB_TABPAGE
+  autocmd BufEnter * call s:gdb_job.tab_enter()
+augroup END
 
 function s:gdb_job.send_cmd(cmd)
   if self.id != -1
     call chansend(self.id, [a:cmd, ''])
-    return v:true
+    return 1
   else
-    return v:false
+    return 0
+  endif
+endfunction
+
+function! s:OpenWindow()
+  if get(g:, 'gdb_vertical', v:true)
+    let min_gdb_width = get(g:, 'min_gdb_width', 40)
+    let sign_col_width = get(g:, 'sign_col_width', 2)
+    let width = max([winwidth(0) - &colorcolumn - &number * 3 - sign_col_width, min_gdb_width])
+    exec 'botright' . width . 'vnew'
+  else
+    botright new
   endif
 endfunction
 
 function! OpenGdbMi3(cmd)
   if s:gdb_job.id == -1
+    call s:OpenWindow()
     let s:gdb_job.bufnr = bufnr()
-    new
+    let s:gdb_job.winnr = win_getid()
     let s:gdb_job.id = jobstart('tail -f /dev/null', s:gdb_job)
     let pty = nvim_get_chan_info(s:gdb_job.id)['pty']
-    let s:gdb_job.term_id = termopen('rust-gdb -ex "new-ui mi3 ' . pty . '" ' . a:cmd, {})
-    "call s:gdb_job.send_cmd('')
+    let gdb_cmd = 'rust-gdb '
+    let gdb_cmd .= '-ex "new-ui mi3 ' . pty . '" '
+    let gdb_cmd .= '--args ' . a:cmd
+    let s:gdb_job.term_id = termopen(gdb_cmd, {'on_exit': function('s:on_exit')})
+    setlocal nonumber
+    setlocal norelativenumber
+    setlocal signcolumn=no
+    setlocal statusline=\ GDB\ Debugger\ 
+    startinsert
+  else
+    exec 'buffer ' . s:gdb_job.bufnr
   endif
 endfunction
 
+" TODO: remove
 function! Inspect()
   return s:gdb_job
 endfunction
 
-function! OpenGdb(cmd)
-  " Sadly, Neovim doesn't let us get the current signcolumn width, so I've
-  " just hardcoded 2 - It matches my signcolumn of `yes:1`, but it's not great
-  let width = max([winwidth(0) - &colorcolumn - &number * 3 - 2, g:min_gdb_width])
-  let gdb_window = floaterm#terminal#get_bufnr('gdb')
-  let cur_filetype = &filetype
-  if gdb_window == -1
-    let cmd = s:get_cmd(a:cmd)
-    let gdb_window = floaterm#new(v:false, cmd, {
-      \ 'on_exit': function('<SID>ClearSigns'),
-      \ }, {
-      \ 'wintype': 'vsplit',
-      \ 'width': width,
-      \ 'position': 'right',
-      \ 'name': 'gdb',
-      \ 'title': 'Gnu DeBugger ' . matchstr(a:cmd, '/\w '),
-      \ 'silent': v:true,
-      \ })
+call sign_define('gdb_curline', {'text': '=>'})
+call sign_define('gdb_breakpoint', {'text': ' !'})
 
-    if cur_filetype == 'rust'
-      let CargoJob = {'json': ''}
-      function CargoJob.on_stdout(_job_id, data, _name)
-        if a:data != ['']
-          let self.json = self.json . join(a:data)
-        else
-          let dict = json_decode(self.json)
-          let gdb_window = floaterm#terminal#get_bufnr('gdb')
-          let cmds = []
-          for buffer in sign_getplaced('', {'group': 'breakpoints'})
-            for sign in buffer.signs
-              call add(cmds, 'break ' . bufname(buffer.bufnr) . ':' . sign.lnum)
-            endfor
-          endfor
-          call add(cmds, 'break ' . substitute(dict.name, '-', '_', '') . '::main')
-          call add(cmds, 'run')
-          call floaterm#terminal#send(gdb_window, cmds)
-          call floaterm#terminal#open_existing(gdb_window)
-        endif
-      endfunction
-      function CargoJob.on_stderr(_job_id, data, _name)
-        "call input(a:data)
-      endfunction
-      let cargo_job = jobstart('cargo read-manifest', CargoJob)
-    endif
-  else
-    call floaterm#show(v:false, gdb_window, 'gdb')
-  endif
-endfunction
+command! -nargs=* Debug  call OpenGdbMi3(<q-args>)
+command! DebugStep       call s:gdb_job.send_cmd('-exec-step')
+command! DebugNext       call s:gdb_job.send_cmd('-exec-next')
+command! DebugFinish     call s:gdb_job.send_cmd('-exec-finish')
+command! DebugContinue   call s:gdb_job.send_cmd('-exec-continue')
+command! DebugRun        call s:gdb_job.send_cmd('-exec-run')
+command! DebugBreak      call ToggleBreakpoint()
 
-call sign_define('debugging_curline', {'text': '=>'})
-call sign_define('debugging_breakpoint', {'text': ' !'})
-" 
-" call sign_place(0, 'debugger', 'debugging_curline', buffer, {'lnum': linenr,
-" 'priority': })
-
-"let g:curline_sign = -1
-let s:signs = {
-  \ 'curline': -1,
-  \ }
-
-function! s:ClearSigns(...)
-  call sign_unplace('debugger')
-  "call sign_unplace('breakpoints')
-endfunction
-
-function! s:UpdateSign(name, buffer, line)
-  call sign_unplace('debugger', {'id': s:signs[a:name]})
-  let s:signs[a:name] = sign_place(0, 'debugger', 'debugging_' . a:name, a:buffer, {'lnum': a:line, 'priority': 0})
-endfunction
-
-function! Debugging(action, name)
-  if a:action == 'open'
-    let [name, line] = split(a:name, ':')
-    exec 'tab drop ' . name
-    call cursor(line, 0)
-    FloatermHide
-  elseif a:action == 'curline'
-    let [name, line] = split(a:name, ':')
-    exec 'tab drop ' . name
-    call cursor(line, 0)
-    call s:UpdateSign('curline', name, line)
-
-    FloatermShow gdb
-  elseif a:action == 'breakpoints'
-    call sign_unplace('breakpoints')
-    for [file, line] in a:name
-      call sign_place(0, 'breakpoints', 'debugging_breakpoint', file, {'lnum': line, 'priority': 0})
-    endfor
-  else
-    stopinsert
-    echo 'Action ' . a:action . ' is not defined'
-  endif
-endfunction
-
-command! -nargs=* Debug call OpenGdb(<q-args>)
