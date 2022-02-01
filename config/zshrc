@@ -44,8 +44,8 @@ gradlew() {
 	done
 }
 
-export PATH=$HOME/bin/:/usr/local/lib/nodejs/node-v14.17.3-linux-x64/bin:$PATH:$HOME/.local/bin/:$SAGE_ROOT/local/bin/
-export PATH=$PATH:/opt/gradle/gradle-7.3.3/bin
+export PATH=$HOME/bin/:/usr/local/lib/nodejs/node-v14.17.3-linux-x64/bin:$PATH:$HOME/.local/bin/
+export PATH=$PATH:/opt/gradle/gradle-7.3.3/bin:$SAGE_ROOT/local/bin/
 
 # Prevent venv from modifiying the prompt,
 # since the prompt already has the info
