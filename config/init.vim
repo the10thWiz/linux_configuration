@@ -2,6 +2,8 @@ let mapleader = ' '
 set mouse=nvichar
 set nocp
 filetype plugin on
+set splitright
+set splitbelow
 
 " Temporarily load quicktype
 set runtimepath^=/home/matthew/quicktype.nvim/quicktype
@@ -525,11 +527,11 @@ source ~/bin/config/gdb-floaterm.vim
 tnoremap <A-j> <C-\><C-N><C-w>j
 tnoremap <A-k> <C-\><C-N><C-w>k
 tnoremap <A-h> <C-\><C-N><C-w>h
-tnoremap <A-j> <C-\><C-N><C-w>j
+tnoremap <A-l> <C-\><C-N><C-w>l
 noremap <A-j> <Esc><C-w>j
 noremap <A-k> <Esc><C-w>k
 noremap <A-h> <Esc><C-w>h
-noremap <A-j> <Esc><C-w>j
+noremap <A-l> <Esc><C-w>l
 inoremap <A-k> <Esc><C-w>k
 inoremap <A-h> <Esc><C-w>h
 inoremap <A-l> <Esc><C-w>l
