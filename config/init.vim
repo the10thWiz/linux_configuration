@@ -9,7 +9,7 @@ set splitbelow
 set runtimepath^=/home/matthew/quicktype.nvim/quicktype
 
 augroup startup
-  autocmd!
+autocmd!
   " Called after startup
   autocmd VimEnter * call Init()
 augroup END
@@ -100,6 +100,9 @@ Plug 'sorribas/vim-close-duplicate-tabs'
 
 " Better git commit?
 Plug 'rhysd/committia.vim'
+
+" Base64 plugin
+"Plug 'christianrondeau/vim-base64'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -231,13 +234,8 @@ augroup gitrebase
 augroup END
 
 function! s:open(name)
-  let list = reverse(split(a:name))
-  for name in list
-    if bufnr(name) != -1
-      execute 'tab drop ' . name
-      return
-    endif
-  endfor
+  let list = matchlist(a:name, '\[\(\d*\)\]')
+  execute 'tab drop ' . bufname(str2nr(list[1]))
 endfunction
 "nmap <Leader>y :CocList yank<CR>
 "nmap <leader>b :Buffers<cr>
@@ -307,7 +305,10 @@ let g:coc_global_extensions = [
 
 " from readme
 " if hidden is not set, TextEdit might fail.
-set hidden " Some servers have issues with backup files, see #649 set nobackup set nowritebackup " Better display for messages set cmdheight=2 " You will have bad experience for diagnostic messages when it's default 4000.
+set hidden
+" Some servers have issues with backup files, see #649 set nobackup set nowritebackup 
+" Better display for messages set cmdheight=2
+" You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=300
 
 " don't give |ins-completion-menu| messages.
@@ -337,6 +338,22 @@ inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 " Or use `complete_info` if your vim support it, like:
 " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+function! s:md_space()
+  if &filetype == 'markdown'
+    let [_bufnum, _line, column, _off, _curswant] = getcurpos()
+    if column > 80
+      return "\n"
+    endif
+  endif
+  return " "
+endfunction
+augroup md_space
+  autocmd!
+  autocmd FileType markdown setlocal cc=0
+augroup END
+
+inoremap <silent><expr> <space> <sid>md_space()
 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
