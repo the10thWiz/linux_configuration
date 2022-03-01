@@ -99,6 +99,7 @@ git config --global alias.a add
 git config --global alias.unadd 'restore --staged'
 git config --global alias.ls '!fd'
 git config --global rerere.enabled true
+git config --global init.defaultBranch 'main'
 
 # Install vim plugins
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
