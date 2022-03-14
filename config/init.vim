@@ -53,13 +53,19 @@ let g:coc_config_home = '~/bin/config/'
 call plug#begin('~/.vim/plugged')
 
 " Declare the list of plugins.
+
+"" Toml syntax highlighting
+Plug 'cespare/vim-toml', { 'branch': 'main' }
+
+"" Fuzzy Finder
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
 
+"" Main completion and LSP support
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'antoinemadec/coc-fzf'
 
-""Plug 'ryanoasis/vim-devicons'
+"" Comment & Uncomment actions
 Plug 'scrooloose/nerdcommenter'
 
 ""Plug 'christoomey/vim-tmux-navigator'
@@ -69,15 +75,17 @@ Plug 'morhetz/gruvbox'
 
 "Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 
+"" Surround action
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 ""Plug 'tpope/vim-endwise'
 
 Plug 'tpope/vim-characterize'
+"" Detect file indentation
 Plug 'tpope/vim-sleuth'
 
 "" Cargo commands
-Plug 'timonv/vim-cargo'
+"Plug 'timonv/vim-cargo'
 
 "" Vimspector
 "Plug 'puremourning/vimspector'
@@ -98,10 +106,10 @@ Plug 'aperezdc/vim-template'
 Plug 'salcode/vim-interactive-rebase-reverse'
 Plug 'sorribas/vim-close-duplicate-tabs'
 
-" Better git commit?
+"" Better git commit?
 Plug 'rhysd/committia.vim'
 
-" Base64 plugin
+"" Base64 plugin
 "Plug 'christianrondeau/vim-base64'
 
 " List ends here. Plugins become visible to Vim after this call.
