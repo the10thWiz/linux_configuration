@@ -57,6 +57,9 @@ call plug#begin('~/.vim/plugged')
 "" Toml syntax highlighting
 Plug 'cespare/vim-toml', { 'branch': 'main' }
 
+"" Crate.io plugin
+Plug 'mhinz/vim-crates'
+
 "" Fuzzy Finder
 Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
@@ -114,6 +117,11 @@ Plug 'rhysd/committia.vim'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
+
+"" automatically add crate deps vtext
+if has('nvim')
+  autocmd BufRead Cargo.toml call crates#toggle()
+endif
 
 "let g:termdebugMap = 0
 "let g:termdebug_wide = 2
