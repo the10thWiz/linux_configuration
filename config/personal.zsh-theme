@@ -92,7 +92,13 @@ GIT_REMOTE_URL() {
    fi
 }
 
-TEST_PROMPT='(237;223)%n>'
+HOSTNAME="@$(hostname)"
+if [[ "$HOSTNAME" == "@matthew-ubuntu" ]]
+then
+   HOSTNAME=""
+fi
+
+TEST_PROMPT='(237;223)%n$HOSTNAME>'
 TEST_PROMPT+='(214)?1j;%%%j>'
 TEST_PROMPT+='(208;237)!%!>'
 TEST_PROMPT+='(109;237)%4~>'
