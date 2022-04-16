@@ -56,7 +56,7 @@ then
       git clone https://github.com/the10thWiz/zsh-theme.git
    fi
    cd $HOME/bin/install/zsh-theme
-   cargo +nightly build
+   cargo build
 fi
 
 GIT_PROMPT_GEN() {
