@@ -25,35 +25,34 @@ fi
 
 if [ -f $HOME/bin/install/arg-adjuster/target/release/p7zip-args ]
 then
-	alias 7z="$HOME/bin/install/arg-adjuster/target/release/p7zip-args"
+  alias 7z="$HOME/bin/install/arg-adjuster/target/release/p7zip-args"
 fi
 
 case $TERM in 
-		*kitty)
-				alias clip='kitty +kitten clipboard'
-				alias paste='kitty +kitten clipboard --get-clipboard'
-				;;
-		*)
-				alias clip='xclip -i'
-				alias paste='echo "$(xclip -o -rmlastnl)"'
-				;;
+    *kitty)
+        alias clip='kitty +kitten clipboard'
+        alias paste='kitty +kitten clipboard --get-clipboard'
+        ;;
+    *)
+        alias clip='xclip -i'
+        alias paste='echo "$(xclip -o -rmlastnl)"'
+        ;;
 esac
 
 # `command` is a bash built-in that executes the given shell command
 # `sudo` is the same, but executes the command as a different user
 #complete -F _command sudo
 
+# If in WSL
 if type wslsys &> /dev/null
 then
-	if wslsys &> /dev/null
-	then
-		alias firefox='wsl_run /mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe'
-	fi
+  alias firefox='wsl_run /mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe'
+  alias neovide='/mnt/c/Users/PomesMatthew/Documents/neovide/target/release/neovide.exe --wsl'
 fi
 
 if type zathura &> /dev/null
 then
-	alias zathura='zathura --fork'
+  alias zathura='zathura --fork'
 fi
 
 timezsh() {
@@ -62,6 +61,6 @@ timezsh() {
 }
 
 function ghost() {
-	cd ~
-	nvim +GhostStart
+  cd ~
+  nvim +GhostStart
 }
