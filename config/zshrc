@@ -143,7 +143,7 @@ ZSH_THEME="personal"
 # DISABLE_LS_COLORS="true"
 
 # Uncomment the following line to disable auto-setting terminal title.
-# DISABLE_AUTO_TITLE="true"
+DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
@@ -222,6 +222,10 @@ source $HOME/bin/config/venv_activate
 
 # Attempt to avoid gnome askpass
 unset SSH_ASKPASS
+
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+export PATH="$HOME/gems/bin:$PATH"
 
 if type kitty > /dev/null
 then

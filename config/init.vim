@@ -8,6 +8,8 @@ set splitbelow
 " Temporarily load quicktype
 set runtimepath^=/home/matthew/quicktype.nvim/quicktype
 
+set guifont=Cascadia\ Code\ PL:h15
+
 augroup startup
 autocmd!
   " Called after startup
@@ -65,7 +67,7 @@ Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
 Plug 'junegunn/fzf.vim' " needed for previews
 
 "" Main completion and LSP support
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': 'yarn install'}
 Plug 'antoinemadec/coc-fzf'
 
 "" Comment & Uncomment actions
@@ -112,16 +114,44 @@ Plug 'sorribas/vim-close-duplicate-tabs'
 "" Better git commit?
 Plug 'rhysd/committia.vim'
 
+"" Better html formatter
+Plug 'maksimr/vim-jsbeautify'
+
+"" Align command
+"Plug 'h1mesuke/vim-alignta'
+"" Harder to use, but maybe better?
+Plug 'junegunn/vim-easy-align'
+
 "" Base64 plugin
 "Plug 'christianrondeau/vim-base64'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
+"" vim-easy align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap <leader>= <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap <leader>= <Plug>(EasyAlign)
+
+"fun! SetupCommandAlias(from, to)
+  "exec 'cnoreabbrev <expr> '.a:from
+        "\ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
+        "\ .'? ("'.a:to.'") : ("'.a:from.'"))'
+"endfun
+"call SetupCommandAlias("Align","SimpleAlign")
+
 "" automatically add crate deps vtext
 if has('nvim')
   autocmd BufRead Cargo.toml call crates#toggle()
 endif
+
+augroup FileTypeExtentions
+  au!
+  autocmd BufRead,BufNewFile *.html.tera setl filetype=htmldjango | nmap <buffer> <leader>f :call HtmlBeautify()<cr>
+  autocmd BufRead,BufNewFile *.js.tera setl filetype=django | nmap <buffer> <leader>f :call JsBeautify()<cr>
+  autocmd BufRead,BufNewFile *.css.tera setl filetype=django | nmap <buffer> <leader>f :call CssBeautify()<cr>
+augroup END
 
 "let g:termdebugMap = 0
 "let g:termdebug_wide = 2
@@ -283,6 +313,7 @@ nmap <Leader>/ <plug>NERDCommenterToggle
 
 let g:NERDCustomDelimiters = {
     \ 'rust': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
+    \ 'htmldjango': { 'leftAlt': '{#', 'rightAlt': '#}' },
   \ }
 
 " j/k will move virtual lines (lines that wrap)
@@ -608,4 +639,15 @@ set statusline+=\ \ %7*\ %t\ %*
 set statusline+=\ \ %5*\ %{strcharpart(get(b:,'coc_git_blame',''),0,100)}\ %*
 set statusline+=%=%6*\ %{coc#status()}%{get(b:,'coc_current_function','')}\ %*
 set statusline+=\ \ %8*\ (%l,%c)\ U+%04B\ :NeoVIM\ %*\ 
+
+function! Title()
+  if &filetype == 'floaterm'
+    return 'Zsh (Floaterm)'
+  else
+    return ':NeoVIM'
+  endif
+endfunction
+
+set title
+set titlestring=%{Title()}
 

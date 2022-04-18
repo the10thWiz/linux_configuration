@@ -11,5 +11,7 @@
 		"-x", "nvr -c 'tab drop %f | %{line}'",
 		"%p"
 	],
-	"texlab.latexindent.modifyLineBreaks": true
+	"texlab.latexindent.modifyLineBreaks": true,
+	"rust-analyzer.cargo.allFeatures": true,
+	"rust-analyzer.procMacro.enable": true
 }

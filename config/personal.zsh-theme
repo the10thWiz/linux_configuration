@@ -96,7 +96,14 @@ HOSTNAME="@$(hostname)"
 if [[ "$HOSTNAME" == "@matthew-ubuntu" ]]
 then
    HOSTNAME=""
+elif [[ "$HOSTNAME" =~ "@WINDOWS-*" ]]
+then
+   HOSTNAME="@wsl"
 fi
+
+set_title() {
+   title "${HOSTNAME#@}:$(print -P '%4~')"
+}
 
 TEST_PROMPT='(237;223)%n$HOSTNAME>'
 TEST_PROMPT+='(214)?1j;%%%j>'
@@ -108,7 +115,7 @@ TEST_PROMPT+='(109;237)?$(DOCKER_NUM)>'
 TEST_PROMPT+='(72;237)?$(battery_pct)>' # TODO: test this with an actual battery
 TEST_PROMPT+='(208;237)%D %T>'
 TEST_PROMPT+='(~)%-1&gt;&gt;$(GIT_REMOTE_URL)%&gt;&gt;|(~)\n|(237)??;%F{250}  √;%F{88}%?|(237;250) $(vi_mode_prompt_info)<'
-TEST_PROMPT+='(0)%k%f %(!.#.)'
+TEST_PROMPT+='(0)%k%f %(!.#.)$(set_title)'
 
 TMP=$($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
 for L in $TMP; do
