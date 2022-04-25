@@ -125,6 +125,9 @@ Plug 'junegunn/vim-easy-align'
 "" Base64 plugin
 "Plug 'christianrondeau/vim-base64'
 
+"" Ghosttext plugin
+Plug 'subnut/nvim-ghost.nvim', {'do': ':call nvim_ghost#installer#install()'}
+
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 

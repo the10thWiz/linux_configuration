@@ -48,6 +48,9 @@
 
 # strategy: eval the result of a rust program
 
+# Init
+setopt PROMPT_SUBST
+
 if [[ ! -x $HOME/bin/install/zsh-theme/target/debug/zsh-theme ]]
 then
    if [[ ! -d $HOME/bin/install/zsh-theme ]]
@@ -101,8 +104,14 @@ then
    HOSTNAME="@wsl"
 fi
 
+DISABLE_AUTO_TITLE="true"
+
+# Prevent venv from modifiying the prompt,
+# since the prompt already has the info
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
 set_title() {
-   title "${HOSTNAME#@}:$(print -P '%4~')"
+   echo -en "\e]2;${HOSTNAME#@}:$(print -P '%4~')\a"
 }
 
 TEST_PROMPT='(237;223)%n$HOSTNAME$(set_title)>'
@@ -112,9 +121,9 @@ TEST_PROMPT+='(109;237)%4~>'
 TEST_PROMPT+='(142;237)?$(GIT_PROMPT_GEN)>'
 TEST_PROMPT+='(72;237)?$(get_venv_name_prompt)>'
 TEST_PROMPT+='(109;237)?$(DOCKER_NUM)>'
-TEST_PROMPT+='(72;237)?$(battery_pct)>' # TODO: test this with an actual battery
+#TEST_PROMPT+='(72;237)?$(battery_pct)>' # TODO: test this with an actual battery
 TEST_PROMPT+='(208;237)%D %T>'
-TEST_PROMPT+='(~)%-1&gt;&gt;$(GIT_REMOTE_URL)%&gt;&gt;|(~)\n|(237)??;%F{250}  √;%F{88}%?|(237;250) $(vi_mode_prompt_info)<'
+TEST_PROMPT+='(~)%-1&gt;&gt;$(GIT_REMOTE_URL)%&gt;&gt;|(~)\n|(237)??;%F{250}  √;%F{88}%?|(237;250) $ZVM_INDICATOR<'
 TEST_PROMPT+='(0)%k%f %(!.#.)'
 
 TMP=$($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
