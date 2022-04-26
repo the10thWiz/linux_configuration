@@ -22,6 +22,14 @@ else
   alias op='xdg-open'
 fi
 
+function __builtin_calc() {
+  python3 -c "from math import *; print(f\"{$* = }\");"
+}
+
+# Alternative alias syntax that allows aliasing `=`
+aliases[calc]="noglob __builtin_calc"
+aliases[=]='noglob __builtin_calc'
+
 
 if [ -f $HOME/bin/install/arg-adjuster/target/release/p7zip-args ]
 then
