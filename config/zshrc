@@ -31,7 +31,10 @@ source $HOME/bin/config/zsh-bar.zsh
 
 # Attempt to avoid gnome askpass
 unset SSH_ASKPASS
-
+# Enable agent
+#alias echo=true
+#type ssh-agent > /dev/null && eval $(ssh-agent -s)
+#unalias echo
 
 # Setup kitty if available
 if type kitty > /dev/null
@@ -107,6 +110,18 @@ path PATH $SAGE_ROOT/local/bin/
 fpath+="$HOME/bin/install/completions"
 fpath+=~/.zfunc
 
+### Keep and Share history
+setopt inc_append_history share_history
+
+### Better up/down
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+zvm_bindkey viins "^[[A" up-line-or-beginning-search
+zvm_bindkey viins "^[[B" down-line-or-beginning-search
+zvm_bindkey vicmd "^[[A" up-line-or-beginning-search
+zvm_bindkey vicmd "^[[B" down-line-or-beginning-search
 
 # The following lines were added by compinstall
 
@@ -130,7 +145,7 @@ autoload -Uz compinit
 compinit
 # End of lines added by compinstall
 # Lines configured by zsh-newuser-install
-HISTFILE=~/bin/zsh_alt/.histfile
+HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 setopt autocd extendedglob notify
