@@ -151,9 +151,10 @@ endif
 
 augroup FileTypeExtentions
   au!
-  autocmd BufRead,BufNewFile *.html.tera setl filetype=htmldjango | nmap <buffer> <leader>f :call HtmlBeautify()<cr>
-  autocmd BufRead,BufNewFile *.js.tera setl filetype=django | nmap <buffer> <leader>f :call JsBeautify()<cr>
-  autocmd BufRead,BufNewFile *.css.tera setl filetype=django | nmap <buffer> <leader>f :call CssBeautify()<cr>
+  autocmd BufRead,BufNewFile *.tera setl filetype=tera
+  autocmd BufRead,BufNewFile *.html* nmap <buffer> <leader>f :call HtmlBeautify()<cr>
+  autocmd BufRead,BufNewFile *.js* nmap <buffer> <leader>f :call JsBeautify()<cr>
+  autocmd BufRead,BufNewFile *.css* nmap <buffer> <leader>f :call CssBeautify()<cr>
 augroup END
 
 "let g:termdebugMap = 0
@@ -316,7 +317,8 @@ nmap <Leader>/ <plug>NERDCommenterToggle
 
 let g:NERDCustomDelimiters = {
     \ 'rust': { 'left': '//', 'leftAlt': '/*', 'rightAlt': '*/' },
-    \ 'htmldjango': { 'leftAlt': '{#', 'rightAlt': '#}' },
+    \ 'htmldjango': { 'left': '<!--', 'right': '--!>', 'leftAlt': '{#', 'rightAlt': '#}' },
+    \ 'tera': { 'left': '{#', 'right': '#}' },
   \ }
 
 " j/k will move virtual lines (lines that wrap)
