@@ -13,5 +13,6 @@
 	],
 	"texlab.latexindent.modifyLineBreaks": true,
 	"rust-analyzer.cargo.allFeatures": true,
-	"rust-analyzer.procMacro.enable": true
+	"rust-analyzer.procMacro.enable": true,
+	"rust-analyzer.inlayHints.enable": true
 }
