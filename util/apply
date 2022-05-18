@@ -95,11 +95,12 @@ fi
 #git config --global user.email "the10thwiz@gmail.com"
 git config --global pull.ff only
 git config --global core.excludesFile "$HOME/bin/config/gitignore"
-git config --global alias.co checkout
-git config --global alias.s status
-git config --global alias.a add
+git config --global alias.co 'checkout'
+git config --global alias.s 'status'
+git config --global alias.a 'add'
 git config --global alias.unadd 'restore --staged'
 git config --global alias.ls '!fd'
+git config --global alias.br 'branch'
 git config --global rerere.enabled true
 git config --global init.defaultBranch 'main'
 
