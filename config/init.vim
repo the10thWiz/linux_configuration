@@ -128,6 +128,9 @@ Plug 'junegunn/vim-easy-align'
 "" Ghosttext plugin
 Plug 'subnut/nvim-ghost.nvim', {'do': ':call nvim_ghost#installer#install()'}
 
+" IEC structured text support
+Plug 'https://github.com/jubnzv/IEC.vim'
+
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
@@ -136,6 +139,23 @@ call plug#end()
 xmap <leader>= <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap <leader>= <Plug>(EasyAlign)
+
+set cino+=(0
+
+let g:easy_align_delimiters = {
+  \ '(': {
+    \ 'pattern': '\((\s*\|^\s\+\)\@<=\(const \)\?[A-Za-z0-9:<>&*]\+ ',
+    \ 'left_margin': 0,
+    \ 'right_margin': 1,
+    \ 'stick_to_left': 1,
+  \ },
+  \ '!': {
+    \ 'pattern': '[*&]',
+    \ 'left_margin': 1,
+    \ 'right_margin': 1,
+    \ 'stick_to_left': 0,
+  \ },
+\ }
 
 "fun! SetupCommandAlias(from, to)
   "exec 'cnoreabbrev <expr> '.a:from
@@ -155,6 +175,7 @@ augroup FileTypeExtentions
   autocmd BufRead,BufNewFile *.html* nmap <buffer> <leader>f :call HtmlBeautify()<cr>
   autocmd BufRead,BufNewFile *.js* nmap <buffer> <leader>f :call JsBeautify()<cr>
   autocmd BufRead,BufNewFile *.css* nmap <buffer> <leader>f :call CssBeautify()<cr>
+  autocmd BufRead,BufNewFile *.st set syntax=iec
 augroup END
 
 "let g:termdebugMap = 0
@@ -293,6 +314,7 @@ nmap <leader>b :call fzf#vim#buffers({'sink': function('<SID>open')})<cr>
 nmap <Leader>e :GitFiles<CR>
 nmap <expr> <Leader>pe ':Files ' . get(g:, 'WorkspaceFolders', [getcwd()])[0] . '<CR>'
 
+command! BufOnly silent! execute "%bd|e#|bd#"
 command! MdFmt normal ^79lwhr<lt>CR>J
 
 nnoremap <leader>i :MdFmt<CR>
@@ -369,25 +391,34 @@ set shortmess+=c
 " always show signcolumns
 set signcolumn=yes:1
 
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-  \ pumvisible() ? "\<C-n>" :
-  \ <SID>check_back_space() ? "\<TAB>" :
-  \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+
+function! s:next_if_completed() 
+  let info = coc#pum#info()
+  if info.inserted
+    return coc#pum#next(1)
+  else
+    return coc#pum#next(1) . coc#pum#prev(1)
+  endif
+endfunction
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+  \ coc#pum#visible() ? <SID>next_if_completed():
+  \ <SID>check_back_space() ? "\<Tab>" :
+  \ coc#refresh()
+inoremap <expr> <S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
 " Coc only does snippet and additional edit on confirm.
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+inoremap <expr> <cr> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 " Or use `complete_info` if your vim support it, like:
 " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
 
