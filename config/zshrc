@@ -50,7 +50,7 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Auto jump setup
-source /usr/share/autojump/autojump.sh
+#source /usr/share/autojump/autojump.sh
 
 ### Editor configuration
 export EDITOR="nvim"
@@ -102,10 +102,12 @@ export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
 # TODO: remove ~/bin from the path
 path $HOME/bin/ PATH
 path $HOME/gems/bin/ PATH
-path /usr/local/lib/nodejs/nodejs/node-v14.17.3-linux-x64/bin/ PATH
-path PATH $HOME/.local/bin/
-path PATH /opt/gradle/gradle-7.3.3/bin/
-path PATH $SAGE_ROOT/local/bin/
+path /usr/local/lib/nodejs/nodejs/node-v14.17.3-linux-x64/bin PATH
+path $HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin PATH
+path $HOME/.cargo/bin PATH
+path PATH $HOME/.local/bin
+path PATH /opt/gradle/gradle-7.3.3/bin
+path PATH $SAGE_ROOT/local/bin
 
 fpath+="$HOME/bin/install/completions"
 fpath+=~/.zfunc
@@ -151,3 +153,9 @@ SAVEHIST=1000
 setopt autocd extendedglob notify
 bindkey -v
 # End of lines configured by zsh-newuser-install
+
+# Machine-specific configuration
+if [[ -f "$HOME/.zshlocal" ]]
+then
+  source "$HOME/.zshlocal"
+fi
