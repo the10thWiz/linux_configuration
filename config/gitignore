@@ -1,3 +1,10 @@
 .vscode
 *.local.sh
 *~
+.ccls-cache/
+.ccls
+.ccls.*
+
+deploy.sh
+run.sh
+gdbserver.sh

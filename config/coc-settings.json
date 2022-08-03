@@ -1,5 +1,20 @@
 {
 	"coc.preferences.formatOnSaveFiletypes": ["tex"],
+	"languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+      "rootPatterns": [".ccls-root", "compile_commands.json"],
+      "initializationOptions": {
+        "cache": {
+          "directory": ".ccls-cache"
+        },
+        "client": {
+          "snippetSupport": true
+        }
+      }
+    }
+  },
 	"git.addGBlameToBufferVar": true,
 	"git.branchCharacter": "",
 	"texlab.build.onSave": true,
