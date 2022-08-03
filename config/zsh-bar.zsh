@@ -91,7 +91,7 @@ DOCKER_NUM() {
 GIT_REMOTE_URL() {
    if [[ -z $GIT_PROMPT_DISABLE ]]
    then
-      $HOME/bin/install/git-remote-url/target/release/git-remote-url
+      $HOME/bin/install/git-remote-url/target/release/git-remote-url 2> /dev/null
    fi
 }
 
@@ -114,16 +114,17 @@ set_title() {
    echo -en "\e]2;${HOSTNAME#@}:$(print -P '%4~')\a"
 }
 
-TEST_PROMPT='(237;223)%n$HOSTNAME$(set_title)>'
+TEST_PROMPT='(237;223)%n$HOSTNAME>'
 TEST_PROMPT+='(214)?1j;%%%j>'
 TEST_PROMPT+='(208;237)!%!>'
-TEST_PROMPT+='(109;237)%4~>'
+TEST_PROMPT+='(109;237)%2~>'
 TEST_PROMPT+='(142;237)?$(GIT_PROMPT_GEN)>'
 TEST_PROMPT+='(72;237)?$(get_venv_name_prompt)>'
 TEST_PROMPT+='(109;237)?$(DOCKER_NUM)>'
 #TEST_PROMPT+='(72;237)?$(battery_pct)>' # TODO: test this with an actual battery
 TEST_PROMPT+='(208;237)%D %T>'
-TEST_PROMPT+='(~)%-1&gt;&gt;$(GIT_REMOTE_URL)%&gt;&gt;|(~)\n|(237)??;%F{250}  √;%F{88}%?|(237;250) $ZVM_INDICATOR<'
+TEST_PROMPT+='(~)\n|(237)??;%F{250}  √;%F{88}%?|(237;250) $ZVM_INDICATOR<'
+#TEST_PROMPT+='(~)%-1&gt;&gt;$(GIT_REMOTE_URL)%&gt;&gt;|(~)\n|(237)??;%F{250}  √;%F{88}%?|(237;250) $ZVM_INDICATOR<'
 TEST_PROMPT+='(0)%k%f %(!.#.)'
 
 TMP=$($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
@@ -131,7 +132,8 @@ for L in $TMP; do
    eval $L
 done
 
-RPROMPT=''
+RPROMPT='%F{208}$(GIT_REMOTE_URL)'
+#RPROMPT=''
 
 #printf '%s' $($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
 
