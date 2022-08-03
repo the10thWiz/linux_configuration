@@ -1,5 +1,5 @@
 # Automatically load local config
-set auto-load safe-path /
+set auto-load safe-path /:.
 
 #define src
   #pipe frame | grep -Po " at \K.*" | xargs -i nvr --remote-expr "Debugging('open', '{}')"
