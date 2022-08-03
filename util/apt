@@ -11,14 +11,19 @@ apt install \
   htop \
   g++ \
   gcc \
+  pkg-config \
   docker \
   docker-compose \
+  nodejs \
+  npm \
   autojump \
   clangd-9 \
   fd-find \
   git \
   gparted \
   net-tools
+
+sudo npm install --global yarn
 
 mkdir -p $HOME/.local/bin/
 (# Executed in subshell so fdfind WILL be found
