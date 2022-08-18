@@ -21,7 +21,12 @@ apt install \
   fd-find \
   git \
   gparted \
-  net-tools
+  net-tools \
+  golang \
+  ncdu \
+  ripgrep
+
+go install github.com/jesseduffield/lazygit@latest
 
 sudo npm install --global yarn
 
