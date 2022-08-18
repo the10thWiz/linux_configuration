@@ -72,7 +72,7 @@ else
   git clone https://github.com/AstroNvim/AstroNvim ~/.config/nvim
 fi
 
-link config/init.lua ~/.config/nvim/user/init.lua
+link config/init.lua ~/.config/nvim/lua/user/init.lua
 nvim +PackerSync
 
 ## oh-my-zsh

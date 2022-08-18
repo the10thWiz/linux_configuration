@@ -2,29 +2,23 @@
 
 apt update
 
-apt install \
-  curl \
-  neovim \
-  kitty \
-  zsh \
-  make \
-  htop \
-  g++ \
-  gcc \
-  pkg-config \
-  docker \
-  docker-compose \
-  nodejs \
-  npm \
-  autojump \
-  clangd-9 \
-  fd-find \
-  git \
-  gparted \
-  net-tools \
-  golang \
-  ncdu \
-  ripgrep
+apt install curl
+apt install neovim
+apt install kitty
+apt install zsh
+apt install htop
+apt install gcc g++
+apt install pkg-config make
+apt install docker docker-compose \
+apt install nodejs npm
+apt install autojump
+apt install fd-find
+apt install git
+apt install gparted
+apt install net-tools
+apt install golang
+apt install ncdu
+apt install ripgrep
 
 go install github.com/jesseduffield/lazygit@latest
 
