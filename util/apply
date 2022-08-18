@@ -11,6 +11,14 @@ else
    exit
 fi
 
+function link() {
+   if [ -f ~/bin/$1 ]
+   then
+      mkdir -p $(dirname $2)
+      ln -sf $HOME/bin/$1 $2
+   fi
+}
+
 # Make git-ignored dirs
 mkdir -p ~/bin/install/
 mkdir -p ~/.zfunc
@@ -52,25 +60,32 @@ then
    ln -sf ~/bin/config/pretty-git-prompt.yml ~/.config/pretty-git-prompt.yml
 fi
 
+mkdir -p ~/.config/nvim/
+if [ -f ~/.config/nvim/init.lua ]
+then
+(
+  cd ~/.config/nvim/
+  git pull --ff-only
+)
+else 
+  rm -rf ~/.config/nvim/*
+  git clone https://github.com/AstroNvim/AstroNvim ~/.config/nvim
+fi
+
+link config/init.lua ~/.config/nvim/user/init.lua
+nvim +PackerSync
+
 ## oh-my-zsh
 #if [ ! -d ~/.oh-my-zsh/ ]; then
    #sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 #fi
 
-function link() {
-   if [ -f ~/bin/$1 ]
-   then
-      mkdir -p $(dirname $2)
-      ln -sf $HOME/bin/$1 $2
-   fi
-}
-
 # Link rc files to where they belong
 link config/bashrc ~/.bashrc
 link config/Xmodmap ~/.Xmodmap
-link config/init.vim ~/.config/nvim/init.vim
-link config/indent_line.vim ~/.config/nvim/plugin/indent_line.vim
-link config/coc_fzf_outline.vim ~/.config/nvim/plugin/coc_fzf_outline.vim
+# link config/init.vim ~/.config/nvim/init.vim
+# link config/indent_line.vim ~/.config/nvim/plugin/indent_line.vim
+# link config/coc_fzf_outline.vim ~/.config/nvim/plugin/coc_fzf_outline.vim
 link config/rust.vim ~/.config/nvim/after/syntax/rust.vim
 link config/json.vim ~/.config/nvim/syntax/json.vim
 link config/squirrel.vim ~/.config/nvim/syntax/squirrel.vim
@@ -105,9 +120,9 @@ git config --global rerere.enabled true
 git config --global init.defaultBranch 'main'
 
 # Install vim plugins
-sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-nvim -c 'PlugInstall'
+# sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+#        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+# nvim -c 'PlugInstall'
 
 # install vscode extensions
 #bash ~/bin/util/vscode

@@ -2,6 +2,8 @@
 local toggleterm = require("toggleterm")
 local toggleterm_ui = require("toggleterm.ui")
 local terms = require("toggleterm.terminal")
+local cmp = require("cmp")
+local luasnip = require("luasnip")
 
 function vim.g.RemoteOpen(pwd, args)
   local terminals = terms.get_all()
@@ -70,6 +72,11 @@ end
 local telescope = require("telescope.builtin")
 
 return {
+  mappings = {
+    n = {
+      ["<leader>tp"] = { function() astronvim.toggle_term_cmd "python3" end, desc = "ToggleTerm python" }
+    },
+  },
   polish = function()
     -- Open files with git if possible
     vim.api.nvim_set_keymap("n", "<leader>ff", "", {
@@ -77,6 +84,10 @@ return {
         local ok = pcall(telescope.git_files)
         if not ok then telescope.find_files() end
       end,
+    })
+    vim.api.nvim_del_keymap("t", "<Esc>")
+    vim.api.nvim_set_keymap("t", "<M-w>", "<C-\\><C-N>", {
+      noremap = true,
     })
   end,
   plugins = {
@@ -89,6 +100,37 @@ return {
       { "junegunn/vim-easy-align" },
     },
     telescope = { pickers = { buffers = { sort_mru = true, ignore_current_buffer = true } } },
+    cmp = {
+      mapping = {
+        ["<Tab>"] = cmp.mapping(function(fallback)
+            vim.cmd("echo 'Pressed Tab'")
+            if cmp.visible() then
+              cmp.select_next_item()
+            elseif luasnip.expandable() then
+              luasnip.expand()
+            -- elseif luasnip.expand_or_jumpable() then
+            --   luasnip.expand_or_jump()
+            else
+              fallback()
+            end
+          end, {
+            "i",
+            "s",
+          }),
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              cmp.select_prev_item()
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
+            end
+          end, {
+            "i",
+            "s",
+          }),
+      },
+    },
   }
 }
 

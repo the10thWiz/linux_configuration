@@ -30,6 +30,8 @@ function __builtin_calc() {
 aliases[calc]="noglob __builtin_calc"
 aliases[=]='noglob __builtin_calc'
 
+alias python=python3
+
 
 if [ -f $HOME/bin/install/arg-adjuster/target/release/p7zip-args ]
 then
