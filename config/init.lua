@@ -89,6 +89,7 @@ return {
     vim.api.nvim_set_keymap("t", "<M-w>", "<C-\\><C-N>", {
       noremap = true,
     })
+    vim.api.nvim_set_option("clipboard", "")
   end,
   plugins = {
     init = {
