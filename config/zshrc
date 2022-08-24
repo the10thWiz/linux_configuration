@@ -1,25 +1,4 @@
 
-# vi() {
-#   if type floaterm > /dev/null
-#   then
-#     # TODO: switch to better version
-#     floaterm $*
-#   else
-#     nvim $*
-#   fi
-# }
-
-gradlew() {
-  local CUR=$PWD
-  while [[ $CUR != "/" ]]; do
-    if [[ -f "$CUR/gradlew" ]]; then
-      $CUR/gradlew $@
-      return 0
-    fi
-    CUR=$(dirname "$CUR")
-  done
-}
-
 path() {
   if [[ "$1" == "PATH" ]]
   then
@@ -34,9 +13,6 @@ path() {
 
 fpath+="$HOME/bin/install/completions"
 fpath+=~/.zfunc
-
-### Keep and Share history
-setopt inc_append_history share_history
 
 # The following lines were added by compinstall
 
@@ -108,6 +84,9 @@ zvm_bindkey vicmd "^[[B" down-line-or-beginning-search
 
 source $HOME/bin/config/zsh-bar.zsh
 
+### Keep and Share history
+setopt inc_append_history share_history
+
 # Attempt to avoid gnome askpass
 unset SSH_ASKPASS
 # Enable agent
@@ -155,6 +134,7 @@ path PATH $HOME/.local/bin
 path PATH /opt/gradle/gradle-7.3.3/bin
 path PATH $SAGE_ROOT/local/bin
 path PATH $HOME/go/bin/
+
 # Machine-specific configuration
 if [[ -f "$HOME/.zshlocal" ]]
 then

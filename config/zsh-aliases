@@ -15,6 +15,7 @@ alias l='ls -CF'
 alias sl='sl -e'
 # Some cool aliases, with cloned completes
 alias ddp='dd status=progress bs=1024k '
+
 if [[ $HOST:l =~ "window" ]]
 then
   alias op='wsl_run files'
@@ -30,22 +31,24 @@ function __builtin_calc() {
 aliases[calc]="noglob __builtin_calc"
 aliases[=]='noglob __builtin_calc'
 
-alias python=python3
+# for systems that do not have a python exectuable but do have python3
+type python &> /dev/null || alias python=python3
 
+# This is currently broken for some reason
+# if [ -f $HOME/bin/install/arg-adjuster/target/release/p7zip-args ]
+# then
+#   alias 7z="$HOME/bin/install/arg-adjuster/target/release/p7zip-args"
+# fi
 
-if [ -f $HOME/bin/install/arg-adjuster/target/release/p7zip-args ]
-then
-  alias 7z="$HOME/bin/install/arg-adjuster/target/release/p7zip-args"
-fi
-
+# Aliases for clip & paste that use an appropriate underlying script
 case $TERM in 
     *kitty)
         alias clip='kitty +kitten clipboard'
         alias paste='kitty +kitten clipboard --get-clipboard'
         ;;
     *)
-        alias clip='xclip -i'
-        alias paste='echo "$(xclip -o -rmlastnl)"'
+        alias clip='xclip -i -selection clipboard'
+        alias paste='echo "$(xclip -o -rmlastnl -selection clipboard)"'
         ;;
 esac
 
@@ -60,17 +63,33 @@ then
   alias neovide='/mnt/c/Users/PomesMatthew/Documents/neovide/target/release/neovide.exe --wsl'
 fi
 
+# Set zathura to fork by default
 if type zathura &> /dev/null
 then
   alias zathura='zathura --fork'
 fi
 
+# Time zsh startup to find and fix issues
 timezsh() {
   shell=${1-$SHELL}
   for i in $(seq 1 10); do /usr/bin/time -p $shell -i -c exit; done
 }
 
-function ghost() {
-  cd ~
-  nvim +GhostStart
+# function ghost() {
+#   cd ~
+#   nvim +GhostStart
+# }
+
+# Gradlew command, finds & executes a gradlew script in the current (or parent) exectuable
+gradlew() {
+  local CUR=$PWD
+  while [[ $CUR != "/" ]]; do
+    if [[ -f "$CUR/gradlew" ]]; then
+      $CUR/gradlew $@
+      return 0
+    fi
+    CUR=$(dirname "$CUR")
+  done
+  echo "No ./gradlew script found"
 }
+
