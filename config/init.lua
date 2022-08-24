@@ -86,10 +86,13 @@ return {
       end,
     })
     vim.api.nvim_del_keymap("t", "<Esc>")
-    vim.api.nvim_set_keymap("t", "<M-w>", "<C-\\><C-N>", {
-      noremap = true,
-    })
+    vim.api.nvim_set_keymap("t", "<M-w>", "<C-\\><C-N>", { noremap = true, })
+    -- Clipboard mappings - ^v maps to using the system clipboard, while p defaults to just using vim registers
     vim.api.nvim_set_option("clipboard", "")
+    vim.api.nvim_set_keymap("i", "<C-v>", "<Esc>\"+pa", { noremap = true, })
+    vim.api.nvim_set_keymap("v", "<C-v>", "s<Esc>\"+p", { noremap = true, })
+    vim.api.nvim_set_keymap("n", "<C-v>", "<Esc>\"+p", { noremap = true, })
+    vim.api.nvim_set_keymap("n", "<C-V>", "<Esc>\"+P", { noremap = true, })
   end,
   plugins = {
     init = {
@@ -132,6 +135,25 @@ return {
           }),
       },
     },
+    ["neo-tree"] = {
+      filesystem = {
+        filtered_items = {
+          visible = false,
+          hide_dotfiles = true,
+          hide_gitignored = true,
+          always_show = { ".gitignore" },
+          hide_by_name = {
+            ".DS_Store",
+            "thumbs.db",
+            "node_modules",
+            "__pycache__",
+            "target",
+            ".git",
+            "Cargo.lock",
+          },
+        }
+      }
+    }
   }
 }
 
