@@ -93,6 +93,7 @@ link config/tera.vim ~/.config/nvim/syntax/tera.vim
 link config/ftdetect.vim ~/.config/nvim/ftdetect/custom.vim
 link config/kitty.conf ~/.config/kitty/kitty.conf
 link config/zshrc ~/.zshrc
+link config/zshenv ~/.zshenv
 link config/personal.zsh-theme ~/.oh-my-zsh/themes/personal.zsh-theme
 link config/i3config ~/.config/i3/config
 link config/indentpath.yaml ~/.indentconfig.yaml

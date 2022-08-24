@@ -1,62 +1,4 @@
 
-### Aliases and useful commands
-source $HOME/bin/config/zsh-aliases
-source $HOME/bin/config/venv_activate
-
-### VI mode
-source $HOME/bin/config/zsh-vi-mode.zsh
-
-ZVM_INDICATOR='λ'
-function zvm_after_select_vi_mode() {
-  case $ZVM_MODE in
-    $ZVM_MODE_NORMAL)
-      ZVM_INDICATOR='ᐅ'
-    ;;
-    $ZVM_MODE_INSERT)
-      ZVM_INDICATOR='λ'
-    ;;
-    $ZVM_MODE_VISUAL)
-      zvm_indicator='λ'
-    ;;
-    $ZVM_MODE_VISUAL_LINE)
-      zvm_indicator='λ'
-    ;;
-    $ZVM_MODE_REPLACE)
-      zvm_indicator='λ'
-    ;;
-  esac
-}
-
-source $HOME/bin/config/zsh-bar.zsh
-
-# Attempt to avoid gnome askpass
-unset SSH_ASKPASS
-# Enable agent
-#alias echo=true
-#type ssh-agent > /dev/null && eval $(ssh-agent -s)
-#unalias echo
-
-# Setup kitty if available
-if type kitty > /dev/null
-then
-  kitty + complete setup zsh | source /dev/stdin
-fi
-
-# Setting fd as the default source for fzf
-export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_DEFAULT_OPTs='--height 60% --layout reverse'
-# To apply the command to CTRL-T as well
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-# Auto jump setup
-#source /usr/share/autojump/autojump.sh
-
-### Editor configuration
-export EDITOR="nvim"
-export SUDO_EDITOR="nvim"
-export VISUAL="nvim"
-
 # vi() {
 #   if type floaterm > /dev/null
 #   then
@@ -90,41 +32,11 @@ path() {
   fi
 }
 
-# Install Ruby Gems to ~/gems
-export GEM_HOME="$HOME/gems"
-
-# Root for SAGE install
-export SAGE_ROOT=$HOME/SageMath
-# SageTex location
-export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
-
-# Add locations to path as needed
-# TODO: remove ~/bin from the path
-path $HOME/bin/ PATH
-path $HOME/gems/bin/ PATH
-path /usr/local/lib/nodejs/nodejs/node-v14.17.3-linux-x64/bin PATH
-path $HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin PATH
-path $HOME/.cargo/bin PATH
-path PATH $HOME/.local/bin
-path PATH /opt/gradle/gradle-7.3.3/bin
-path PATH $SAGE_ROOT/local/bin
-path PATH $HOME/go/bin/
-
 fpath+="$HOME/bin/install/completions"
 fpath+=~/.zfunc
 
 ### Keep and Share history
 setopt inc_append_history share_history
-
-### Better up/down
-autoload -U up-line-or-beginning-search
-autoload -U down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-zvm_bindkey viins "^[[A" up-line-or-beginning-search
-zvm_bindkey viins "^[[B" down-line-or-beginning-search
-zvm_bindkey vicmd "^[[A" up-line-or-beginning-search
-zvm_bindkey vicmd "^[[B" down-line-or-beginning-search
 
 # The following lines were added by compinstall
 
@@ -155,6 +67,94 @@ setopt autocd extendedglob notify
 bindkey -v
 # End of lines configured by zsh-newuser-install
 
+
+### Aliases and useful commands
+source $HOME/bin/config/zsh-aliases
+source $HOME/bin/config/venv_activate
+
+### VI mode
+source $HOME/bin/config/zsh-vi-mode.zsh
+
+ZVM_INDICATOR='λ'
+function zvm_after_select_vi_mode() {
+  case $ZVM_MODE in
+    $ZVM_MODE_NORMAL)
+      ZVM_INDICATOR='ᐅ'
+    ;;
+    $ZVM_MODE_INSERT)
+      ZVM_INDICATOR='λ'
+    ;;
+    $ZVM_MODE_VISUAL)
+      zvm_indicator='λ'
+    ;;
+    $ZVM_MODE_VISUAL_LINE)
+      zvm_indicator='λ'
+    ;;
+    $ZVM_MODE_REPLACE)
+      zvm_indicator='λ'
+    ;;
+  esac
+}
+
+### Better up/down
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+zvm_bindkey viins "^[[A" up-line-or-beginning-search
+zvm_bindkey viins "^[[B" down-line-or-beginning-search
+zvm_bindkey vicmd "^[[A" up-line-or-beginning-search
+zvm_bindkey vicmd "^[[B" down-line-or-beginning-search
+
+source $HOME/bin/config/zsh-bar.zsh
+
+# Attempt to avoid gnome askpass
+unset SSH_ASKPASS
+# Enable agent
+#alias echo=true
+#type ssh-agent > /dev/null && eval $(ssh-agent -s)
+#unalias echo
+
+# Setup kitty if available
+if type kitty > /dev/null
+then
+  kitty + complete setup zsh | source /dev/stdin
+fi
+
+# Setting fd as the default source for fzf
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_OPTs='--height 60% --layout reverse'
+# To apply the command to CTRL-T as well
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Auto jump setup
+#source /usr/share/autojump/autojump.sh
+
+### Editor configuration
+export EDITOR="nvim"
+export SUDO_EDITOR="nvim"
+export VISUAL="nvim"
+
+# Install Ruby Gems to ~/gems
+export GEM_HOME="$HOME/gems"
+
+# Root for SAGE install
+export SAGE_ROOT=$HOME/SageMath
+# SageTex location
+export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
+
+# Add locations to path as needed
+# TODO: remove ~/bin from the path
+path $HOME/bin/ PATH
+path $HOME/gems/bin/ PATH
+path /usr/local/lib/nodejs/nodejs/node-v14.17.3-linux-x64/bin PATH
+path $HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin PATH
+path $HOME/.cargo/bin PATH
+path PATH $HOME/.local/bin
+path PATH /opt/gradle/gradle-7.3.3/bin
+path PATH $SAGE_ROOT/local/bin
+path PATH $HOME/go/bin/
 # Machine-specific configuration
 if [[ -f "$HOME/.zshlocal" ]]
 then

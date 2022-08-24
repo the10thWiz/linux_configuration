@@ -1,0 +1,2 @@
+# Skip global compinit to allow better caching (since I modify fpath)
+skip_global_compinit=1
