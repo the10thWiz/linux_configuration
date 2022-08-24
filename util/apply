@@ -99,6 +99,24 @@ link config/i3config ~/.config/i3/config
 link config/indentpath.yaml ~/.indentconfig.yaml
 link config/gdbinit ~/.gdbinit
 
+link audio ~/.local/bin/audio
+link brightnessctl ~/.local/bin/brightnessctl
+link colors ~/.local/bin/colors
+link deploy ~/.local/bin/deploy
+link file_paste ~/.local/bin/file_paste
+# link hpScreen ~/.local/bin/hpScreen
+# link llvmenv ~/.local/bin/llvmenv
+# link nxgmake ~/.local/bin/nxgmake
+link text_paste ~/.local/bin/text_paste
+link vi ~/.local/bin/vi
+# link yakuakeToggle ~/.local/bin/yakuakeToggle
+
+if type wslsys &> /dev/null
+then
+  link wsl_download ~/.local/bin/wsl_download
+  link wsl_run ~/.local/bin/wsl_run
+fi
+
 # Apply Git config options
 if type nvim
 then

@@ -124,11 +124,8 @@ export SAGE_ROOT=$HOME/SageMath
 export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
 
 # Add locations to path as needed
-# TODO: remove ~/bin from the path
-path $HOME/bin/ PATH
 path $HOME/gems/bin/ PATH
 path /usr/local/lib/nodejs/nodejs/node-v14.17.3-linux-x64/bin PATH
-path $HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin PATH
 path $HOME/.cargo/bin PATH
 path PATH $HOME/.local/bin
 path PATH /opt/gradle/gradle-7.3.3/bin
