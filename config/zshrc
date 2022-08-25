@@ -127,7 +127,7 @@ export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
 path $HOME/gems/bin/ PATH
 path /usr/local/lib/nodejs/nodejs/node-v14.17.3-linux-x64/bin PATH
 path $HOME/.cargo/bin PATH
-path PATH $HOME/.local/bin
+path $HOME/.local/bin PATH
 path PATH /opt/gradle/gradle-7.3.3/bin
 path PATH $SAGE_ROOT/local/bin
 path PATH $HOME/go/bin/
