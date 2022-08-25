@@ -68,7 +68,7 @@ then
   git pull --ff-only
 )
 else 
-  rm -rf ~/.config/nvim/*
+  rm -rf ~/.config/nvim
   git clone https://github.com/AstroNvim/AstroNvim ~/.config/nvim
 fi
 
