@@ -8,3 +8,4 @@
 deploy.sh
 run.sh
 gdbserver.sh
+*.log
