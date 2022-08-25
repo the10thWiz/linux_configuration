@@ -91,8 +91,6 @@ return {
     vim.api.nvim_set_option("clipboard", "")
     vim.api.nvim_set_keymap("i", "<C-v>", "<Esc>\"+pa", { noremap = true, })
     vim.api.nvim_set_keymap("v", "<C-v>", "s<Esc>\"+p", { noremap = true, })
-    vim.api.nvim_set_keymap("n", "<C-v>", "<Esc>\"+p", { noremap = true, })
-    vim.api.nvim_set_keymap("n", "<C-V>", "<Esc>\"+P", { noremap = true, })
   end,
   plugins = {
     init = {
