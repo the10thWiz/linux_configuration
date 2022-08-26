@@ -1,4 +1,4 @@
-
+#!/bin/zsh
 path() {
   if [[ "$1" == "PATH" ]]
   then
