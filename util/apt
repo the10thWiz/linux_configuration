@@ -3,7 +3,7 @@
 apt update
 
 apt install curl
-apt install neovim
+#apt install neovim
 apt install kitty
 apt install zsh
 apt install htop

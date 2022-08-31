@@ -134,6 +134,9 @@ Plug 'https://github.com/jubnzv/IEC.vim'
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
 
+" Insert UUID
+inoremap <c-u> <c-r>=trim(system('uuidgen'))<cr>
+
 "" vim-easy align
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap <leader>= <Plug>(EasyAlign)
@@ -175,7 +178,36 @@ augroup FileTypeExtentions
   autocmd BufRead,BufNewFile *.html* nmap <buffer> <leader>f :call HtmlBeautify()<cr>
   autocmd BufRead,BufNewFile *.js* nmap <buffer> <leader>f :call JsBeautify()<cr>
   autocmd BufRead,BufNewFile *.css* nmap <buffer> <leader>f :call CssBeautify()<cr>
+
   autocmd BufRead,BufNewFile *.st set syntax=iec
+
+  " SM specific JSON file exts
+  autocmd BufRead,BufNewFile *.assetset setl filetype=json
+  autocmd BufRead,BufNewFile *.assetdb setl filetype=json
+  autocmd BufRead,BufNewFile *.blueprint setl filetype=json
+  autocmd BufRead,BufNewFile *.characterset setl filetype=json
+  autocmd BufRead,BufNewFile *.characterdb setl filetype=json
+  autocmd BufRead,BufNewFile *.rend setl filetype=json
+  autocmd BufRead,BufNewFile *.effectset setl filetype=json
+  autocmd BufRead,BufNewFile *.effectdb setl filetype=json
+  autocmd BufRead,BufNewFile *.harvestableset setl filetype=json
+  autocmd BufRead,BufNewFile *.harvestabledb setl filetype=json
+  autocmd BufRead,BufNewFile *.kinematicset setl filetype=json
+  autocmd BufRead,BufNewFile *.kinematicdb setl filetype=json
+  autocmd BufRead,BufNewFile *.logset setl filetype=json
+  autocmd BufRead,BufNewFile *.meleeattackset setl filetype=json
+  autocmd BufRead,BufNewFile *.meleeattackdb setl filetype=json
+  autocmd BufRead,BufNewFile *.shapeset setl filetype=json
+  autocmd BufRead,BufNewFile *.shapedb setl filetype=json
+  autocmd BufRead,BufNewFile *.rotationset setl filetype=json
+  autocmd BufRead,BufNewFile *.rotationdb setl filetype=json
+  autocmd BufRead,BufNewFile *.projectileset setl filetype=json
+  autocmd BufRead,BufNewFile *.projectiledb setl filetype=json
+  autocmd BufRead,BufNewFile *.sobset setl filetype=json
+  autocmd BufRead,BufNewFile *.sobdb setl filetype=json
+  autocmd BufRead,BufNewFile *.world setl filetype=json
+  autocmd BufRead,BufNewFile *.toolset setl filetype=json
+  autocmd BufRead,BufNewFile *.tooldb setl filetype=json
 augroup END
 
 "let g:termdebugMap = 0
@@ -373,6 +405,7 @@ let g:coc_global_extensions = [
   \ 'coc-texlab',
   \ 'coc-python',
   \ 'coc-yaml',
+  \ 'coc-lua',
   \ 'coc-html',
   \ 'coc-elixir',
 \ ]

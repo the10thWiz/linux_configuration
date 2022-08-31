@@ -1,5 +1,4 @@
 {
-	"coc.preferences.formatOnSaveFiletypes": ["tex"],
 	"languageserver": {
     "ccls": {
       "command": "ccls",
@@ -15,19 +14,26 @@
       }
     }
   },
-	"git.addGBlameToBufferVar": true,
-	"git.branchCharacter": "",
-	"texlab.build.onSave": true,
-	"texlab.build.executable": "latexmk",
-	"texlab.build.args": ["%f"],
-	"texlab.forwardSearch.executable": "zathura",
-	"texlab.forwardSearch.args": [
-		"--synctex-forward", "%l:0:%f", 
-		"-x", "nvr -c 'tab drop %f | %{line}'",
-		"%p"
-	],
-	"texlab.latexindent.modifyLineBreaks": true,
-	"rust-analyzer.cargo.allFeatures": true,
-	"rust-analyzer.procMacro.enable": true,
-	"rust-analyzer.inlayHints.enable": true
+  "git.addGBlameToBufferVar": true,
+  "git.branchCharacter": "",
+  "texlab.build.onSave": true,
+  "texlab.build.executable": "latexmk",
+  "texlab.build.args": ["%f"],
+  "texlab.forwardSearch.executable": "zathura",
+  "texlab.forwardSearch.args": [
+  	"--synctex-forward", "%l:0:%f", 
+  	"-x", "nvr -c 'tab drop %f | %{line}'",
+  	"%p"
+  ],
+  "texlab.latexindent.modifyLineBreaks": true,
+  "rust-analyzer.cargo.allFeatures": true,
+  "rust-analyzer.procMacro.enable": true,
+  "rust-analyzer.inlayHints.enable": true,
+  "Lua.workspace.library": {
+    "~/sm_modding/lua_compat/": true,
+    "~/sm_modding/game_data/Survival/": true,
+    "~/sm_modding/game_data/Data/": true
+  },
+  "Lua.diagnostics.globals": ["sm", "bit"],
+  "Lua.diagnostics.disable": ["lowercase-global"]
 }
