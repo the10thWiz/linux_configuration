@@ -123,6 +123,9 @@ export SAGE_ROOT=$HOME/SageMath
 # SageTex location
 export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
 
+# make GPG work
+export GPG_TTY=$(tty)
+
 # Add locations to path as needed
 path $HOME/gems/bin/ PATH
 path /usr/local/lib/nodejs/nodejs/node-v14.17.3-linux-x64/bin PATH
