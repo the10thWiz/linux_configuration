@@ -6,8 +6,11 @@
 if type apt
 then
    sudo bash ~/bin/util/apt
+elif type yum
+then
+   sudo bash ~/bin/util/yum
 else
-   echo "Unkown package manager"
+   echo "Unknown package manager"
    exit
 fi
 

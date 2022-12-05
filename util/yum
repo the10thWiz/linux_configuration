@@ -1,0 +1,27 @@
+#!/bin/bash
+
+yum update
+
+yum install curl
+#apt install neovim
+yum install kitty
+yum install zsh
+yum install htop
+yum install gcc g++
+yum install pkg-config make
+yum install docker docker-compose
+yum install nodejs npm
+yum install autojump
+yum install fd
+yum install git
+yum install gparted
+yum install net-tools
+yum install golang
+yum install ncdu
+yum install ripgrep
+
+go install github.com/jesseduffield/lazygit@latest
+
+sudo npm install --global yarn
+
+mkdir -p $HOME/.local/bin/
