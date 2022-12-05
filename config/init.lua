@@ -105,6 +105,8 @@ return {
       ["<leader>tr"] = toggle_term("R"),
       ["<leader>tsr"] = toggle_term_send_n("R"),
       ["<C-\\>"] = { "<Cmd>ToggleTerm float<cr>", desc = "Toggle Terminal" },
+      ["<leader>e"] = { "<Cmd>Neotree focus<cr>", desc = "Focus Explorer" },
+      ["<leader>o"] = { "<Cmd>Neotree toggle<cr>", desc = "Toggle Explorer" },
     },
     v = {
       ["<leader>tp"] = toggle_term_send_v("python3"),
@@ -167,6 +169,11 @@ return {
         vim.api.nvim_buf_set_option(0, "textwidth", 80)
       end,
     })
+
+    if vim.api.nvim_eval("exists('g:neovide')") then
+      vim.api.nvim_set_option("guifont", "Cascadia Code PL")
+      vim.g.neovide_scroll_animation_length = 0
+    end
   end,
   plugins = {
     init = {
@@ -216,6 +223,8 @@ return {
           ["h"] = "prev_source",
           ["l"] = "next_source",
           ["Z"] = "expand_all_nodes",
+          ["."] = "nop",
+          ["<bs>"] = "nop",
         },
       },
       filesystem = {
