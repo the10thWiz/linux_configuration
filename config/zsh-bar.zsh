@@ -127,10 +127,38 @@ TEST_PROMPT+='(~)\n|(237)??;%F{250}  √;%F{88}%?|(237;250) $ZVM_INDICATOR<'
 #TEST_PROMPT+='(~)%-1&gt;&gt;$(GIT_REMOTE_URL)%&gt;&gt;|(~)\n|(237)??;%F{250}  √;%F{88}%?|(237;250) $ZVM_INDICATOR<'
 TEST_PROMPT+='(0)%k%f %(!.#.)'
 
-TMP=$($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
-for L in $TMP; do
-   eval $L
-done
+# TMP=$($HOME/bin/install/zsh-theme/target/debug/zsh-theme $TEST_PROMPT )
+# for L in $TMP; do
+#    eval $L
+# done
+
+function precmd {
+  local CONDA_PROMPT
+  if [[ "$CONDA_PREFIX" == "/opt/anaconda3" ]]
+  then
+    CONDA_PROMPT="C~"
+  else
+    CONDA_PROMPT="$(basename $CONDA_PREFIX)"
+  fi
+  psvar=(
+    "$(GIT_PROMPT_GEN)"
+    "$(get_venv_name_prompt)"
+    "$(DOCKER_NUM)"
+    "$CONDA_PROMPT"
+  )
+}
+
+PS1=' %223F❮ %n$HOSTNAME ❯%f'
+PS1+='%(1j& %214F❮ %%%j ❯%f&) '
+PS1+='%208F❮ !%! ❯'
+PS1+='%f %109F❮ %2~ ❯%f'
+PS1+='%(1V. %142F❮${psvar[1]}❯%f.)'
+PS1+='%(2V. %72F❮ V ${psvar[2]} ❯%f.)'
+PS1+='%(3V. %72F❮ D ${psvar[3]} ❯%f.)'
+PS1+='%(4V. %72F❮ ${psvar[4]} ❯%f.)'
+PS1+=''
+PS1+='
+ %(!.#.)$ZVM_INDICATOR ❮ '
 
 RPROMPT='%F{208}$(GIT_REMOTE_URL)'
 #RPROMPT=''

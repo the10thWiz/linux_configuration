@@ -101,6 +101,7 @@ link config/personal.zsh-theme ~/.oh-my-zsh/themes/personal.zsh-theme
 link config/i3config ~/.config/i3/config
 link config/indentpath.yaml ~/.indentconfig.yaml
 link config/gdbinit ~/.gdbinit
+link config/condarc ~/.condarc
 
 link audio ~/.local/bin/audio
 link brightnessctl ~/.local/bin/brightnessctl

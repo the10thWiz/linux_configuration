@@ -1,0 +1,4 @@
+#!/bin/bash
+
+URL="$(conda run jupyter server list | grep -P 'http.*token=.*(?= :: /home/matthew/latex_workspace)' -o)"
+/mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe ${URL/\?/tree\/math_writing\/modeling?}
