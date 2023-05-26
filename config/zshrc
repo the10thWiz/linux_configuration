@@ -162,3 +162,4 @@ compinit conda
 
 echo $PATH > ~/.cache/nvim/path
 
+PS2="    >"
