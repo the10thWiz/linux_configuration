@@ -111,9 +111,17 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 #source /usr/share/autojump/autojump.sh
 
 ### Editor configuration
-export EDITOR="nvim"
-export SUDO_EDITOR="nvim"
-export VISUAL="nvim"
+if [[ -z $NVIM ]]
+then
+  export EDITOR="nvim"
+  export SUDO_EDITOR="nvim"
+  export VISUAL="nvim"
+else
+  export EDITOR="nvr -cc 'ToggleTermCloseAll'"
+  export SUDO_EDITOR="nvr -cc 'ToggleTermCloseAll'"
+  export VISUAL="nvr -cc 'ToggleTermCloseAll'"
+  alias vi="nvr -cc 'ToggleTermCloseAll'"
+fi
 
 # Install Ruby Gems to ~/gems
 export GEM_HOME="$HOME/gems"
@@ -161,5 +169,7 @@ fpath+=$HOME/conda-zsh-completion
 compinit conda
 
 echo $PATH > ~/.cache/nvim/path
+
+alias fixmodmap="xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
 
 PS2="    >"
