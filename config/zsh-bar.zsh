@@ -137,6 +137,9 @@ function precmd {
   if [[ "$CONDA_PREFIX" == "/opt/anaconda3" ]]
   then
     CONDA_PROMPT="C~"
+  elif [[ "$CONDA_PREFIX" == "" ]]
+  then
+    CONDA_PROMPT=""
   else
     CONDA_PROMPT="$(basename $CONDA_PREFIX)"
   fi
