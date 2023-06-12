@@ -16,6 +16,8 @@ alias sl='sl -e'
 # Some cool aliases, with cloned completes
 alias ddp='dd status=progress bs=1024k '
 
+alias fd='fdfind'
+
 if [[ $HOST:l =~ "window" ]]
 then
   alias op='wsl_run files'
@@ -60,8 +62,11 @@ esac
 if type wslsys &> /dev/null
 then
   alias firefox='wsl_run /mnt/c/Program\ Files/Mozilla\ Firefox/firefox.exe'
-  alias neovide='/mnt/c/Users/PomesMatthew/Documents/neovide/target/release/neovide.exe --wsl'
+  alias neovide='/mnt/c/Users/PomesMatthew/Documents/neovide/target/release/neovide.exe --wsl --notabs'
+else
+  alias neovide='neovide --notabs'
 fi
+
 
 # Set zathura to fork by default
 if type zathura &> /dev/null
