@@ -84,6 +84,7 @@ return {
             end
         })
 
+        -- autocmd FileType markdown set textwidth=80
         vim.api.nvim_create_autocmd("FileType", {
             pattern = "markdown",
             desc = "Set Markdown text width",
@@ -92,10 +93,27 @@ return {
             end
         })
 
+        -- autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "gitcommit,gitrebase,gitconfig",
+            desc = "git buffers get deleted when hidden",
+            callback = function(args)
+                vim.api.nvim_buf_set_option(0, "bufhidden", "delete")
+                -- TODO: maybe locally override close (<leader>c) to also trigger toggleterm?
+                vim.api.nvim_buf_set_keymap(0, "n", "<leader>c", "<Cmd>bd<cr><Cmd>ToggleTerm<cr>", {})
+            end
+        })
+
         if vim.api.nvim_eval("exists('g:neovide')") then
             vim.api.nvim_set_option("guifont", "Cascadia Code PL")
             vim.g.neovide_scroll_animation_length = 0
         end
+
+        vim.api.nvim_create_user_command("ToggleTermCloseAll", function()
+            require("toggleterm").toggle_all("close")
+        end, {})
+
+        vim.env.GIT_EDITOR = "nvr -cc 'ToggleTermCloseAll' --remote-wait"
 
         local urls = {}
         urls["*stackoverflow.com"] = "markdown"
@@ -109,7 +127,47 @@ return {
                 command = "setfiletype " .. filetype
             })
         end
+
+        if vim.g.neovide then
+            vim.g.neovide_fullscreen = true
+        end
+
+        local dap = require('dap')
+        dap.adapters.cppdbg = {
+            id = 'cppdbg',
+            type = 'executable',
+            command = '/home/matthew/extension/debugAdapters/bin/OpenDebugAD7',
+        }
+        dap.configurations.cpp = {
+            {
+                name = "Launch file",
+                type = "cppdbg",
+                request = "launch",
+                program = function()
+                  return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                end,
+                cwd = '${workspaceFolder}',
+                stopAtEntry = true,
+            },
+            {
+                name = 'Attach to gdbserver :1234',
+                type = 'cppdbg',
+                request = 'launch',
+                MIMode = 'gdb',
+                miDebuggerServerAddress = 'localhost:1234',
+                miDebuggerPath = '/usr/bin/gdb',
+                cwd = '${workspaceFolder}',
+                program = function()
+                  return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+                end,
+            },
+        }
+
+        vim.api.nvim_set_hl(0, "DapUIVariable", {
+            fg = "#FFFFFF",
+        })
     end,
+
     mappings = {
         n = {
             ["<leader>tp"] = toggle_term("python3"),
@@ -121,6 +179,10 @@ return {
             ["<leader>o"] = {
                 "<Cmd>Neotree toggle<cr>",
                 desc = "Toggle Explorer"
+            },
+            ["<leader>a"] = {
+                "<Plug>(EasyAlign)",
+                desc = "Align"
             },
             ["<leader>ff"] = {
                 function()
@@ -134,7 +196,11 @@ return {
         v = {
             ["<leader>tp"] = toggle_term_send_v("python3"),
             ["<leader>tr"] = toggle_term_send_v("R"),
-            ["<C-\\>"] = { "<Cmd>ToggleTerm float<cr>", desc = "Toggle Terminal" },
+            ["<C-\\>"] = { "<Esc><Cmd>ToggleTerm float<cr>", desc = "Toggle Terminal" },
+            ["<leader>a"] = {
+                "<Plug>(EasyAlign)",
+                desc = "Align"
+            },
         },
         t = {
             ["<C-\\>"] = { "<Cmd>ToggleTerm float<cr>", desc = "Toggle Terminal" },
@@ -143,10 +209,11 @@ return {
                 desc = "Terminal normal mode",
                 noremap = true
             },
+            ["<C-v>"] = { "<C-\\><C-N>\"+pa", noremap = true, desc = "Paste from system clipboard" },
         },
         i = {
             ["<C-v>"] = { "<Esc>\"+pa", noremap = true, desc = "Paste from system clipboard" },
-            ["<C-\\>"] = { "<Cmd>ToggleTerm float<cr>", desc = "Toggle Terminal" },
+            ["<C-\\>"] = { "<Esc><Cmd>ToggleTerm float<cr>", desc = "Toggle Terminal" },
         }
     },
     lsp = {
@@ -169,9 +236,23 @@ return {
                         telemetry = { enable = false },
                     },
                 },
-            }
-        }
+            },
+            ["clangd"] = function()
+                local root = require("lspconfig.util").root_pattern("WORKSPACE")
+                local root_dir = root(vim.api.nvim_call_function("getcwd", {}))
+                if root_dir == nil then root_dir = "" end
+                return {
+                    cmd = {"clangd",
+                        "--header-insertion=never",
+                        "--compile-commands-dir=" .. root_dir,
+                        "--query-driver=**"},
+                    filetypes = {"cpp"},
+                    root_dir = root,
+                }
+            end,
+        },
     },
+
     plugins = {
         { "tpope/vim-surround",       lazy = false },
         { "mhinz/vim-crates",         lazy = false },
@@ -180,11 +261,21 @@ return {
         { "farmergreg/vim-lastplace", lazy = false },
         { "junegunn/vim-easy-align",  lazy = false },
         { "dccsillag/magma-nvim",     lazy = false },
-        { "subnut/nvim-ghost.nvim",   lazy = false },
+        -- { "subnut/nvim-ghost.nvim",   lazy = false },
         { "github/copilot.vim",       lazy = false },
         { "junegunn/fzf",             lazy = false },
         { "junegunn/fzf.vim",         lazy = false },
         { "chrisbra/unicode.vim",     lazy = false },
+        { "bazelbuild/vim-ft-bzl",    lazy = false },
+        -- { "google/vim-maktaba",       lazy = false }, -- dependency of vim-bazel
+        -- { "bazelbuild/vim-bazel",     lazy = false }, -- currently broken?
+        { "p00f/clangd_extensions.nvim" }, -- install lsp plugin
+        {
+            "williamboman/mason-lspconfig.nvim",
+            opts = {
+                ensure_installed = { "clangd" }, -- automatically install lsp
+            },
+        },
         {
             "hrsh7th/nvim-cmp",
             opts = function(_, opts)
