@@ -12,10 +12,14 @@ then
   shift 1
 fi
 
-for file in ./deploy*
+DEPLOY_SCRIPTS=("./deploy" "./deploy.sh")
+
+while [[ "$PWD" != "/" ]]
 do
-  if ./$file $@
-  then
-    exit
-  fi
+  for file in $DEPLOY_SCRIPTS
+  do
+    # If file exists, execute file, and exit if successful
+    [ -f $file ] && ./$file $@ && exit
+  done
+  cd ..
 done

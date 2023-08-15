@@ -91,7 +91,7 @@ setopt inc_append_history share_history
 unset SSH_ASKPASS
 # Enable agent
 #alias echo=true
-#type ssh-agent > /dev/null && eval $(ssh-agent -s)
+type ssh-agent > /dev/null && eval $(ssh-agent -s) > /dev/null
 #unalias echo
 
 # Setup kitty if available
@@ -113,14 +113,14 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 ### Editor configuration
 if [[ -z $NVIM ]]
 then
-  export EDITOR="nvim"
-  export SUDO_EDITOR="nvim"
-  export VISUAL="nvim"
+  export EDITOR=$(which nvim)
+  export SUDO_EDITOR="$EDITOR"
+  export VISUAL="$EDITOR"
 else
-  export EDITOR="nvr -cc 'ToggleTermCloseAll'"
-  export SUDO_EDITOR="nvr -cc 'ToggleTermCloseAll'"
-  export VISUAL="nvr -cc 'ToggleTermCloseAll'"
-  alias vi="nvr -cc 'ToggleTermCloseAll'"
+  export EDITOR="$(which nvr) -cc 'ToggleTermCloseAll'"
+  export SUDO_EDITOR="$EDITOR"
+  export VISUAL="$EDITOR"
+  alias vi="$EDITOR"
 fi
 
 # Install Ruby Gems to ~/gems
