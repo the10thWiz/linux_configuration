@@ -172,4 +172,7 @@ echo $PATH > ~/.cache/nvim/path
 
 alias fixmodmap="xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
 
+# For some reason, GPG uses this to decide to do use a CLI prompt
+export GPG_TTY=$(tty)
+
 PS2="    >"
