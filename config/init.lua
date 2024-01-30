@@ -128,6 +128,8 @@ end
 vim.api.nvim_set_var("nvim_ghost_use_script", 1)
 vim.api.nvim_set_var("nvim_ghost_python_executable", "/usr/bin/python3")
 vim.api.nvim_set_option("clipboard", "")
+
+vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername
 -- This should be set in the later mappings but it is not working for some reason
 -- vim.api.nvim_set_keymap("i", "<C-l>", "copilot#Accept('')", { expr = true, noremap = true })
 -- When using copilot.lua, we can actually integrate it into nvim-cmp, the normal completion engine
@@ -249,7 +251,7 @@ return {
             ["<leader>tsp"] = toggle_term_send_n("python3"),
             ["<leader>tr"] = toggle_term("R"),
             ["<leader>tsr"] = toggle_term_send_n("R"),
-            ["<C-\\>"] = {"<Cmd>ToggleTerm float<cr>", desc = "Toggle Terminal"},
+            ["<C-\\>"] = { "<Cmd>ToggleTerm float<cr>", desc = "Toggle Terminal" },
             ["<leader>e"] = {"<Cmd>Neotree focus<cr>", desc = "Focus Explorer"},
             ["<leader>o"] = {
                 "<Cmd>Neotree toggle<cr>",
@@ -449,6 +451,31 @@ return {
                 opts.register.n["<leader>ts"] = {name = "Send line to terminal"}
                 opts.register.n["<leader>t"] = {name = "Send lines to terminal"}
                 return opts
+            end
+        }, {
+            "akinsho/toggleterm.nvim",
+            opts = function(_, opts)
+                return opts
+            end
+        }, {
+            'chipsenkbeil/distant.nvim',
+            lazy = false,
+            branch = 'v0.3',
+            config = function()
+                require('distant'):setup({
+                    buffer = {
+                        watch = { enabled = true },
+                    },
+                    servers = {
+                        -- ["192.168.130.137"] = {
+                        --     connect = { defualt = {
+                        --         scheme = "ssh",
+                        --         username = "matt",
+                        --         options = "ssh.identity_files=~/.ssh/id_rsa",
+                        --     }},
+                        -- }
+                    },
+                })
             end
         }
     }
