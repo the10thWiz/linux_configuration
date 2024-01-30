@@ -114,6 +114,9 @@ link file_paste ~/.local/bin/file_paste
 link text_paste ~/.local/bin/text_paste
 link vi ~/.local/bin/vi
 # link yakuakeToggle ~/.local/bin/yakuakeToggle
+link config/helix_config.toml ~/.config/helix/config.toml
+link config/helix_languages.toml ~/.config/helix/languages.toml
+link vi ~/.local/bin/vi
 
 if type wslsys &> /dev/null
 then

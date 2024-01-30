@@ -1,0 +1,8 @@
+[language-server.markdown-lsp]
+command = "/home/matthew/rustmark/target/debug/rustmark"
+
+[[language]]
+name = "markdown"
+auto-format = false
+file-types = ["markdown", "md"]
+language-servers = [ "markdown-lsp" ]
