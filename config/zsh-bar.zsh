@@ -51,15 +51,26 @@
 # Init
 setopt PROMPT_SUBST
 
-if [[ ! -x $HOME/bin/install/zsh-theme/target/debug/zsh-theme ]]
+# if [[ ! -x $HOME/bin/install/zsh-theme/target/debug/zsh-theme ]]
+# then
+#    if [[ ! -d $HOME/bin/install/zsh-theme ]]
+#    then
+#       cd $HOME/bin/install
+#       git clone https://github.com/the10thWiz/zsh-theme.git
+#    fi
+#    cd $HOME/bin/install/zsh-theme
+#    cargo build
+# fi
+
+if [[ ! -x $HOME/bin/install/pretty-git-prompt/target/release/pretty-git-prompt ]]
 then
-   if [[ ! -d $HOME/bin/install/zsh-theme ]]
+   if [[ ! -d $HOME/bin/install/pretty-git-prompt ]]
    then
       cd $HOME/bin/install
-      git clone https://github.com/the10thWiz/zsh-theme.git
+      git clone https://github.com/the10thWiz/pretty-git-prompt.git
    fi
-   cd $HOME/bin/install/zsh-theme
-   cargo build
+   cd $HOME/bin/install/pretty-git-prompt
+   cargo build --release
 fi
 
 GIT_PROMPT_GEN() {
