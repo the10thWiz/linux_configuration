@@ -11,7 +11,6 @@ then
    sudo bash ~/bin/util/yum
 else
    echo "Unknown package manager"
-   exit
 fi
 
 function link() {

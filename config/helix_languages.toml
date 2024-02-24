@@ -1,8 +1,49 @@
+[language-server.typos-lsp]
+command = "/home/matthew/.local/bin/typos-lsp"
+
 [language-server.markdown-lsp]
 command = "/home/matthew/rustmark/target/debug/rustmark"
+
+[language-server.ltex]
+command = "/home/matthew/bin/install/ltex/ltex-ls-16.0.0/bin/ltex-ls"
+# args = ["--log-file=/tmp/ltex-ls-log"]
+timeout = 200
+[language-server.ltex.config.ltex]
+dictionary = { "en-US" = ["Pomes", "cybertechnology", "Cybertechnology"] }
+
+[language-server.texlab.config.texlab]
+forwardSearch = { executable = "zathura", args = [ "--synctex-forward", "%l:1:%f", "%p" ]}
+chktex = { onEdit = true }
+
+[language-server.texlab.config.texlab.build]
+executable = "tectonic"
+args = [ "-X", "compile", "%f", "--synctex", "--keep-logs", "--keep-intermediates" ]
+onSave = true
+forwardSearchAfter = false
 
 [[language]]
 name = "markdown"
 auto-format = false
-file-types = ["markdown", "md"]
-language-servers = [ "markdown-lsp" ]
+# file-types = ["markdown", "md"]
+language-servers = [ "ltex" ]
+
+[[language]]
+name = "latex"
+auto-format = true
+language-servers = [ "ltex" ]
+
+[[language]]
+name = "rust"
+auto-format = false
+language-servers = [ "rust-analyzer", "typos-lsp" ]
+
+[language.debugger]
+name = "lldb-vscode"
+transport = "stdio"
+command = "lldb-vscode"
+
+[[language.debugger.templates]]
+name = "binary"
+request = "launch"
+completion = [ { name = "binary", completion = "filename" } ]
+args = { program = "{0}", initCommands = [ "command script import /usr/local/etc/lldb_vscode_rustc_primer.py" ] }

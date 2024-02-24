@@ -57,9 +57,6 @@ then
    then
       cd $HOME/bin/install
       git clone https://github.com/the10thWiz/zsh-theme.git
-   else
-      cd $HOME/bin/install
-      git pull
    fi
    cd $HOME/bin/install/zsh-theme
    cargo build

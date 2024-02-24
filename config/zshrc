@@ -1,4 +1,7 @@
 #!/bin/zsh
+
+BASE_PWD="$PWD"
+
 path() {
   if [[ "$1" == "PATH" ]]
   then
@@ -43,6 +46,14 @@ setopt autocd extendedglob notify
 bindkey -v
 # End of lines configured by zsh-newuser-install
 
+# Add locations to path as needed
+path $HOME/gems/bin/ PATH
+path /usr/local/lib/nodejs/nodejs/node-v14.17.3-linux-x64/bin PATH
+path $HOME/.cargo/bin PATH
+path $HOME/.local/bin PATH
+path PATH /opt/gradle/gradle-7.3.3/bin
+path PATH $SAGE_ROOT/local/bin
+path PATH $HOME/go/bin/
 
 ### Aliases and useful commands
 source $HOME/bin/config/zsh-aliases
@@ -113,35 +124,26 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 ### Editor configuration
 if [[ -z $NVIM ]]
 then
-  export EDITOR=$(which nvim)
+  export EDITOR=$(which hx)
   export SUDO_EDITOR="$EDITOR"
   export VISUAL="$EDITOR"
-else
-  export EDITOR="$(which nvr) -cc 'ToggleTermCloseAll'"
-  export SUDO_EDITOR="$EDITOR"
-  export VISUAL="$EDITOR"
-  alias vi="$EDITOR"
+# else
+#   export EDITOR="$(which nvr) -cc 'ToggleTermCloseAll'"
+#   export SUDO_EDITOR="$EDITOR"
+#   export VISUAL="$EDITOR"
+#   alias vi="$EDITOR"
 fi
 
 # Install Ruby Gems to ~/gems
 export GEM_HOME="$HOME/gems"
 
 # Root for SAGE install
-export SAGE_ROOT=$HOME/SageMath
+# export SAGE_ROOT=$HOME/SageMath
 # SageTex location
-export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
+# export TEXINPUTS="$SAGE_ROOT/local/share/texmf//:"
 
 # make GPG work
 export GPG_TTY=$(tty)
-
-# Add locations to path as needed
-path $HOME/gems/bin/ PATH
-path /usr/local/lib/nodejs/nodejs/node-v14.17.3-linux-x64/bin PATH
-path $HOME/.cargo/bin PATH
-path $HOME/.local/bin PATH
-path PATH /opt/gradle/gradle-7.3.3/bin
-path PATH $SAGE_ROOT/local/bin
-path PATH $HOME/go/bin/
 
 # Machine-specific configuration
 if [[ -f "$HOME/.zshlocal" ]]
@@ -168,11 +170,14 @@ unset __conda_setup
 fpath+=$HOME/conda-zsh-completion
 compinit conda
 
-echo $PATH > ~/.cache/nvim/path
-
 alias fixmodmap="xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'"
 
-# For some reason, GPG uses this to decide to do use a CLI prompt
-export GPG_TTY=$(tty)
-
 PS2="    >"
+
+cd $BASE_PWD
+
+PATH="/home/matthew/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/matthew/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/matthew/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/matthew/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/matthew/perl5"; export PERL_MM_OPT;
