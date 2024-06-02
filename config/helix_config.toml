@@ -33,6 +33,7 @@ display-inlay-hints = true
 [keys.normal]
 A-x = "extend_to_line_bounds"
 X = ["extend_line_up", "extend_to_line_bounds"]
+x = ["extend_line_down", "extend_to_line_bounds"]
 "A-," = "goto_previous_buffer"
 "A-." = "goto_next_buffer"
 "A-w" = ":buffer-close"
@@ -41,3 +42,4 @@ X = ["extend_line_up", "extend_to_line_bounds"]
 [keys.select]
 A-x = "extend_to_line_bounds"
 X = ["extend_line_up", "extend_to_line_bounds"]
+x = ["extend_line_down", "extend_to_line_bounds"]
