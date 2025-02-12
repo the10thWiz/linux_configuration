@@ -5,10 +5,15 @@
 .ccls
 .ccls.*
 
+notes.md
 deploy.sh
 run.sh
 gdbserver.sh
 *.log
+
+# Ignore build directories
+/build/
+/*-build/
 
 ### Automatically added by Hedron's Bazel Compile Commands Extractor: https://github.com/hedronvision/bazel-compile-commands-extractor
 # Ignore the `external` link (that is added by `bazel-compile-commands-extractor`). The link differs between macOS/Linux and Windows, so it shouldn't be checked in. The pattern must not end with a trailing `/` because it's a symlink on macOS/Linux.
@@ -18,4 +23,4 @@ gdbserver.sh
 # Ignore generated output. Although valuable (after all, the primary purpose of `bazel-compile-commands-extractor` is to produce `compile_commands.json`!), it should not be checked in.
 /compile_commands.json
 # Ignore the directory in which `clangd` stores its local index.
-/.cache/
+.cache/

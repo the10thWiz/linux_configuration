@@ -102,7 +102,18 @@ setopt inc_append_history share_history
 unset SSH_ASKPASS
 # Enable agent
 #alias echo=true
-type ssh-agent > /dev/null && eval $(ssh-agent -s) > /dev/null
+if [[ "$SSH_AGENT_PID" == "" ]]
+then
+  if [[ ! -e /tmp/ssh-agent-mpomes ]]
+  then
+    type ssh-agent > /dev/null && eval $(ssh-agent -s -a /tmp/ssh-agent-mpomes) > /dev/null
+    echo "$SSH_AGENT_PID" > /tmp/ssh-agent-mpomes.pid
+  else
+    read SSH_AGENT_PID < /tmp/ssh-agent-mpomes.pid
+    export SSH_AGENT_PID
+    export SSH_AUTH_SOCK=/tmp/ssh-agent-mpomes
+  fi
+fi
 #unalias echo
 
 # Setup kitty if available
