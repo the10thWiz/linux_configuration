@@ -31,13 +31,39 @@ hidden = false
 display-inlay-hints = true
 
 [keys.normal]
-A-x = "extend_to_line_bounds"
+h = "collapse_selection"
+j = "move_char_left"
+k = "move_visual_line_down"
+l = "move_visual_line_up"
+";" = "move_char_right"
 X = ["extend_line_up", "extend_to_line_bounds"]
+A-x = ["extend_line_down", "extend_to_line_bounds"]
+# x = "extend_to_line_bounds"
 "A-," = "goto_previous_buffer"
 "A-." = "goto_next_buffer"
 "A-w" = ":buffer-close"
 "A-/" = "repeat_last_motion"
 
+[keys.normal.g]
+h = "no_op"
+j = "goto_line_start"
+";" = "goto_line_end"
+k = "move_line_down"
+l = "move_line_up"
+
 [keys.select]
-A-x = "extend_to_line_bounds"
+h = "collapse_selection"
+j = "extend_char_left"
+k = "extend_visual_line_down"
+l = "extend_visual_line_up"
+";" = "extend_char_right"
 X = ["extend_line_up", "extend_to_line_bounds"]
+A-x = ["extend_line_down", "extend_to_line_bounds"]
+# x = "extend_to_line_bounds"
+
+[keys.select.g]
+h = "no_op"
+j = "extend_to_line_start"
+";" = "extend_to_line_end"
+k = "extend_line_down"
+l = "extend_line_up"

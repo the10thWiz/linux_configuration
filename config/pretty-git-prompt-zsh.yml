@@ -45,15 +45,15 @@ values:
           #  * <REMOTE> will be replaced with name of a remote
           #  * <LOCAL_BRANCH> will be replaced with current branch name
           #  * <REMOTE_BRANCH> will be replaced with name of remote branch
-          pre_format: ' <LOCAL_BRANCH> '
+          pre_format: ' <LOCAL_BRANCH>'
           post_format: ''
           # the number of files present locally which are missing in remote repo
         - type: ahead
           pre_format: '↑'
-          post_format: ' '
+          post_format: ''
         - type: behind
           pre_format: '↓'
-          post_format: ' '
+          post_format: ''
     - type: separator
       display: surrounded
       pre_format: ''
@@ -65,39 +65,35 @@ values:
       post_format: ''
       values:
         - type: name
-          pre_format: '<REMOTE>'
+          pre_format: ' <REMOTE>'
           post_format: ''
         - type: ahead
           pre_format: '↑'
-          post_format: ' '
+          post_format: ''
         - type: behind
           pre_format: '↓'
-          post_format: ' '
-    - type: separator
-      display: surrounded
-      pre_format: ''
-      post_format: ''
+          post_format: ''
       # the number of untracked files
     - type: new
-      pre_format: '✚'
-      post_format: ' '
+      pre_format: ' ✚'
+      post_format: ''
       # the number of tracked files which were changed in working tree
     - type: changed
-      pre_format: 'Δ'
-      post_format: ' '
+      pre_format: ' Δ'
+      post_format: ''
       # the number of files added to index
     - type: staged
-      pre_format: '▶'
-      post_format: ' '
+      pre_format: ' ▶'
+      post_format: ''
       # during merge, rebase, or others, the numbers files which conflict
     - type: conflicts
-      pre_format: '✖'
-      post_format: ' '
-    - type: separator
-      display: surrounded
-      pre_format: ''
+      pre_format: ' ✖'
       post_format: ''
       # show number of items in stash
     - type: stash
-      pre_format: '☐'
+      pre_format: ' ☐'
+      post_format: ''
+    - type: separator
+      display: always
+      pre_format: ''
       post_format: ' '
