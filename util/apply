@@ -9,6 +9,9 @@ then
 elif type yum
 then
    sudo bash ~/bin/util/yum
+elif type pacman
+then
+   sudo bash ~/bin/util/pacman
 else
    echo "Unknown package manager"
 fi
@@ -52,9 +55,9 @@ function rust-git-install() {
    cargo build --release
 }
 
-rust-git-install TomasTomecek pretty-git-prompt 
-rust-git-install the10thwiz arg-adjuster
-rust-git-install the10thwiz git-remote-url
+(rust-git-install TomasTomecek pretty-git-prompt)
+(rust-git-install the10thwiz arg-adjuster)
+(rust-git-install the10thwiz git-remote-url)
 
 mkdir -p ~/.config
 if [ -f ~/bin/config/pretty-git-prompt.yml ]
@@ -75,7 +78,10 @@ else
 fi
 
 link config/init.lua ~/.config/nvim/lua/user/init.lua
-nvim +PackerSync
+if type nvim 2> /dev/null
+then
+   nvim +PackerSync
+fi
 
 ## oh-my-zsh
 #if [ ! -d ~/.oh-my-zsh/ ]; then
@@ -124,7 +130,10 @@ then
 fi
 
 # Apply Git config options
-if type nvim
+if type hx
+then
+   git config --global core.editor "hx"
+elif type nvim
 then
    git config --global core.editor "nvim"
 elif type vi
@@ -143,6 +152,9 @@ git config --global alias.ls '!fd'
 git config --global alias.br 'branch'
 git config --global rerere.enabled true
 git config --global init.defaultBranch 'main'
+
+echo "PWD: $PWD"
+fish util/setup.fish
 
 # Install vim plugins
 # sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
